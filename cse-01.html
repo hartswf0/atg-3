@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ATG 2.3 | Pattern Atlas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap');
+
+        :root {
+            --bg-canvas: #f2f0e9;
+            --bg-overlay: #e8e4dc;
+
+            --ink-primary: #1a1918;
+            --ink-secondary: #57534e;
+            --ink-faint: #d6d3cd;
+
+            --accent-main: #c2410c;
+            --accent-path: #0f766e;
+
+            --elevation-shadow: 0 10px 30px -10px rgba(26, 25, 24, 0.15);
+            --grid-line: rgba(26, 25, 24, 0.06);
+        }
+
+        body.dark-mode {
+            --bg-canvas: #0c0a09;
+            --bg-overlay: #1c1917;
+            --ink-primary: #e7e5e4;
+            --ink-secondary: #a8a29e;
+            --ink-faint: #292524;
+            --accent-main: #fb923c;
+            --accent-path: #2dd4bf;
+            --grid-line: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            background-color: var(--bg-canvas);
+            color: var(--ink-primary);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            transition: background 0.3s;
+        }
+
+        .font-serif {
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Paper grain */
+        .texture-layer {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.6;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+        }
+
+        /* Atlas grid */
+        .atlas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 2px;
+            padding: 40px;
+            max-width: 1800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            padding-bottom: 120px;
+        }
+
+        @media (max-width: 768px) {
+            .atlas-grid {
+                padding: 16px;
+                gap: 16px;
+            }
+        }
+
+        /* Map sheet */
+        .map-sheet {
+            background: var(--bg-overlay);
+            border: 1px solid var(--ink-faint);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            aspect-ratio: 4/5;
+            overflow: hidden;
+            transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .map-sheet:hover {
+            z-index: 5;
+            box-shadow: var(--elevation-shadow);
+            border-color: var(--ink-secondary);
+            transform: scale(1.015);
+        }
+
+        /* Viewport */
+        .viewport {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            background: var(--bg-canvas);
+            cursor: crosshair;
+        }
+
+        canvas.layer-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .map-grid-lines {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .compass-rose {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 26px;
+            height: 26px;
+            border: 1px solid var(--ink-secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            color: var(--ink-secondary);
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .compass-rose::after {
+            content: '';
+            width: 1px;
+            height: 100%;
+            background: var(--ink-secondary);
+            position: absolute;
+            transform: rotate(45deg);
+        }
+
+        .scale-bar {
+            position: absolute;
+            bottom: 14px;
+            left: 14px;
+            width: 60px;
+            height: 4px;
+            background: repeating-linear-gradient(90deg,
+                    var(--ink-secondary) 0,
+                    var(--ink-secondary) 5px,
+                    transparent 5px,
+                    transparent 10px);
+            border-bottom: 1px solid var(--ink-secondary);
+            z-index: 3;
+        }
+
+        .scale-label {
+            position: absolute;
+            bottom: 4px;
+            left: 14px;
+            font-size: 9px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--ink-secondary);
+            z-index: 3;
+        }
+
+        .axis-label {
+            position: absolute;
+            font-size: 9px;
+            font-family: 'JetBrains Mono', monospace;
+            color: rgba(87, 83, 78, 0.8);
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        /* Node popover */
+        .node-popover {
+            position: absolute;
+            background: var(--bg-canvas);
+            border: 1px solid var(--accent-main);
+            padding: 6px 10px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+            opacity: 0;
+            pointer-events: none;
+            transform: translate(-50%, -110%) scale(0.9);
+            transition: all 0.18s ease;
+            z-index: 5;
+            min-width: 160px;
+            max-width: 220px;
+        }
+
+        .node-popover.active {
+            opacity: 1;
+            transform: translate(-50%, -110%) scale(1);
+        }
+
+        .node-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: var(--accent-main);
+        }
+
+        .node-text {
+            margin-top: 2px;
+            font-size: 11px;
+            color: var(--ink-primary);
+        }
+
+        /* Meta footer */
+        .sheet-meta {
+            padding: 14px 16px 16px;
+            border-top: 1px solid var(--ink-faint);
+            background: var(--bg-overlay);
+        }
+
+        /* Control bar */
+        .control-deck {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-canvas);
+            border: 1px solid var(--ink-secondary);
+            padding: 10px 20px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+            z-index: 20;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--accent-main);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="texture-layer"></div>
+
+    <header class="p-8 max-w-[1800px] mx-auto relative z-10 flex justify-between items-end border-b mb-4"
+        style="border-color: var(--ink-faint);">
+        <div>
+            <h1 class="text-4xl font-serif font-bold italic tracking-tight"
+                style="color: var(--ink-primary); line-height: 1;">
+                ATG 2.3
+                <span
+                    class="not-italic text-sm font-sans font-normal tracking-widest ml-2 uppercase opacity-80 block md:inline mt-2 md:mt-0"
+                    style="color: var(--ink-secondary);">
+                    Pattern Atlas
+                </span>
+            </h1>
+        </div>
+        <div class="text-[10px] font-mono text-right hidden md:block" style="color: var(--ink-secondary);">
+            SAMPLE SET · 7 SURFACES<br>
+            LINKED HABIT TOPOGRAPHY
+        </div>
+    </header>
+
+    <div class="atlas-grid" id="grid-container"></div>
+
+    <div class="control-deck">
+        <button id="theme-toggle" class="text-[var(--ink-primary)] hover:text-[var(--accent-main)] transition">
+            <i data-lucide="moon" class="w-5 h-5"></i>
+        </button>
+        <div class="w-px h-6" style="background: var(--ink-faint);"></div>
+        <div class="flex flex-col w-40">
+            <label class="text-[9px] uppercase tracking-widest font-sans mb-1 flex justify-between"
+                style="color: var(--ink-secondary);">
+                <span>Simulation Speed</span>
+                <span id="speed-val">1.0x</span>
+            </label>
+            <input type="range" id="global-speed" min="0.5" max="4" step="0.5" value="1">
+        </div>
+        <div class="w-px h-6" style="background: var(--ink-faint);"></div>
+        <button id="reset-sim" class="text-[var(--ink-primary)] hover:text-[var(--accent-main)] transition"
+            title="Reset All Maps">
+            <i data-lucide="rotate-ccw" class="w-5 h-5"></i>
+        </button>
+    </div>
+
+    <script>
+        (function () {
+            const CONFIG = {
+                LOGICAL_SIZE: 32,
+                RENDER_RES: 96,
+                SPEED: 1.0,
+                AGENTS_PER_PROJECT: 4
+            };
+
+            // --- RAW DATA LOADING ---
+            let RAW_DATA = {};
+
+            async function loadRawData() {
+                try {
+                    const response = await fetch('./data/wag-atlas.json');
+                    if (!response.ok) throw new Error('Not found');
+                    const data = await response.json();
+
+                    // Transform WAG atlas format to CSE format
+                    Object.keys(data).forEach(id => {
+                        const region = data[id];
+                        if (region.moves) {
+                            if (region.links) {
+                                // Has explicit links
+                                RAW_DATA[id] = {
+                                    moves: region.moves,
+                                    links: region.links
+                                };
+                            } else {
+                                // Array of moves only
+                                RAW_DATA[id] = region.moves;
+                            }
+                        }
+                    });
+                    console.log(`Loaded ${Object.keys(RAW_DATA).length} scenarios from WAG Atlas`);
+                } catch (e) {
+                    console.warn('Using default RAW_DATA:', e);
+                    useDefaultRawData();
+                }
+            }
+
+            function useDefaultRawData() {
+                RAW_DATA = {
+                    FullyConnected: [
+                        { "text": "hello" },
+                        { "text": "hello", "actor": 1 },
+                        { "text": "hello" },
+                        { "text": "hello", "actor": 1 },
+                        { "text": "hello" },
+                        { "text": "hello", "actor": 1 },
+                        { "text": "hello" }
+                    ],
+                    NoConnection: [
+                        { "text": "wolves" },
+                        { "text": "snuggly", "actor": 1 },
+                        { "text": "dishpan" },
+                        { "text": "cranium", "actor": 1 },
+                        { "text": "disruptor" },
+                        { "text": "legate", "actor": 1 },
+                        { "text": "orange" }
+                    ],
+                    MixedBinaryLinks: {
+                        moves: [
+                            { "text": "john" },
+                            { "text": "jacob" },
+                            { "text": "jingleheimer schmidt" },
+                            { "text": "his name is my name too" }
+                        ],
+                        links: {
+                            "0": {},
+                            "1": { "0": 1 },
+                            "2": { "0": 0, "1": 1 },
+                            "3": { "0": 1, "1": 0, "2": 0 }
+                        }
+                    },
+                    AllMiddlingLinks: {
+                        moves: [
+                            { "text": "john" },
+                            { "text": "jacob" },
+                            { "text": "jingleheimer schmidt" },
+                            { "text": "his name is my name too" }
+                        ],
+                        links: {
+                            "0": {},
+                            "1": { "0": 0.675 },
+                            "2": { "0": 0.675, "1": 0.675 },
+                            "3": { "0": 0.675, "1": 0.675, "2": 0.675 }
+                        }
+                    },
+                    StreamOfConsciousness1: [
+                        { "text": "hello" },
+                        { "text": "hello world" },
+                        { "text": "dog" },
+                        { "text": "cat" },
+                        { "text": "zebra" },
+                        { "text": "horse" },
+                        { "text": "hello horse world" },
+                        { "text": "hello kitty" },
+                        { "text": "stream of consciousness" },
+                        { "text": "kitty cat" },
+                        { "text": "not much money in the kitty" },
+                        { "text": "piggy bank" },
+                        { "text": "riverbank" },
+                        { "text": "stream" },
+                        { "text": "video stream" },
+                        { "text": "cat video" },
+                        { "text": "hello kitty tv show" }
+                    ],
+                    StreamOfConsciousness2: [
+                        { "text": "a phrase" },
+                        { "text": "streetlights" },
+                        { "text": "LED" },
+                        { "text": "ceiling fixture" },
+                        { "text": "buzzing" },
+                        { "text": "Christmas lights" },
+                        { "text": "giant skeleton" },
+                        { "text": "trains" },
+                        { "text": "railroad tracks" },
+                        { "text": "Alfred Hitchcock" },
+                        { "text": "cinematography" },
+                        { "text": "The Fall" },
+                        { "text": "red" },
+                        { "text": "billowing cloth" },
+                        { "text": "lens flare" },
+                        { "text": "Industrial Light and Magic" },
+                        { "text": "blue screen" }
+                    ],
+                    DevDiary: [
+                        { "text": "Photorealistic environments" },
+                        { "text": "Fully automatic weapon-equipped vehicles" },
+                        { "text": "Highly detailed urban environments" },
+                        { "text": "Destructive racing" },
+                        { "text": "40-hour-plus main quest" },
+                        { "text": "Squads of adventurers" },
+                        { "text": "Underwater levels" },
+                        { "text": "Ice levels" }
+                    ]
+                };
+            }
+
+            const SCENARIO_META = {
+                FullyConnected: {
+                    title: 'Fully Connected',
+                    desc: 'Every move is essentially the same surface: total overlap.'
+                },
+                NoConnection: {
+                    title: 'No Connection',
+                    desc: 'Orphans in semantic space; almost no shared tokens.'
+                },
+                MixedBinaryLinks: {
+                    title: 'Mixed Binary Links',
+                    desc: 'Explicit 0/1 link matrix – crisp ridges, hard breaks.'
+                },
+                AllMiddlingLinks: {
+                    title: 'All Middling Links',
+                    desc: 'Uniform ~0.675 connectivity; fuzzy basin with no clear peaks.'
+                },
+                StreamOfConsciousness1: {
+                    title: 'Stream · Animals',
+                    desc: 'Hello → animals → kitty → streams – auto-linked drift.'
+                },
+                StreamOfConsciousness2: {
+                    title: 'Stream · Lights & Film',
+                    desc: 'Streetlights → skeletons → Hitchcock → ILM – visual chain.'
+                },
+                DevDiary: {
+                    title: 'Dev Diary',
+                    desc: 'Everything-feature list; repeated motifs carve canyons.'
+                }
+            };
+
+            function tokenize(text) {
+                return (text || '')
+                    .toLowerCase()
+                    .split(/[^a-z0-9]+/)
+                    .filter(Boolean);
+            }
+
+            function jaccard(tokensA, tokensB) {
+                const setA = new Set(tokensA);
+                const setB = new Set(tokensB);
+                if (!setA.size && !setB.size) return 0;
+                let inter = 0;
+                setA.forEach(t => { if (setB.has(t)) inter++; });
+                const union = setA.size + setB.size - inter;
+                return union ? inter / union : 0;
+            }
+
+            function pseudoRandom(x, y) {
+                const v = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453;
+                return v - Math.floor(v);
+            }
+
+            function stampGaussian(grid, size, gx, gy, radius, amp) {
+                const r2 = radius * radius;
+                const sigma2 = r2 * 0.5;
+                for (let y = gy - radius; y <= gy + radius; y++) {
+                    if (y < 0 || y >= size) continue;
+                    for (let x = gx - radius; x <= gx + radius; x++) {
+                        if (x < 0 || x >= size) continue;
+                        const dx = x - gx;
+                        const dy = y - gy;
+                        const dist2 = dx * dx + dy * dy;
+                        if (dist2 > r2) continue;
+                        const falloff = Math.exp(-dist2 / sigma2);
+                        grid[y * size + x] += amp * falloff;
+                    }
+                }
+            }
+
+            function buildScenarios() {
+                const result = [];
+                for (const key in RAW_DATA) {
+                    const raw = RAW_DATA[key];
+                    let moves;
+                    let explicitLinks = null;
+                    if (Array.isArray(raw)) {
+                        moves = raw;
+                    } else {
+                        moves = raw.moves || [];
+                        explicitLinks = raw.links || null;
+                    }
+                    const meta = SCENARIO_META[key] || { title: key, desc: '' };
+                    result.push({
+                        id: key,
+                        title: meta.title,
+                        desc: meta.desc,
+                        moves,
+                        explicitLinks
+                    });
+                }
+                return result;
+            }
+
+            // Agent leaving ink trails
+            class Agent {
+                constructor(nodes) {
+                    this.nodes = nodes;
+                    this.pos = { x: Math.random(), y: Math.random() };
+                    this.target = this.pickTarget();
+                    this.history = [];
+                    const colors = ['#c2410c', '#0f766e', '#4338ca', '#be185d'];
+                    this.color = colors[Math.floor(Math.random() * colors.length)];
+                }
+
+                pickTarget() {
+                    if (!this.nodes.length) return { x: Math.random(), y: Math.random() };
+                    return this.nodes[Math.floor(Math.random() * this.nodes.length)];
+                }
+
+                update(agentGrid, size) {
+                    const speed = 0.003 * CONFIG.SPEED;
+                    const dx = this.target.x - this.pos.x;
+                    const dy = this.target.y - this.pos.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy) || 0.0001;
+
+                    if (dist < 0.02) {
+                        this.target = this.pickTarget();
+                        this.deposit(agentGrid, size, this.pos.x, this.pos.y, 0.16, 0.45);
+                    } else {
+                        this.pos.x += (dx / dist) * speed;
+                        this.pos.y += (dy / dist) * speed;
+                        this.pos.x += (Math.random() - 0.5) * 0.006 * CONFIG.SPEED;
+                        this.pos.y += (Math.random() - 0.5) * 0.006 * CONFIG.SPEED;
+                        this.pos.x = Math.max(0, Math.min(1, this.pos.x));
+                        this.pos.y = Math.max(0, Math.min(1, this.pos.y));
+                        this.deposit(agentGrid, size, this.pos.x, this.pos.y, 0.03, 0.06 * CONFIG.SPEED);
+                    }
+
+                    if (Math.random() > 0.5) {
+                        this.history.push({ x: this.pos.x, y: this.pos.y });
+                        if (this.history.length > 30) this.history.shift();
+                    }
+                }
+
+                deposit(grid, size, nx, ny, radiusNorm, amount) {
+                    const gx = Math.floor(nx * size);
+                    const gy = Math.floor(ny * size);
+                    const r = Math.ceil(radiusNorm * size);
+                    const r2 = r * r;
+                    for (let y = gy - r; y <= gy + r; y++) {
+                        if (y < 0 || y >= size) continue;
+                        for (let x = gx - r; x <= gx + r; x++) {
+                            if (x < 0 || x >= size) continue;
+                            const dx = x - gx;
+                            const dy = y - gy;
+                            const dist2 = dx * dx + dy * dy;
+                            if (dist2 < r2) {
+                                const idx = y * size + x;
+                                const falloff = 1 - Math.sqrt(dist2) / r;
+                                grid[idx] = Math.min(grid[idx] + amount * falloff, 3.0);
+                            }
+                        }
+                    }
+                }
+            }
+
+            class TerrainMap {
+                constructor(container, scenario) {
+                    this.container = container;
+                    this.scenario = scenario;
+
+                    const N = CONFIG.LOGICAL_SIZE * CONFIG.LOGICAL_SIZE;
+                    this.baseGrid = new Float32Array(N);
+                    this.agentGrid = new Float32Array(N);
+                    this.heatGrid = new Float32Array(N);
+                    this.renderGrid = new Float32Array(CONFIG.RENDER_RES * CONFIG.RENDER_RES);
+
+                    this.prepareData();
+                    const agentCount = Math.min(CONFIG.AGENTS_PER_PROJECT, Math.max(2, this.moves.length));
+                    this.agents = Array.from({ length: agentCount }, () => new Agent(this.nodes));
+
+                    this.setupDOM();
+                    this.canvas = this.container.querySelector('canvas');
+                    this.ctx = this.canvas.getContext('2d');
+                    this.popover = this.container.querySelector('.node-popover');
+                    this.fluxEl = this.container.querySelector('.flux-val');
+                    this.linkEl = this.container.querySelector('.link-val');
+                    this.movesEl = this.container.querySelector('.moves-val');
+
+                    this.resize();
+                    window.addEventListener('resize', () => this.resize());
+
+                    this.canvas.addEventListener('mousemove', (e) => this.handleHover(e));
+                    this.canvas.addEventListener('click', (e) => this.handleClick(e));
+
+                    this.loop();
+                }
+
+                prepareData() {
+                    const moves = this.scenario.moves || [];
+                    this.moves = moves;
+                    const n = moves.length;
+                    this.tokens = moves.map(m => tokenize(m.text || ''));
+
+                    // Build link matrix
+                    const links = Array.from({ length: n }, () => Array(n).fill(0));
+                    if (this.scenario.explicitLinks) {
+                        const raw = this.scenario.explicitLinks;
+                        for (const iKey in raw) {
+                            const i = parseInt(iKey, 10);
+                            const row = raw[iKey];
+                            for (const jKey in row) {
+                                const j = parseInt(jKey, 10);
+                                const w = Number(row[jKey]);
+                                if (!isNaN(w) && w > 0) {
+                                    links[i][j] = w;
+                                    links[j][i] = w;
+                                }
+                            }
+                        }
+                    } else {
+                        for (let i = 0; i < n; i++) {
+                            for (let j = 0; j < i; j++) {
+                                const w = jaccard(this.tokens[i], this.tokens[j]);
+                                links[i][j] = links[j][i] = w;
+                            }
+                        }
+                    }
+                    this.linkMatrix = links;
+
+                    let sum = 0, count = 0;
+                    for (let i = 0; i < n; i++) {
+                        for (let j = 0; j < i; j++) {
+                            sum += links[i][j];
+                            count++;
+                        }
+                    }
+                    this.linkDensity = count ? sum / count : 0;
+
+                    // Node layout: x = time, y = actor/curve
+                    const hasActor = moves.some(m => typeof m.actor !== 'undefined');
+                    this.nodes = [];
+                    for (let i = 0; i < n; i++) {
+                        const t = n <= 1 ? 0.5 : i / (n - 1);
+                        let baseY;
+                        if (hasActor) {
+                            baseY = moves[i].actor ? 0.75 : 0.25;
+                        } else {
+                            baseY = 0.5 + Math.sin(t * Math.PI * 2) * 0.15;
+                        }
+                        const jitterX = (pseudoRandom(i, 1) - 0.5) * 0.08;
+                        const jitterY = (pseudoRandom(i, 2) - 0.5) * 0.06;
+                        let x = 0.12 + 0.76 * t + jitterX;
+                        let y = baseY + jitterY;
+                        x = Math.max(0.08, Math.min(0.92, x));
+                        y = Math.max(0.08, Math.min(0.92, y));
+                        this.nodes.push({
+                            index: i,
+                            label: moves[i].text.slice(0, 18),
+                            full: moves[i].text,
+                            x,
+                            y
+                        });
+                    }
+
+                    this.buildBaseTerrain();
+                }
+
+                buildBaseTerrain() {
+                    const size = CONFIG.LOGICAL_SIZE;
+                    const grid = this.baseGrid;
+                    grid.fill(0);
+                    const n = this.nodes.length;
+                    if (!n) return;
+
+                    // Nodes as peaks
+                    for (let i = 0; i < n; i++) {
+                        const node = this.nodes[i];
+                        const gx = Math.round(node.x * (size - 1));
+                        const gy = Math.round(node.y * (size - 1));
+
+                        let degree = 0;
+                        for (let j = 0; j < n; j++) degree += this.linkMatrix[i][j];
+                        const normDeg = n > 1 ? degree / (n - 1) : 0;
+                        const extra = this.scenario.id === 'NoConnection' ? 0.15 : 0;
+                        const amp = 0.6 + normDeg * 1.1 + extra;
+                        const radius = Math.floor(size * (0.18 + 0.06 * normDeg));
+                        stampGaussian(grid, size, gx, gy, radius, amp);
+                    }
+
+                    // Ridges along links
+                    for (let i = 0; i < n; i++) {
+                        for (let j = i + 1; j < n; j++) {
+                            const w = this.linkMatrix[i][j];
+                            if (w <= 0.02) continue;
+                            this.stampRidgeBetween(i, j, w);
+                        }
+                    }
+
+                    // Normalize
+                    let max = 0;
+                    for (let i = 0; i < grid.length; i++) {
+                        if (grid[i] > max) max = grid[i];
+                    }
+                    if (max > 0) {
+                        const factor = 1.7 / max;
+                        for (let i = 0; i < grid.length; i++) {
+                            grid[i] *= factor;
+                        }
+                    }
+                }
+
+                stampRidgeBetween(iIndex, jIndex, weight) {
+                    const size = CONFIG.LOGICAL_SIZE;
+                    const a = this.nodes[iIndex];
+                    const b = this.nodes[jIndex];
+                    const steps = 28;
+                    const radius = Math.floor(size * (0.08 + 0.04 * weight));
+                    const baseAmp = 0.5 * weight;
+                    for (let s = 0; s <= steps; s++) {
+                        const t = s / steps;
+                        const nx = a.x + (b.x - a.x) * t;
+                        const ny = a.y + (b.y - a.y) * t;
+                        const gx = Math.round(nx * (size - 1));
+                        const gy = Math.round(ny * (size - 1));
+                        const amp = baseAmp * (0.45 + 0.55 * Math.sin(Math.PI * t));
+                        stampGaussian(this.baseGrid, size, gx, gy, radius, amp);
+                    }
+                }
+
+                setupDOM() {
+                    this.container.innerHTML = `
+                <div class="viewport">
+                    <canvas class="layer-canvas"></canvas>
+                    <div class="map-grid-lines"></div>
+                    <div class="compass-rose">N</div>
+                    <div class="scale-label">ATG</div>
+                    <div class="scale-bar"></div>
+                    <div class="axis-label" style="bottom:6px; left:50%; transform:translateX(-50%);">
+                        PHASE →
+                    </div>
+                    <div class="axis-label" style="left:6px; top:50%; transform:translateY(-50%) rotate(-90deg);">
+                        LOAD →
+                    </div>
+                    <div class="node-popover">
+                        <div class="node-label font-mono">NODE</div>
+                        <div class="node-text"></div>
+                    </div>
+                </div>
+                <div class="sheet-meta">
+                    <div class="flex justify-between items-baseline mb-1">
+                        <h3 class="font-serif text-xl font-bold" style="color: var(--ink-primary);">
+                            ${this.scenario.title}
+                        </h3>
+                        <span class="font-mono text-[9px]" style="color: var(--ink-secondary);">
+                            ${this.scenario.id}
+                        </span>
+                    </div>
+                    <p class="text-[11px]" style="color: var(--ink-secondary);">
+                        ${this.scenario.desc}
+                    </p>
+                    <div class="flex justify-between mt-2 text-[10px] font-mono" style="color: var(--ink-secondary);">
+                        <span>Moves: <span class="moves-val">${this.moves.length}</span></span>
+                        <span>Link density: <span class="link-val">${this.linkDensity.toFixed(2)}</span></span>
+                        <span>Flux: <span class="flux-val">0.00</span></span>
+                    </div>
+                </div>
+            `;
+                }
+
+                resize() {
+                    const rect = this.canvas.getBoundingClientRect();
+                    this.width = rect.width;
+                    this.height = rect.height;
+                    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+                    this.canvas.width = this.width * dpr;
+                    this.canvas.height = this.height * dpr;
+                    this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                }
+
+                getHitNode(e) {
+                    const rect = this.canvas.getBoundingClientRect();
+                    const xNorm = (e.clientX - rect.left) / this.width;
+                    const yNorm = (e.clientY - rect.top) / this.height;
+                    let best = null;
+                    let bestDist = 0.1;
+                    this.nodes.forEach(n => {
+                        const dx = n.x - xNorm;
+                        const dy = n.y - yNorm;
+                        const d = Math.sqrt(dx * dx + dy * dy);
+                        if (d < bestDist) {
+                            bestDist = d;
+                            best = n;
+                        }
+                    });
+                    return best;
+                }
+
+                handleHover(e) {
+                    if (!this.popover) return;
+                    const hit = this.getHitNode(e);
+                    if (hit) {
+                        this.canvas.style.cursor = 'pointer';
+                        const rect = this.canvas.getBoundingClientRect();
+                        const px = e.clientX - rect.left;
+                        const py = e.clientY - rect.top;
+                        this.popover.style.left = px + 'px';
+                        this.popover.style.top = py + 'px';
+                        this.popover.classList.add('active');
+                        this.popover.querySelector('.node-label').textContent = `#${hit.index + 1}`;
+                        this.popover.querySelector('.node-text').textContent = hit.full;
+                    } else {
+                        this.canvas.style.cursor = 'crosshair';
+                        this.popover.classList.remove('active');
+                    }
+                }
+
+                handleClick(e) {
+                    // For now, click just reinforces hover; could be used to pin selection
+                    this.handleHover(e);
+                }
+
+                update() {
+                    const size = CONFIG.LOGICAL_SIZE;
+                    this.agents.forEach(a => a.update(this.agentGrid, size));
+                    let sumAgent = 0;
+                    for (let i = 0; i < this.agentGrid.length; i++) {
+                        this.agentGrid[i] *= 0.985;
+                        sumAgent += this.agentGrid[i];
+                        this.heatGrid[i] = this.baseGrid[i] + this.agentGrid[i];
+                    }
+
+                    const scale = (size - 1) / (CONFIG.RENDER_RES - 1);
+                    const res = CONFIG.RENDER_RES;
+                    for (let y = 0; y < res; y++) {
+                        for (let x = 0; x < res; x++) {
+                            const gx = x * scale;
+                            const gy = y * scale;
+                            const ix = Math.floor(gx);
+                            const iy = Math.floor(gy);
+                            const fx = gx - ix;
+                            const fy = gy - iy;
+                            const idx = iy * size + ix;
+
+                            const i00 = idx;
+                            const i10 = Math.min(idx + 1, this.heatGrid.length - 1);
+                            const i01 = Math.min(idx + size, this.heatGrid.length - 1);
+                            const i11 = Math.min(idx + size + 1, this.heatGrid.length - 1);
+
+                            const v00 = this.heatGrid[i00];
+                            const v10 = this.heatGrid[i10];
+                            const v01 = this.heatGrid[i01];
+                            const v11 = this.heatGrid[i11];
+
+                            const top = v00 * (1 - fx) + v10 * fx;
+                            const bot = v01 * (1 - fx) + v11 * fx;
+                            this.renderGrid[y * res + x] = top * (1 - fy) + bot * fy;
+                        }
+                    }
+
+                    if (this.fluxEl && Math.random() < 0.1) {
+                        const avg = sumAgent / this.agentGrid.length;
+                        this.fluxEl.textContent = avg.toFixed(2);
+                    }
+                }
+
+                draw() {
+                    const ctx = this.ctx;
+                    ctx.clearRect(0, 0, this.width, this.height);
+                    const isDark = document.body.classList.contains('dark-mode');
+
+                    const res = CONFIG.RENDER_RES;
+                    const cellW = this.width / res;
+                    const cellH = this.height / res;
+
+                    let maxVal = 0;
+                    for (let i = 0; i < this.renderGrid.length; i++) {
+                        if (this.renderGrid[i] > maxVal) maxVal = this.renderGrid[i];
+                    }
+                    if (maxVal <= 1e-4) return;
+
+                    // Background wash
+                    for (let y = 0; y < res; y += 2) {
+                        for (let x = 0; x < res; x += 2) {
+                            const val = this.renderGrid[y * res + x] / maxVal;
+                            if (val < 0.05) continue;
+                            const intensity = Math.min(val * 1.4, 1.0);
+                            let r, g, b, a;
+                            if (!isDark) {
+                                r = 194; g = 65; b = 12; // orange
+                                a = intensity * 0.24;
+                            } else {
+                                r = 45; g = 212; b = 191; // teal
+                                a = intensity * 0.28;
+                            }
+                            ctx.fillStyle = `rgba(${r},${g},${b},${a})`;
+                            ctx.fillRect(x * cellW, y * cellH, cellW * 2.2, cellH * 2.2);
+                        }
+                    }
+
+                    // Strong topo lines – Marching Squares
+                    const levels = 14;
+                    for (let l = 1; l <= levels; l++) {
+                        const thr = maxVal * (l / (levels + 1));
+                        const major = (l % 3 === 0);
+
+                        ctx.beginPath();
+                        if (!isDark) {
+                            ctx.strokeStyle = major
+                                ? 'rgba(26,25,23,0.95)'
+                                : 'rgba(87,83,78,0.7)';
+                        } else {
+                            ctx.strokeStyle = major
+                                ? 'rgba(248,250,252,0.95)'
+                                : 'rgba(148,163,184,0.7)';
+                        }
+                        ctx.lineWidth = major ? 1.2 : 0.6;
+                        ctx.globalAlpha = 1.0;
+
+                        for (let r = 0; r < res - 1; r++) {
+                            for (let c = 0; c < res - 1; c++) {
+                                const idx = r * res + c;
+                                const v0 = this.renderGrid[idx];
+                                const v1 = this.renderGrid[idx + 1];
+                                const v2 = this.renderGrid[idx + res + 1];
+                                const v3 = this.renderGrid[idx + res];
+
+                                let code = 0;
+                                if (v0 >= thr) code |= 8;
+                                if (v1 >= thr) code |= 4;
+                                if (v2 >= thr) code |= 2;
+                                if (v3 >= thr) code |= 1;
+                                if (code === 0 || code === 15) continue;
+
+                                const interp = (a, b) => (thr - a) / ((b - a) || 1e-6);
+                                const pt = { x: (c + interp(v0, v1)) * cellW, y: r * cellH };
+                                const pr = { x: (c + 1) * cellW, y: (r + interp(v1, v2)) * cellH };
+                                const pb = { x: (c + interp(v3, v2)) * cellW, y: (r + 1) * cellH };
+                                const pl = { x: c * cellW, y: (r + interp(v0, v3)) * cellH };
+                                const seg = (a, b) => { ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); };
+
+                                switch (code) {
+                                    case 1: case 14: seg(pl, pb); break;
+                                    case 2: case 13: seg(pb, pr); break;
+                                    case 3: case 12: seg(pl, pr); break;
+                                    case 4: case 11: seg(pt, pr); break;
+                                    case 5: seg(pl, pt); seg(pb, pr); break;
+                                    case 6: case 9: seg(pt, pb); break;
+                                    case 7: case 8: seg(pl, pt); break;
+                                    case 10: seg(pl, pb); seg(pt, pr); break;
+                                }
+                            }
+                        }
+                        ctx.stroke();
+                    }
+
+                    // Path across nodes
+                    if (this.nodes.length > 1) {
+                        ctx.save();
+                        ctx.lineWidth = 2;
+                        const pathColor = isDark ? '#2dd4bf' : '#0f766e';
+                        ctx.strokeStyle = pathColor;
+                        ctx.shadowBlur = 10;
+                        ctx.shadowColor = pathColor;
+                        ctx.beginPath();
+                        this.nodes.forEach((n, i) => {
+                            const x = n.x * this.width;
+                            const y = n.y * this.height;
+                            if (i === 0) ctx.moveTo(x, y);
+                            else ctx.lineTo(x, y);
+                        });
+                        ctx.stroke();
+                        ctx.shadowBlur = 0;
+                        const last = this.nodes[this.nodes.length - 1];
+                        const lx = last.x * this.width;
+                        const ly = last.y * this.height;
+                        ctx.fillStyle = pathColor;
+                        ctx.beginPath();
+                        ctx.arc(lx, ly, 4, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.restore();
+                    }
+
+                    // Nodes
+                    this.nodes.forEach(n => {
+                        const x = n.x * this.width;
+                        const y = n.y * this.height;
+                        ctx.fillStyle = isDark ? '#e7e5e4' : '#1c1917';
+                        ctx.beginPath();
+                        ctx.arc(x, y, 3, 0, Math.PI * 2);
+                        ctx.fill();
+                    });
+
+                    // Agent dots
+                    this.agents.forEach(a => {
+                        const x = a.pos.x * this.width;
+                        const y = a.pos.y * this.height;
+                        ctx.fillStyle = a.color;
+                        ctx.beginPath();
+                        ctx.arc(x, y, 2.3, 0, Math.PI * 2);
+                        ctx.fill();
+                    });
+                }
+
+                loop() {
+                    this.update();
+                    this.draw();
+                    requestAnimationFrame(() => this.loop());
+                }
+            }
+
+            function initAtlas() {
+                const grid = document.getElementById('grid-container');
+                const scenarios = buildScenarios();
+                scenarios.forEach(s => {
+                    const el = document.createElement('div');
+                    el.className = 'map-sheet';
+                    grid.appendChild(el);
+                    new TerrainMap(el, s);
+                });
+            }
+
+            function setupControls() {
+                const themeToggle = document.getElementById('theme-toggle');
+                const speedSlider = document.getElementById('global-speed');
+                const speedVal = document.getElementById('speed-val');
+                const resetBtn = document.getElementById('reset-sim');
+                let isDark = false;
+
+                if (themeToggle) {
+                    themeToggle.addEventListener('click', () => {
+                        isDark = !isDark;
+                        document.body.classList.toggle('dark-mode', isDark);
+                        themeToggle.innerHTML = isDark
+                            ? '<i data-lucide="sun" class="w-5 h-5"></i>'
+                            : '<i data-lucide="moon" class="w-5 h-5"></i>';
+                        lucide.createIcons();
+                    });
+                }
+
+                if (speedSlider && speedVal) {
+                    speedSlider.addEventListener('input', (e) => {
+                        CONFIG.SPEED = parseFloat(e.target.value);
+                        speedVal.textContent = CONFIG.SPEED.toFixed(1) + 'x';
+                    });
+                }
+
+                if (resetBtn) {
+                    resetBtn.addEventListener('click', () => {
+                        window.location.reload();
+                    });
+                }
+            }
+
+            window.addEventListener('load', async () => {
+                lucide.createIcons();
+                await loadRawData();
+                initAtlas();
+                setupControls();
+            });
+        })();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,827 @@
+{
+    "meta": {
+        "version": "2.1",
+        "generated": "2025-12-09",
+        "description": "ATG Trail Map - Comprehensive repo atlas with verified cross-links from site crawl",
+        "totalRepos": 9,
+        "totalSizeKB": 145000,
+        "crawlDate": "2025-12-09T04:53:00Z"
+    },
+    "repos": {
+        "tractor-dce-gyo": {
+            "label": "TRACTOR CORE",
+            "desc": "Digital Content Environment - Central hub for WAG: Words Assemble Geometries",
+            "url": "https://hartswf0.github.io/tractor-dce-gyo/",
+            "repo": "https://github.com/hartswf0/tractor-dce-gyo",
+            "type": "mountain",
+            "sizeKB": 139000,
+            "files": 1424,
+            "position": {
+                "x": 0.5,
+                "y": 0.5
+            },
+            "elevation": 1.0,
+            "pages": [
+                {
+                    "path": "wag-work.html",
+                    "label": "WAG Workshop",
+                    "desc": "Words Become Worlds - Main manifesto"
+                },
+                {
+                    "path": "wag-pres.html",
+                    "label": "WAG Presentation"
+                },
+                {
+                    "path": "gar-onyx-studio.html",
+                    "label": "Onyx Studio",
+                    "desc": "Operative workbench, no AI"
+                },
+                {
+                    "path": "index.html",
+                    "label": "Core-Age",
+                    "desc": "Parallel development trajectories"
+                },
+                {
+                    "path": "grecian-urn.html",
+                    "label": "Grecian Urn",
+                    "desc": "Ekphrastic artifact"
+                },
+                {
+                    "path": "shield-of-achilles.html",
+                    "label": "Shield of Achilles",
+                    "desc": "Ekphrastic artifact"
+                },
+                {
+                    "path": "ball-jar.html",
+                    "label": "Ball Jar",
+                    "desc": "Ekphrastic artifact"
+                },
+                {
+                    "path": "homer.html",
+                    "label": "Homer",
+                    "desc": "Ekphrastic artifact"
+                }
+            ],
+            "externalLinks": [
+                {
+                    "url": "https://chatgpt.com/g/g-6928ce54fbe48191a18ecd544414675f-legos-cognitive-architect-v8-0",
+                    "label": "LEGOS Cognitive Architect v8.0",
+                    "type": "gpt-agent"
+                },
+                {
+                    "url": "https://chatgpt.com/g/g-6920e3c02e548191a474407dac776edf-le-build-build",
+                    "label": "Le-Build-Build",
+                    "type": "gpt-agent"
+                },
+                {
+                    "url": "https://terhimarttila.com/",
+                    "label": "Terhi Marttila Portfolio",
+                    "type": "collaborator"
+                }
+            ],
+            "crossLinks": [
+                {
+                    "to": "func-sub",
+                    "via": "collaborator",
+                    "person": "Jordan Caldwell"
+                },
+                {
+                    "to": "the-fork",
+                    "via": "collaborator",
+                    "person": "Kayla Uleah Evans"
+                },
+                {
+                    "to": "1000-small-futures",
+                    "via": "collaborator",
+                    "person": "Shuruq Tramontini"
+                }
+            ],
+            "moves": [
+                {
+                    "text": "WAG: Words Assemble Geometries"
+                },
+                {
+                    "text": "Words Become Worlds"
+                },
+                {
+                    "text": "Freirean pedagogy of design"
+                },
+                {
+                    "text": "Tool of liberation"
+                },
+                {
+                    "text": "Natural language to 3D models"
+                },
+                {
+                    "text": "Operative Ekphrasis"
+                }
+            ]
+        },
+        "dirty-disclosure": {
+            "label": "DISCLOSURE BASIN",
+            "desc": "AI disclosure theatre against Gregory Bateson's double bind",
+            "url": "https://hartswf0.github.io/dirty-disclosure/",
+            "repo": "https://github.com/hartswf0/dirty-disclosure",
+            "type": "valley",
+            "sizeKB": 2400,
+            "files": 24,
+            "position": {
+                "x": 0.2,
+                "y": 0.3
+            },
+            "elevation": 0.4,
+            "pages": [
+                {
+                    "path": "disclosure-theatre-01.html",
+                    "label": "AI Disclosure Theatre",
+                    "desc": "ComplianceCheck annotates, redacts, broadcasts"
+                },
+                {
+                    "path": "nested-double-bind-00.html",
+                    "label": "Nested Double Bind",
+                    "desc": "Recursive loops of compliance"
+                },
+                {
+                    "path": "provenance-00.html",
+                    "label": "Provenance",
+                    "desc": "AI-assisted content flagging"
+                }
+            ],
+            "crossLinks": [
+                {
+                    "to": "privacy-value-labels",
+                    "via": "theme",
+                    "theme": "disclosure/privacy"
+                }
+            ],
+            "moves": [
+                {
+                    "text": "Turing Test as legibility performance"
+                },
+                {
+                    "text": "Double bind: hide=deceitful, reveal=impure"
+                },
+                {
+                    "text": "Proof-of-transparency as proof-of-guilt"
+                },
+                {
+                    "text": "Disclosure theatre"
+                }
+            ]
+        },
+        "privacy-value-labels": {
+            "label": "PRIVACY PLATEAU",
+            "desc": "Nutritional labels for privacy using Contextual Integrity",
+            "url": "https://hartswf0.github.io/privacy-value-labels/",
+            "repo": "https://github.com/hartswf0/privacy-value-labels",
+            "type": "plateau",
+            "sizeKB": 85,
+            "files": 6,
+            "position": {
+                "x": 0.35,
+                "y": 0.15
+            },
+            "elevation": 0.3,
+            "externalLinks": [
+                {
+                    "url": "https://doi.org/10.1109/MSEC.2022.3201585",
+                    "label": "Malkin - Contextual Integrity Explained",
+                    "type": "academic"
+                },
+                {
+                    "url": "https://doi.org/10.1098/rsta.2016.0118",
+                    "label": "Mulligan/Koopman/Doty - Privacy Multi-Dimensional",
+                    "type": "academic"
+                },
+                {
+                    "url": "https://www.humanrightscentered.design/s/Secure-UX-Checklist.pdf",
+                    "label": "Secure UX Checklist",
+                    "type": "resource"
+                }
+            ],
+            "crossLinks": [
+                {
+                    "to": "dirty-disclosure",
+                    "via": "theme",
+                    "theme": "privacy/disclosure"
+                }
+            ],
+            "moves": [
+                {
+                    "text": "Contextual Integrity"
+                },
+                {
+                    "text": "Privacy as multi-dimensional"
+                },
+                {
+                    "text": "Label/Deck/Learn views"
+                }
+            ]
+        },
+        "mfss": {
+            "label": "MFSS OUTPOST",
+            "desc": "Multi-faceted system simulation",
+            "url": "https://hartswf0.github.io/mfss/",
+            "repo": "https://github.com/hartswf0/mfss",
+            "type": "outpost",
+            "sizeKB": 45,
+            "files": 3,
+            "position": {
+                "x": 0.15,
+                "y": 0.45
+            },
+            "elevation": 0.2,
+            "crossLinks": [
+                {
+                    "to": "dirty-disclosure",
+                    "via": "theme",
+                    "theme": "simulation"
+                }
+            ],
+            "moves": [
+                {
+                    "text": "System Simulation"
+                },
+                {
+                    "text": "Multi-Faceted Analysis"
+                }
+            ]
+        },
+        "role-deck": {
+            "label": "ROLE DECK RANGE",
+            "desc": "Ethical Identity Cards - Practitioner roles mapped to Bartle Taxonomy",
+            "url": "https://hartswf0.github.io/role-deck/",
+            "repo": "https://github.com/hartswf0/role-deck",
+            "type": "mountains",
+            "sizeKB": 8500,
+            "files": 106,
+            "position": {
+                "x": 0.6,
+                "y": 0.25
+            },
+            "elevation": 0.7,
+            "pages": [
+                {
+                    "path": "HUB.html",
+                    "label": "Role Deck HUB",
+                    "desc": "Feed Loop integration point"
+                }
+            ],
+            "crossLinks": [
+                {
+                    "to": "1000-small-futures",
+                    "via": "backlink",
+                    "from": "Feed Loop Analyzer"
+                },
+                {
+                    "to": "liberty-machines",
+                    "via": "theme",
+                    "theme": "ethics/roles"
+                }
+            ],
+            "moves": [
+                {
+                    "text": "Bartle Taxonomy for ethics"
+                },
+                {
+                    "text": "PLoT - Probability of Legitimate Outcome"
+                },
+                {
+                    "text": "Practitioner roles"
+                },
+                {
+                    "text": "AAA contrast, big type, printable"
+                }
+            ]
+        },
+        "liberty-machines": {
+            "label": "LIBERTY ISLES",
+            "desc": "Lessig × PLoT - Freedom is the interface, control is the architecture",
+            "url": "https://hartswf0.github.io/liberty-machines/",
+            "repo": "https://github.com/hartswf0/liberty-machines",
+            "type": "islands",
+            "sizeKB": 440,
+            "files": 12,
+            "position": {
+                "x": 0.85,
+                "y": 0.2
+            },
+            "elevation": 0.35,
+            "pages": [
+                {
+                    "path": "sra-01.html",
+                    "label": "Field Export"
+                },
+                {
+                    "path": "Thank-You-For-Being-Free.html",
+                    "label": "Thank You For Being Free"
+                },
+                {
+                    "path": "map-01.html",
+                    "label": "Pack Edition Freedom Theater"
+                },
+                {
+                    "path": "vape-loop.html",
+                    "label": "Vape Loop",
+                    "extras": [
+                        "vape-loop-prompt.md",
+                        "vape-loop.pdf"
+                    ]
+                },
+                {
+                    "path": "map-00.html",
+                    "label": "Cigarette Pack Freedom Dials"
+                },
+                {
+                    "path": "pp-00.html",
+                    "label": "Liberty HUD"
+                },
+                {
+                    "path": "hw-00.html",
+                    "label": "HW-00"
+                },
+                {
+                    "path": "the-smoke-of-liberty.html",
+                    "label": "The Smoke of Liberty"
+                },
+                {
+                    "path": "sra-00.html",
+                    "label": "Smoking Dynamics"
+                },
+                {
+                    "path": "bs-00.html",
+                    "label": "Pocket Bullseye"
+                }
+            ],
+            "externalLinks": [
+                {
+                    "url": "https://upload.wikimedia.org/wikipedia/commons/f/fd/Code_v2.pdf",
+                    "label": "Lessig - Code v2.0 Ch.7",
+                    "type": "academic"
+                },
+                {
+                    "url": "https://doi.org/10.1177/0162243912436985",
+                    "label": "Shilton - Values Levers",
+                    "type": "academic"
+                },
+                {
+                    "url": "https://doi.org/10.1145/3615670",
+                    "label": "Spitzberg - Creating Standards",
+                    "type": "academic"
+                }
+            ],
+            "crossLinks": [
+                {
+                    "to": "role-deck",
+                    "via": "theme",
+                    "theme": "ethics/control"
+                }
+            ],
+            "moves": [
+                {
+                    "text": "Lessig's Pathetic Dot"
+                },
+                {
+                    "text": "Law/Norms/Market/Code"
+                },
+                {
+                    "text": "Cigarette pack as freedom theater"
+                },
+                {
+                    "text": "Second-order control shapes first-order freedom"
+                }
+            ]
+        },
+        "func-sub": {
+            "label": "FUNCTIONAL DELTA",
+            "desc": "A functional substrate - Training ground with SHED-INTEGRATE-GROUND",
+            "url": "https://hartswf0.github.io/func-sub/func-index.html",
+            "repo": "https://github.com/hartswf0/func-sub",
+            "type": "river",
+            "sizeKB": 821,
+            "files": 28,
+            "position": {
+                "x": 0.75,
+                "y": 0.65
+            },
+            "elevation": 0.5,
+            "pages": [
+                {
+                    "path": "func-index.html",
+                    "label": "Func Index",
+                    "desc": "Main index with 19+ modules"
+                },
+                {
+                    "path": "t6-sonic.html",
+                    "label": "T6 Sonic"
+                },
+                {
+                    "path": "dsl-02-dual-agent.html",
+                    "label": "DSL-02 Dual Agent",
+                    "desc": "INNER/OUTER agents, observer protocol"
+                },
+                {
+                    "path": "dsl-01-single-agent.html",
+                    "label": "DSL-01 Single Agent",
+                    "desc": "SIG operators, OpenAI integration"
+                },
+                {
+                    "path": "func-sherpa.html",
+                    "label": "Func Sherpa",
+                    "desc": "SHED-INTEGRATE-GROUND grid"
+                },
+                {
+                    "path": "centaur-mode.html",
+                    "label": "Centaur Mode",
+                    "desc": "3-channel Inner/Outer/Observer"
+                },
+                {
+                    "path": "shed-frame.html",
+                    "label": "Shed Framework",
+                    "desc": "36 operations, 6 axes, 3 phases"
+                }
+            ],
+            "crossLinks": [
+                {
+                    "to": "tractor-dce-gyo",
+                    "via": "collaborator",
+                    "person": "Jordan Caldwell"
+                },
+                {
+                    "to": "1000-small-futures",
+                    "via": "theme",
+                    "theme": "training/emergence"
+                }
+            ],
+            "moves": [
+                {
+                    "text": "SHED-INTEGRATE-GROUND"
+                },
+                {
+                    "text": "6 axes, 3 phases, 2 polarities"
+                },
+                {
+                    "text": "Dual agent scene assembly"
+                },
+                {
+                    "text": "Operator upgrade"
+                }
+            ]
+        },
+        "1000-small-futures": {
+            "label": "THOUSAND FUTURES",
+            "desc": "Tools for thinking about media, narrative, belief, and culture - LEGOS framework",
+            "url": "https://hartswf0.github.io/1000-small-futures/",
+            "repo": "https://github.com/hartswf0/1000-small-futures",
+            "type": "highlands",
+            "sizeKB": 1494,
+            "files": 45,
+            "position": {
+                "x": 0.3,
+                "y": 0.75
+            },
+            "elevation": 0.6,
+            "pages": [
+                {
+                    "path": "thousand-tetrad.html",
+                    "label": "Tetrad Analysis Engine",
+                    "desc": "McLuhan's Four Laws, 57 scenarios"
+                },
+                {
+                    "path": "thousand-ring.html",
+                    "label": "Ring Memory",
+                    "desc": "Circular buffer, temporal index"
+                },
+                {
+                    "path": "thousand-multi.html",
+                    "label": "Multi-Channel Engine",
+                    "desc": "LEGOS orchestration"
+                },
+                {
+                    "path": "CARTRIDGE_BROWSER.html",
+                    "label": "Scenario Cartridge Browser",
+                    "desc": "63 scenarios, 13 categories"
+                },
+                {
+                    "path": "session-viewer-filmic.html",
+                    "label": "Session Viewer",
+                    "desc": "Spatio-temporal timeline"
+                },
+                {
+                    "path": "thousand-lives-godlevel.html",
+                    "label": "God-Level Interface",
+                    "desc": "Belief formation, cultural transmission"
+                },
+                {
+                    "path": "thousand-technogenesis.html",
+                    "label": "Technogenesis",
+                    "desc": "Digital humanities narratives"
+                },
+                {
+                    "path": "thousand-lle.html",
+                    "label": "Lived Learning Experiences",
+                    "desc": "Tech ethics scenarios"
+                },
+                {
+                    "path": "thousand-feedloop.html",
+                    "label": "Feed Loop Analyzer",
+                    "desc": "Power dynamics 0.0-1.0 scale"
+                }
+            ],
+            "crossLinks": [
+                {
+                    "to": "role-deck",
+                    "via": "explicit",
+                    "path": "/role-deck/HUB.html",
+                    "label": "Feed Loop Role Deck"
+                },
+                {
+                    "to": "tractor-dce-gyo",
+                    "via": "collaborator",
+                    "person": "Shuruq Tramontini"
+                },
+                {
+                    "to": "func-sub",
+                    "via": "theme",
+                    "theme": "emergence/simulation"
+                },
+                {
+                    "to": "the-fork",
+                    "via": "theme",
+                    "theme": "ethics/decisions"
+                }
+            ],
+            "moves": [
+                {
+                    "text": "LEGOS framework"
+                },
+                {
+                    "text": "McLuhan tetrad analysis"
+                },
+                {
+                    "text": "Ring memory buffer"
+                },
+                {
+                    "text": "Procedurally generated emergence"
+                },
+                {
+                    "text": "Ian Cheng inspired"
+                }
+            ]
+        },
+        "the-fork": {
+            "label": "THE FORK",
+            "desc": "Negotiate with autonomous agents that embody distinct moral frameworks",
+            "url": "https://hartswf0.github.io/the-fork/",
+            "repo": "https://github.com/hartswf0/the-fork",
+            "type": "crossroads",
+            "sizeKB": 653,
+            "files": 18,
+            "position": {
+                "x": 0.55,
+                "y": 0.8
+            },
+            "elevation": 0.55,
+            "pages": [
+                {
+                    "path": "fork-01.html",
+                    "label": "Grid",
+                    "desc": "9×9 cellular automata"
+                },
+                {
+                    "path": "RAILWAY GAME/thousand-tetrad-00.html",
+                    "label": "The Lever",
+                    "desc": "Hamlet mode trolley problem"
+                },
+                {
+                    "path": "RAILWAY GAME/projection-viewer.html",
+                    "label": "Projector",
+                    "desc": "Multi-channel text-to-speech"
+                },
+                {
+                    "path": "RAILWAY GAME/railway-full-integration.html",
+                    "label": "Railway Junction",
+                    "desc": "3D train on spatial grid"
+                },
+                {
+                    "path": "RAILWAY GAME/README-COMPREHENSIVE.md",
+                    "label": "Docs",
+                    "desc": "LEGOS framework specs"
+                },
+                {
+                    "path": "RAILWAY GAME/MEDIUM-ARTICLE.md",
+                    "label": "Essays",
+                    "desc": "How to make dilemmas weigh 40 tons"
+                }
+            ],
+            "crossLinks": [
+                {
+                    "to": "tractor-dce-gyo",
+                    "via": "collaborator",
+                    "person": "Kayla Uleah Evans"
+                },
+                {
+                    "to": "1000-small-futures",
+                    "via": "theme",
+                    "theme": "ethics/decisions"
+                }
+            ],
+            "moves": [
+                {
+                    "text": "Moral frameworks as agents"
+                },
+                {
+                    "text": "Active vs Passive decisions"
+                },
+                {
+                    "text": "LEGOS context engineering"
+                },
+                {
+                    "text": "Trolley problem as 40-ton weight"
+                }
+            ]
+        },
+        "haunted-tools": {
+            "label": "HAUNTED MESA",
+            "desc": "Barthesian mythology - Forms that look like work but avoid transfers of budget, time, rights, risk",
+            "url": "https://hartswf0.github.io/haunted-tools/",
+            "repo": "https://github.com/hartswf0/haunted-tools",
+            "type": "plateau",
+            "sizeKB": 85,
+            "files": 3,
+            "position": {
+                "x": 0.25,
+                "y": 0.55
+            },
+            "elevation": 0.45,
+            "pages": [
+                {
+                    "path": "index.html",
+                    "label": "Print Catalog",
+                    "desc": "Retro essays with image slots - paper first design"
+                }
+            ],
+            "crossLinks": [
+                {
+                    "to": "dirty-disclosure",
+                    "via": "theme",
+                    "theme": "critique/mythology"
+                },
+                {
+                    "to": "privacy-value-labels",
+                    "via": "theme",
+                    "theme": "semiotics/values"
+                }
+            ],
+            "moves": [
+                {
+                    "text": "Makita Ethics Driver",
+                    "myth": "Ethics as calibration rather than structure"
+                },
+                {
+                    "text": "Ryobi Access Drill Kit",
+                    "myth": "Access as aesthetic, not infrastructure"
+                },
+                {
+                    "text": "DeWalt Citation Hammer",
+                    "myth": "Citation as blunt force"
+                },
+                {
+                    "text": "Milwaukee Messiness Grinder",
+                    "myth": "Innovation as performance"
+                },
+                {
+                    "text": "FLEXVOLT Justice Battery",
+                    "myth": "Capacity substitutes for connectivity"
+                },
+                {
+                    "text": "Cordless Academic Drill",
+                    "myth": "Academic freedom becomes precarity"
+                },
+                {
+                    "text": "Infinite Punch List",
+                    "myth": "Progress becomes permanent process"
+                }
+            ],
+            "method": "Semiotic Scalpel - form, concept, twist following Barthes' Mythologies"
+        }
+    },
+    "crossLinks": [
+        {
+            "from": "tractor-dce-gyo",
+            "to": "func-sub",
+            "weight": 0.95,
+            "type": "collaborator",
+            "evidence": "WAG Workshop links to Jordan Caldwell"
+        },
+        {
+            "from": "tractor-dce-gyo",
+            "to": "the-fork",
+            "weight": 0.9,
+            "type": "collaborator",
+            "evidence": "WAG Workshop links to Kayla Evans"
+        },
+        {
+            "from": "tractor-dce-gyo",
+            "to": "1000-small-futures",
+            "weight": 0.9,
+            "type": "collaborator",
+            "evidence": "WAG Workshop links to Shuruq Tramontini"
+        },
+        {
+            "from": "1000-small-futures",
+            "to": "role-deck",
+            "weight": 0.85,
+            "type": "explicit",
+            "evidence": "Feed Loop Analyzer links to role-deck/HUB.html"
+        },
+        {
+            "from": "dirty-disclosure",
+            "to": "privacy-value-labels",
+            "weight": 0.7,
+            "type": "thematic",
+            "evidence": "Both address disclosure/privacy"
+        },
+        {
+            "from": "role-deck",
+            "to": "liberty-machines",
+            "weight": 0.6,
+            "type": "thematic",
+            "evidence": "Both address ethics/control"
+        },
+        {
+            "from": "func-sub",
+            "to": "1000-small-futures",
+            "weight": 0.65,
+            "type": "thematic",
+            "evidence": "Both use LEGOS/emergence patterns"
+        },
+        {
+            "from": "1000-small-futures",
+            "to": "the-fork",
+            "weight": 0.7,
+            "type": "thematic",
+            "evidence": "Both explore ethics/decisions"
+        },
+        {
+            "from": "haunted-tools",
+            "to": "dirty-disclosure",
+            "weight": 0.75,
+            "type": "thematic",
+            "evidence": "Both use semiotic critique methods"
+        },
+        {
+            "from": "haunted-tools",
+            "to": "privacy-value-labels",
+            "weight": 0.65,
+            "type": "thematic",
+            "evidence": "Both examine hidden value structures"
+        }
+    ],
+    "gptAgents": [
+        {
+            "id": "legos-architect",
+            "name": "LEGOS Cognitive Architect v8.0",
+            "url": "https://chatgpt.com/g/g-6928ce54fbe48191a18ecd544414675f-legos-cognitive-architect-v8-0",
+            "repo": "tractor-dce-gyo"
+        },
+        {
+            "id": "le-build-build",
+            "name": "Le-Build-Build",
+            "url": "https://chatgpt.com/g/g-6920e3c02e548191a474407dac776edf-le-build-build",
+            "repo": "tractor-dce-gyo"
+        }
+    ],
+    "academicRefs": [
+        {
+            "doi": "10.1109/MSEC.2022.3201585",
+            "author": "Malkin",
+            "title": "Contextual Integrity Explained",
+            "repo": "privacy-value-labels"
+        },
+        {
+            "doi": "10.1098/rsta.2016.0118",
+            "author": "Mulligan/Koopman/Doty",
+            "title": "Privacy Multi-Dimensional Analytic",
+            "repo": "privacy-value-labels"
+        },
+        {
+            "doi": "10.1177/0162243912436985",
+            "author": "Shilton",
+            "title": "Values Levers",
+            "repo": "liberty-machines"
+        },
+        {
+            "doi": "10.1145/3615670",
+            "author": "Spitzberg",
+            "title": "Creating Standards",
+            "repo": "liberty-machines"
+        },
+        {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/f/fd/Code_v2.pdf",
+            "author": "Lessig",
+            "title": "Code v2.0 Ch.7",
+            "repo": "liberty-machines"
+        }
+    ]
+}

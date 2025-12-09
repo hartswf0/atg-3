@@ -1,0 +1,357 @@
+{
+    "FullyConnected": {
+        "label": "CONNEX PEAKS",
+        "desc": "Onyx Studio - Fully connected project planning",
+        "url": "https://hartswf0.github.io/tractor-dce-gyo/onyx-studio.html",
+        "type": "mountain",
+        "moves": [
+            {
+                "text": "Words Assemble Geometries",
+                "actor": 0
+            },
+            {
+                "text": "Operative Ekphrasis",
+                "actor": 1
+            },
+            {
+                "text": "Words Become Worlds",
+                "actor": 0
+            },
+            {
+                "text": "Natural Language → 3D Models",
+                "actor": 1
+            },
+            {
+                "text": "Democratize Design",
+                "actor": 0
+            },
+            {
+                "text": "Freirean Pedagogy",
+                "actor": 1
+            },
+            {
+                "text": "Tech as Liberation Tool",
+                "actor": 0
+            }
+        ]
+    },
+    "NoConnection": {
+        "label": "ISOLATION ISLES",
+        "desc": "GPT Tools - Standalone cognitive architectures",
+        "url": "https://chatgpt.com/g/g-6928ce54fbe48191a18ecd544414675f-legos-cognitive-architect-v8-0",
+        "type": "islands",
+        "moves": [
+            {
+                "text": "LEGOS Cognitive Architect v8.0"
+            },
+            {
+                "text": "LE-BUILD-BUILD"
+            },
+            {
+                "text": "Complex Ideas → LEGO Files"
+            },
+            {
+                "text": "Words Assemble Grids"
+            },
+            {
+                "text": "Words Assemble Geometries"
+            },
+            {
+                "text": "Words Assemble Generations"
+            },
+            {
+                "text": "Multi-Part Design Files"
+            }
+        ]
+    },
+    "MixedBinaryLinks": {
+        "label": "BINARY BASIN",
+        "desc": "The Fork - Ethical choices in NLP research",
+        "url": "https://hartswf0.github.io/the-fork/",
+        "type": "valley",
+        "moves": [
+            {
+                "text": "Active Decisions"
+            },
+            {
+                "text": "Passive Decisions"
+            },
+            {
+                "text": "Ethical Choices"
+            },
+            {
+                "text": "NLP Research Settings"
+            },
+            {
+                "text": "Make it like a video game"
+            },
+            {
+                "text": "Human-Centered Computing"
+            }
+        ],
+        "links": {
+            "0": {},
+            "1": {
+                "0": 1
+            },
+            "2": {
+                "0": 0,
+                "1": 1
+            },
+            "3": {
+                "0": 1,
+                "1": 0,
+                "2": 1
+            },
+            "4": {
+                "0": 0,
+                "1": 1,
+                "2": 0,
+                "3": 1
+            },
+            "5": {
+                "0": 1,
+                "1": 1,
+                "2": 1,
+                "3": 0,
+                "4": 1
+            }
+        }
+    },
+    "StreamOfConsciousness1": {
+        "label": "STREAM DELTA",
+        "desc": "Training Ground - Operator upgrade flow",
+        "url": "https://hartswf0.github.io/func-sub/func-index.html",
+        "type": "river",
+        "moves": [
+            {
+                "text": "Experience Designer"
+            },
+            {
+                "text": "World Builder"
+            },
+            {
+                "text": "Black Metal aesthetic"
+            },
+            {
+                "text": "speculation"
+            },
+            {
+                "text": "operator upgrade"
+            },
+            {
+                "text": "better onboarding"
+            },
+            {
+                "text": "complex systems"
+            },
+            {
+                "text": "training ground"
+            },
+            {
+                "text": "immersive learning"
+            },
+            {
+                "text": "spatial interaction"
+            },
+            {
+                "text": "embodied knowledge"
+            }
+        ]
+    },
+    "DevDiary": {
+        "label": "DEV HIGHLANDS",
+        "desc": "Thousand-Tetrad - Procedural open-ended sims",
+        "url": "https://hartswf0.github.io/1000-small-futures/",
+        "type": "highlands",
+        "moves": [
+            {
+                "text": "Procedurally generated worlds"
+            },
+            {
+                "text": "Web-friendly simulations"
+            },
+            {
+                "text": "Open-ended emergence"
+            },
+            {
+                "text": "Branching paths"
+            },
+            {
+                "text": "Post-human interfaces"
+            },
+            {
+                "text": "Multiple channels same space"
+            },
+            {
+                "text": "Ian Cheng inspiration"
+            },
+            {
+                "text": "Thousand Lives reference"
+            },
+            {
+                "text": "Agent model integration"
+            },
+            {
+                "text": "Urgent needs + affordances"
+            },
+            {
+                "text": "Environmental interaction"
+            },
+            {
+                "text": "Latent space navigation"
+            },
+            {
+                "text": "Not enough AI / too much AI"
+            },
+            {
+                "text": "Finding the balance"
+            }
+        ]
+    },
+    "EkphrasticExperiments": {
+        "label": "EKPHRASIS RANGE",
+        "desc": "Words describing objects that become worlds",
+        "url": "https://hartswf0.github.io/tractor-dce-gyo/grecian-urn.html",
+        "type": "plateau",
+        "moves": [
+            {
+                "text": "Grecian Urn"
+            },
+            {
+                "text": "Shield of Achilles"
+            },
+            {
+                "text": "Ball Jar"
+            },
+            {
+                "text": "Homer"
+            },
+            {
+                "text": "Words → Objects → Worlds"
+            },
+            {
+                "text": "Inverse storyboarding"
+            },
+            {
+                "text": "Multimodal synthetic agency"
+            }
+        ],
+        "links": {
+            "0": {},
+            "1": {
+                "0": 0.8
+            },
+            "2": {
+                "0": 0.6,
+                "1": 0.9
+            },
+            "3": {
+                "0": 0.9,
+                "1": 0.7,
+                "2": 0.5
+            },
+            "4": {
+                "0": 0.7,
+                "1": 0.8,
+                "2": 0.8,
+                "3": 0.6
+            },
+            "5": {
+                "0": 0.5,
+                "1": 0.6,
+                "2": 0.7,
+                "3": 0.8,
+                "4": 0.9
+            },
+            "6": {
+                "0": 0.4,
+                "1": 0.5,
+                "2": 0.6,
+                "3": 0.7,
+                "4": 0.8,
+                "5": 0.9
+            }
+        }
+    },
+    "CoreTrajectories": {
+        "label": "CORE SLOPES",
+        "desc": "Core Age - Game mechanics and engine utilities",
+        "url": "https://hartswf0.github.io/core-age/",
+        "type": "mountains",
+        "moves": [
+            {
+                "text": "Parallel development"
+            },
+            {
+                "text": "Core mechanics"
+            },
+            {
+                "text": "Game-like interactions"
+            },
+            {
+                "text": "Engine utilities"
+            },
+            {
+                "text": "Spatial possibilities of AI"
+            },
+            {
+                "text": "Alternative exploration"
+            }
+        ]
+    },
+    "Contributors": {
+        "label": "COLLABORATOR PEAKS",
+        "desc": "The team building WAG",
+        "type": "settlement",
+        "moves": [
+            {
+                "text": "Jordan Caldwell",
+                "role": "Experience Designer"
+            },
+            {
+                "text": "Kayla Uleah Evans",
+                "role": "Human-Centered Computing PhD"
+            },
+            {
+                "text": "Shuruq Tramontini",
+                "role": "Creative Technical Artist"
+            },
+            {
+                "text": "Terhi Marttila",
+                "role": "PhD Digital Media, Artist/Researcher"
+            },
+            {
+                "text": "So-youn Jang",
+                "role": "PhD Student, Digital Media"
+            }
+        ]
+    },
+    "Films": {
+        "label": "CINEMA BASIN",
+        "desc": "Video demonstrations and showcases",
+        "type": "valley",
+        "moves": [
+            {
+                "text": "Carrot Uprising 4Grid",
+                "url": "https://www.youtube.com/embed/hdTEJSyZahs"
+            },
+            {
+                "text": "Carrot Uprising SA vs Files",
+                "url": "https://www.youtube.com/embed/X5xCx2oa2Xw"
+            },
+            {
+                "text": "Grid 47",
+                "url": "https://www.youtube.com/embed/Pvx9OBBRNn0"
+            },
+            {
+                "text": "Undaunted Courage",
+                "url": "https://www.youtube.com/embed/6uur2TqTTKA"
+            },
+            {
+                "text": "Simpsons",
+                "url": "https://www.youtube.com/embed/ctPjAhfJA0Y"
+            }
+        ]
+    }
+}

@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATG 2.0</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #000;
+            color: #00ff00;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            height: 100vh;
+        }
+
+        /* Map Area */
+        .map-area {
+            position: relative;
+            background: #000;
+            overflow: hidden;
+        }
+
+        canvas {
+            display: block;
+            background: #000;
+        }
+
+        /* TUI Controls */
+        .tui-controls {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #111;
+            border: 1px solid #333;
+            padding: 10px;
+        }
+
+        .control-row {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        .control-btn {
+            padding: 5px 10px;
+            background: #222;
+            border: 1px solid #444;
+            color: #00ff00;
+            font-family: inherit;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .control-btn.active {
+            background: #00ff00;
+            color: #000;
+            border-color: #00ff00;
+        }
+
+        .control-btn:hover {
+            background: #333;
+        }
+
+        .coord-display {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* Console Panel */
+        .console-panel {
+            background: #111;
+            border-left: 1px solid #333;
+            display: flex;
+            flex-direction: column;
+            font-size: 12px;
+        }
+
+        .console-header {
+            background: #000;
+            padding: 10px;
+            border-bottom: 1px solid #333;
+            font-weight: bold;
+        }
+
+        .console-output {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            line-height: 1.4;
+        }
+
+        .console-line {
+            margin-bottom: 5px;
+            white-space: pre-wrap;
+        }
+
+        .console-line.system {
+            color: #00ffff;
+        }
+
+        .console-line.event {
+            color: #00ff00;
+        }
+
+        .console-line.warning {
+            color: #ffff00;
+        }
+
+        .console-line.error {
+            color: #ff0000;
+        }
+
+        .console-input {
+            padding: 10px;
+            border-top: 1px solid #333;
+            display: flex;
+            align-items: center;
+        }
+
+        .prompt {
+            color: #00ff00;
+            margin-right: 5px;
+        }
+
+        #consoleInput {
+            flex: 1;
+            background: #000;
+            border: none;
+            color: #00ff00;
+            font-family: inherit;
+            font-size: 12px;
+            outline: none;
+            caret-color: #00ff00;
+        }
+
+        /* Node Info */
+        .node-info {
+            background: #000;
+            border-top: 1px solid #333;
+            padding: 10px;
+            display: none;
+        }
+
+        .node-info.visible {
+            display: block;
+        }
+
+        .node-title {
+            color: #ffff00;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .node-meta {
+            color: #666;
+            font-size: 11px;
+            margin-bottom: 5px;
+        }
+
+        .node-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .stat {
+            background: #111;
+            padding: 5px;
+            border: 1px solid #222;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 10px;
+        }
+
+        .stat-value {
+            color: #00ff00;
+            font-weight: bold;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: rgba(0, 0, 0, 0.9);
+            border-top: 1px solid #333;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+        }
+
+        .timeline-progress {
+            flex: 1;
+            height: 4px;
+            background: #333;
+            margin: 0 10px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .timeline-bar {
+            position: absolute;
+            height: 100%;
+            background: #00ff00;
+            width: 0%;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 12px;
+            height: 12px;
+            background: #222;
+            border: 1px solid #444;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .timeline-marker.active {
+            background: #00ff00;
+            border-color: #00ff00;
+            box-shadow: 0 0 10px #00ff00;
+        }
+
+        .timeline-marker:hover {
+            background: #333;
+        }
+
+        .timeline-time {
+            font-size: 11px;
+            color: #666;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        /* Large Node Markers */
+        .node-marker {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            border: 2px solid;
+            transition: all 0.2s;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .node-marker:hover {
+            transform: translate(-50%, -50%) scale(1.2);
+        }
+
+        .node-marker.active {
+            animation: pulse 1s infinite;
+            transform: translate(-50%, -50%) scale(1.3);
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(0, 255, 0, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(0, 255, 0, 0);
+            }
+        }
+
+        .node-label {
+            position: absolute;
+            top: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 11px;
+            color: #00ff00;
+            white-space: nowrap;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 2px 6px;
+            border: 1px solid #333;
+            display: none;
+        }
+
+        .node-marker:hover .node-label {
+            display: block;
+        }
+
+        /* Grid Overlay */
+        .grid-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            opacity: 0.1;
+            background-image:
+                linear-gradient(rgba(0, 255, 0, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 0, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            position: absolute;
+            bottom: 60px;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 5px 10px;
+            border-top: 1px solid #333;
+            font-size: 11px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .status-item {
+            color: #666;
+        }
+
+        .status-item .value {
+            color: #00ff00;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="map-area">
+            <canvas id="terrainCanvas"></canvas>
+            <div class="grid-overlay"></div>
+
+            <div class="tui-controls">
+                <div class="control-row">
+                    <button class="control-btn active" id="btnTopo">TOPO</button>
+                    <button class="control-btn" id="btnHeat">HEAT</button>
+                    <button class="control-btn" id="btnPath">PATH</button>
+                </div>
+                <div class="control-row">
+                    <button class="control-btn" id="btnPlay">▶ PLAY</button>
+                    <button class="control-btn" id="btnPause">⏸</button>
+                    <button class="control-btn" id="btnReset">↺</button>
+                </div>
+            </div>
+
+            <div class="coord-display" id="coordDisplay">X: 0 Y: 0</div>
+            <div class="status-bar">
+                <div class="status-item">SYSTEM: <span class="value">ACTIVE</span></div>
+                <div class="status-item">NODES: <span class="value" id="nodeCount">0</span></div>
+                <div class="status-item">TIME: <span class="value" id="currentTime">00:00</span></div>
+                <div class="status-item">MODE: <span class="value" id="currentMode">TOPO</span></div>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-time" id="startTime">00:00</div>
+                <div class="timeline-progress" id="timelineTrack">
+                    <div class="timeline-bar" id="timelineBar"></div>
+                </div>
+                <div class="timeline-time" id="endTime">00:00</div>
+            </div>
+        </div>
+
+        <div class="console-panel">
+            <div class="console-header">SYSTEM LOG</div>
+            <div class="console-output" id="consoleOutput">
+                <div class="console-line system">ATG 2.0 SYSTEM INITIALIZED</div>
+                <div class="console-line system">TOPOGRAHPIC ENGINE: READY</div>
+                <div class="console-line system">TIMELINE CONTROLLER: READY</div>
+                <div class="console-line event">> LOADING JOURNEY DATA...</div>
+            </div>
+
+            <div class="node-info" id="nodeInfo">
+                <div class="node-title" id="nodeTitle">NODE</div>
+                <div class="node-meta" id="nodeMeta">Phase: Setup | Time: 00:00</div>
+                <div class="node-stats">
+                    <div class="stat">
+                        <div class="stat-label">INTENSITY</div>
+                        <div class="stat-value" id="statIntensity">0.0</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">CONNECTIONS</div>
+                        <div class="stat-value" id="statConnections">0</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">DURATION</div>
+                        <div class="stat-value" id="statDuration">0m</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">FLOW</div>
+                        <div class="stat-value" id="statFlow">--</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="console-input">
+                <span class="prompt">></span>
+                <input type="text" id="consoleInput" placeholder="Type command... (help, goto, play, pause)">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // CONFIG
+        const CONFIG = {
+            VIEW_MODES: ['topo', 'heat', 'path'],
+            AUTO_PLAY_SPEED: 2000,
+            GRID_SIZE: 64,
+            CONTOUR_LEVELS: 8,
+            NODE_COLORS: {
+                setup: '#00ff00',
+                research: '#00ffff',
+                build: '#ffff00',
+                review: '#ff00ff',
+                deploy: '#ff8800'
+            }
+        };
+
+        // DATA
+        const JOURNEY = [
+            { id: 1, title: "BOOT", phase: "setup", time: "00:00", x: 0.15, y: 0.2, intensity: 0.3, connections: 2, duration: 15, flow: "INIT" },
+            { id: 2, title: "RESEARCH", phase: "research", time: "00:15", x: 0.25, y: 0.35, intensity: 0.5, connections: 4, duration: 30, flow: "EXPLORE" },
+            { id: 3, title: "PLAN", phase: "setup", time: "00:45", x: 0.4, y: 0.25, intensity: 0.6, connections: 3, duration: 20, flow: "FOCUS" },
+            { id: 4, title: "BUILD", phase: "build", time: "01:05", x: 0.55, y: 0.5, intensity: 0.9, connections: 8, duration: 60, flow: "PEAK" },
+            { id: 5, title: "TEST", phase: "review", time: "02:05", x: 0.65, y: 0.45, intensity: 0.7, connections: 5, duration: 25, flow: "ANALYZE" },
+            { id: 6, title: "REFINE", phase: "build", time: "02:30", x: 0.75, y: 0.4, intensity: 0.8, connections: 6, duration: 40, flow: "FLOW" },
+            { id: 7, title: "DEPLOY", phase: "deploy", time: "03:10", x: 0.9, y: 0.8, intensity: 0.6, connections: 4, duration: 20, flow: "WRAP" }
+        ];
+
+        // STATE
+        let state = {
+            currentMode: 'topo',
+            currentNode: 0,
+            isPlaying: true,
+            terrainData: [],
+            markers: [],
+            timelineMarkers: [],
+            playInterval: null,
+            canvasWidth: 0,
+            canvasHeight: 0
+        };
+
+        // INIT
+        const canvas = document.getElementById('terrainCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function init() {
+            resizeCanvas();
+            generateTerrain();
+            createMarkers();
+            createTimeline();
+            startAutoPlay();
+            drawTerrain();
+
+            updateConsole("System ready. Timeline auto-playing.");
+            updateStatus();
+        }
+
+        function resizeCanvas() {
+            const container = document.querySelector('.map-area');
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight - 50; // Subtract timeline height
+            state.canvasWidth = canvas.width;
+            state.canvasHeight = canvas.height;
+        }
+
+        function generateTerrain() {
+            state.terrainData = [];
+            const gridSize = CONFIG.GRID_SIZE;
+
+            // Generate terrain with mountain ridge along journey path
+            for (let y = 0; y < gridSize; y++) {
+                for (let x = 0; x < gridSize; x++) {
+                    // Base noise
+                    let value = 0;
+                    const nx = x / gridSize;
+                    const ny = y / gridSize;
+
+                    // Create ridge along journey path
+                    JOURNEY.forEach(node => {
+                        const dx = nx - node.x;
+                        const dy = ny - node.y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        const influence = Math.exp(-distance * distance * 20) * node.intensity;
+                        value += influence;
+                    });
+
+                    // Add some random variation
+                    value += (Math.random() - 0.5) * 0.2;
+
+                    state.terrainData[y * gridSize + x] = Math.min(value, 1);
+                }
+            }
+        }
+
+        function drawTerrain() {
+            // Clear
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const gridSize = CONFIG.GRID_SIZE;
+            const cellWidth = canvas.width / gridSize;
+            const cellHeight = canvas.height / gridSize;
+
+            if (state.currentMode === 'topo') {
+                drawContours(cellWidth, cellHeight);
+            } else if (state.currentMode === 'heat') {
+                drawHeatmap(cellWidth, cellHeight);
+            }
+
+            if (state.currentMode !== 'path') {
+                drawNodes();
+            }
+
+            if (state.currentMode === 'path') {
+                drawJourneyPath();
+            }
+        }
+
+        function drawContours(cellWidth, cellHeight) {
+            const levels = CONFIG.CONTOUR_LEVELS;
+
+            for (let level = 1; level <= levels; level++) {
+                const threshold = level / levels;
+                ctx.strokeStyle = `rgba(0, 255, 0, ${0.1 + level * 0.05})`;
+                ctx.lineWidth = 1;
+
+                for (let y = 0; y < CONFIG.GRID_SIZE - 1; y++) {
+                    for (let x = 0; x < CONFIG.GRID_SIZE - 1; x++) {
+                        const v00 = state.terrainData[y * CONFIG.GRID_SIZE + x];
+                        const v10 = state.terrainData[y * CONFIG.GRID_SIZE + (x + 1)];
+                        const v01 = state.terrainData[(y + 1) * CONFIG.GRID_SIZE + x];
+                        const v11 = state.terrainData[(y + 1) * CONFIG.GRID_SIZE + (x + 1)];
+
+                        drawContourSegment(x, y, cellWidth, cellHeight, v00, v10, v01, v11, threshold);
+                    }
+                }
+            }
+        }
+
+        function drawContourSegment(x, y, w, h, v00, v10, v01, v11, threshold) {
+            const points = [];
+
+            if ((v00 < threshold && v10 >= threshold) || (v00 >= threshold && v10 < threshold)) {
+                const t = (threshold - v00) / (v10 - v00);
+                points.push({ x: x * w + t * w, y: y * h });
+            }
+
+            if ((v10 < threshold && v11 >= threshold) || (v10 >= threshold && v11 < threshold)) {
+                const t = (threshold - v10) / (v11 - v10);
+                points.push({ x: (x + 1) * w, y: y * h + t * h });
+            }
+
+            if ((v01 < threshold && v11 >= threshold) || (v01 >= threshold && v11 < threshold)) {
+                const t = (threshold - v01) / (v11 - v01);
+                points.push({ x: x * w + t * w, y: (y + 1) * h });
+            }
+
+            if ((v00 < threshold && v01 >= threshold) || (v00 >= threshold && v01 < threshold)) {
+                const t = (threshold - v00) / (v01 - v00);
+                points.push({ x: x * w, y: y * h + t * h });
+            }
+
+            if (points.length === 2) {
+                ctx.beginPath();
+                ctx.moveTo(points[0].x, points[0].y);
+                ctx.lineTo(points[1].x, points[1].y);
+                ctx.stroke();
+            }
+        }
+
+        function drawHeatmap(cellWidth, cellHeight) {
+            for (let y = 0; y < CONFIG.GRID_SIZE; y++) {
+                for (let x = 0; x < CONFIG.GRID_SIZE; x++) {
+                    const value = state.terrainData[y * CONFIG.GRID_SIZE + x];
+                    if (value < 0.1) continue;
+
+                    const intensity = Math.min(value * 2, 1);
+                    const alpha = 0.2 + intensity * 0.3;
+                    ctx.fillStyle = `rgba(255, ${Math.floor(100 + intensity * 155)}, 0, ${alpha})`;
+                    ctx.fillRect(x * cellWidth, y * cellHeight, cellWidth, cellHeight);
+                }
+            }
+        }
+
+        function drawNodes() {
+            JOURNEY.forEach((node, index) => {
+                const x = node.x * canvas.width;
+                const y = node.y * canvas.height;
+
+                // Draw node
+                ctx.beginPath();
+                ctx.fillStyle = CONFIG.NODE_COLORS[node.phase] || '#00ff00';
+                ctx.arc(x, y, 10, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Draw border
+                ctx.strokeStyle = index === state.currentNode ? '#ffffff' : '#333333';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Draw label
+                ctx.fillStyle = '#00ff00';
+                ctx.font = '10px Courier New';
+                ctx.textAlign = 'center';
+                ctx.fillText(node.title, x, y - 15);
+            });
+        }
+
+        function drawJourneyPath() {
+            if (JOURNEY.length < 2) return;
+
+            ctx.beginPath();
+            ctx.strokeStyle = '#00ff00';
+            ctx.lineWidth = 2;
+            ctx.lineJoin = 'round';
+
+            // Draw path
+            ctx.moveTo(JOURNEY[0].x * canvas.width, JOURNEY[0].y * canvas.height);
+
+            for (let i = 1; i <= state.currentNode; i++) {
+                const prev = JOURNEY[i - 1];
+                const curr = JOURNEY[i];
+
+                // Add some curve to the path
+                const midX = (prev.x + curr.x) * 0.5 * canvas.width;
+                const midY = (prev.y + curr.y) * 0.5 * canvas.height + Math.sin(i) * 20;
+
+                ctx.quadraticCurveTo(midX, midY, curr.x * canvas.width, curr.y * canvas.height);
+            }
+
+            ctx.stroke();
+
+            // Draw nodes on path
+            drawNodes();
+        }
+
+        function createMarkers() {
+            const mapArea = document.querySelector('.map-area');
+
+            // Remove old markers
+            document.querySelectorAll('.node-marker').forEach(m => m.remove());
+            state.markers = [];
+
+            JOURNEY.forEach((node, index) => {
+                const marker = document.createElement('div');
+                marker.className = 'node-marker';
+                if (index === state.currentNode) marker.classList.add('active');
+
+                marker.style.left = `${node.x * 100}%`;
+                marker.style.top = `${node.y * 100}%`;
+                marker.style.borderColor = CONFIG.NODE_COLORS[node.phase] || '#00ff00';
+
+                const label = document.createElement('div');
+                label.className = 'node-label';
+                label.textContent = `${node.title} (${node.time})`;
+                marker.appendChild(label);
+
+                marker.addEventListener('click', () => {
+                    selectNode(index);
+                });
+
+                mapArea.appendChild(marker);
+                state.markers.push(marker);
+            });
+        }
+
+        function createTimeline() {
+            const track = document.getElementById('timelineTrack');
+
+            // Clear existing markers
+            document.querySelectorAll('.timeline-marker').forEach(m => m.remove());
+            state.timelineMarkers = [];
+
+            JOURNEY.forEach((node, index) => {
+                const marker = document.createElement('div');
+                marker.className = 'timeline-marker';
+                if (index === state.currentNode) marker.classList.add('active');
+
+                const percent = index / (JOURNEY.length - 1);
+                marker.style.left = `${percent * 100}%`;
+
+                marker.addEventListener('click', () => {
+                    selectNode(index);
+                });
+
+                track.appendChild(marker);
+                state.timelineMarkers.push(marker);
+            });
+
+            document.getElementById('startTime').textContent = JOURNEY[0].time;
+            document.getElementById('endTime').textContent = JOURNEY[JOURNEY.length - 1].time;
+        }
+
+        function selectNode(index) {
+            state.currentNode = index;
+            const node = JOURNEY[index];
+
+            // Update markers
+            state.markers.forEach((m, i) => {
+                m.classList.toggle('active', i === index);
+            });
+
+            state.timelineMarkers.forEach((m, i) => {
+                m.classList.toggle('active', i === index);
+            });
+
+            // Update timeline
+            const percent = index / (JOURNEY.length - 1);
+            document.getElementById('timelineBar').style.width = `${percent * 100}%`;
+
+            // Update info panel
+            document.getElementById('nodeTitle').textContent = node.title;
+            document.getElementById('nodeMeta').textContent = `Phase: ${node.phase} | Time: ${node.time}`;
+            document.getElementById('statIntensity').textContent = node.intensity.toFixed(1);
+            document.getElementById('statConnections').textContent = node.connections;
+            document.getElementById('statDuration').textContent = `${node.duration}m`;
+            document.getElementById('statFlow').textContent = node.flow;
+
+            // Show info panel
+            document.getElementById('nodeInfo').classList.add('visible');
+
+            // Update console
+            updateConsole(`Selected node: ${node.title} (${node.time})`);
+            updateStatus();
+
+            drawTerrain();
+        }
+
+        function startAutoPlay() {
+            if (state.playInterval) clearInterval(state.playInterval);
+
+            state.playInterval = setInterval(() => {
+                if (state.isPlaying) {
+                    const nextNode = (state.currentNode + 1) % JOURNEY.length;
+                    selectNode(nextNode);
+                }
+            }, CONFIG.AUTO_PLAY_SPEED);
+        }
+
+        function updateConsole(message, type = 'event') {
+            const output = document.getElementById('consoleOutput');
+            const line = document.createElement('div');
+            line.className = `console-line ${type}`;
+            line.textContent = `> ${new Date().toLocaleTimeString()}: ${message}`;
+
+            output.appendChild(line);
+            output.scrollTop = output.scrollHeight;
+
+            // Keep only last 50 lines
+            const lines = output.querySelectorAll('.console-line');
+            if (lines.length > 50) {
+                lines[0].remove();
+            }
+        }
+
+        function updateStatus() {
+            document.getElementById('nodeCount').textContent = JOURNEY.length;
+            document.getElementById('currentTime').textContent = JOURNEY[state.currentNode].time;
+            document.getElementById('currentMode').textContent = state.currentMode.toUpperCase();
+        }
+
+        function handleCommand(command) {
+            const parts = command.toLowerCase().split(' ');
+            const cmd = parts[0];
+
+            switch (cmd) {
+                case 'help':
+                    updateConsole('Available commands:', 'system');
+                    updateConsole('  help - Show this help', 'system');
+                    updateConsole('  play - Start auto-play', 'system');
+                    updateConsole('  pause - Pause auto-play', 'system');
+                    updateConsole('  reset - Go to first node', 'system');
+                    updateConsole('  goto [n] - Go to node n', 'system');
+                    updateConsole('  mode [topo|heat|path] - Change view', 'system');
+                    break;
+
+                case 'play':
+                    state.isPlaying = true;
+                    document.getElementById('btnPlay').classList.add('active');
+                    document.getElementById('btnPause').classList.remove('active');
+                    updateConsole('Auto-play started');
+                    break;
+
+                case 'pause':
+                    state.isPlaying = false;
+                    document.getElementById('btnPause').classList.add('active');
+                    document.getElementById('btnPlay').classList.remove('active');
+                    updateConsole('Auto-play paused');
+                    break;
+
+                case 'reset':
+                    selectNode(0);
+                    updateConsole('Reset to beginning');
+                    break;
+
+                case 'goto':
+                    const nodeIndex = parseInt(parts[1]) - 1;
+                    if (nodeIndex >= 0 && nodeIndex < JOURNEY.length) {
+                        selectNode(nodeIndex);
+                        updateConsole(`Jumped to node ${parts[1]}`);
+                    } else {
+                        updateConsole(`Invalid node number. Use 1-${JOURNEY.length}`, 'error');
+                    }
+                    break;
+
+                case 'mode':
+                    const mode = parts[1];
+                    if (CONFIG.VIEW_MODES.includes(mode)) {
+                        setViewMode(mode);
+                        updateConsole(`View mode set to ${mode}`);
+                    } else {
+                        updateConsole(`Invalid mode. Use: ${CONFIG.VIEW_MODES.join(', ')}`, 'error');
+                    }
+                    break;
+
+                default:
+                    updateConsole(`Unknown command: ${cmd}`, 'error');
+                    updateConsole('Type "help" for available commands', 'system');
+            }
+        }
+
+        function setViewMode(mode) {
+            state.currentMode = mode;
+
+            // Update button states
+            document.getElementById('btnTopo').classList.toggle('active', mode === 'topo');
+            document.getElementById('btnHeat').classList.toggle('active', mode === 'heat');
+            document.getElementById('btnPath').classList.toggle('active', mode === 'path');
+
+            // Update status
+            document.getElementById('currentMode').textContent = mode.toUpperCase();
+
+            drawTerrain();
+        }
+
+        // EVENT LISTENERS
+        function setupEventListeners() {
+            // View mode buttons
+            document.getElementById('btnTopo').addEventListener('click', () => setViewMode('topo'));
+            document.getElementById('btnHeat').addEventListener('click', () => setViewMode('heat'));
+            document.getElementById('btnPath').addEventListener('click', () => setViewMode('path'));
+
+            // Play controls
+            document.getElementById('btnPlay').addEventListener('click', () => handleCommand('play'));
+            document.getElementById('btnPause').addEventListener('click', () => handleCommand('pause'));
+            document.getElementById('btnReset').addEventListener('click', () => handleCommand('reset'));
+
+            // Console input
+            const consoleInput = document.getElementById('consoleInput');
+            consoleInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const command = consoleInput.value.trim();
+                    if (command) {
+                        handleCommand(command);
+                        consoleInput.value = '';
+                    }
+                }
+            });
+
+            // Timeline click
+            document.getElementById('timelineTrack').addEventListener('click', (e) => {
+                const rect = e.target.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const percent = x / rect.width;
+                const index = Math.round(percent * (JOURNEY.length - 1));
+                selectNode(index);
+            });
+
+            // Resize
+            window.addEventListener('resize', () => {
+                resizeCanvas();
+                generateTerrain();
+                drawTerrain();
+            });
+
+            // Mouse move for coordinates
+            canvas.addEventListener('mousemove', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                const normX = (x / canvas.width).toFixed(2);
+                const normY = (y / canvas.height).toFixed(2);
+
+                document.getElementById('coordDisplay').textContent = `X: ${normX} Y: ${normY}`;
+            });
+        }
+
+        // INITIALIZE
+        window.addEventListener('load', () => {
+            init();
+            setupEventListeners();
+            selectNode(0); // Start with first node
+        });
+    </script>
+</body>
+
+</html>

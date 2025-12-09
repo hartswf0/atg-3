@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATG Master Terrain | All Data Sources</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&family=JetBrains+Mono:wght@400;600&display=swap');
+
+        :root {
+            --bg: #0a0a0f;
+            --surface: #111117;
+            --ink: #e5e5e5;
+            --ink-dim: #666;
+            --accent: #d97706;
+            --water: #3b82f6;
+            --forest: #10b981;
+            --peak: #ef4444;
+            --valley: #8b5cf6;
+            --plateau: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--ink);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+        }
+
+        #viewport {
+            position: absolute;
+            inset: 0;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .texture-overlay {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.1;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+        }
+
+        #labels {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .zone-label {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            color: var(--ink);
+            opacity: 0.85;
+            text-shadow: 0 0 20px var(--bg), 0 0 40px var(--bg);
+            pointer-events: auto;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .zone-label:hover {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1.1);
+            color: var(--accent);
+        }
+
+        .zone-label .meta {
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 8px;
+            font-weight: 400;
+            margin-top: 2px;
+            opacity: 0.5;
+        }
+
+        .zone-label .type-badge {
+            font-size: 7px;
+            padding: 2px 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin-top: 3px;
+            display: inline-block;
+        }
+
+        #connections {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        #timeline-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: linear-gradient(to top, rgba(17, 17, 23, 0.98), transparent);
+            z-index: 40;
+            padding: 12px 24px;
+        }
+
+        .timeline-track {
+            position: relative;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            margin-top: 16px;
+        }
+
+        .timeline-event {
+            position: absolute;
+            top: -6px;
+            width: 14px;
+            height: 14px;
+            background: var(--accent);
+            border-radius: 50%;
+            border: 2px solid var(--bg);
+            cursor: pointer;
+            transition: all 0.2s;
+            transform: translateX(-50%);
+        }
+
+        .timeline-event:hover {
+            transform: translateX(-50%) scale(1.3);
+            background: #fff;
+        }
+
+        .timeline-event.major {
+            width: 18px;
+            height: 18px;
+            top: -8px;
+        }
+
+        .timeline-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 9px;
+            color: var(--ink-dim);
+            margin-top: 8px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .page-header {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 50;
+        }
+
+        .page-header h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 18px;
+            color: var(--accent);
+        }
+
+        .page-header .sub {
+            font-size: 9px;
+            color: var(--ink-dim);
+            margin-top: 3px;
+        }
+
+        .data-sources {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .data-source {
+            font-size: 8px;
+            padding: 3px 8px;
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--forest);
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .legend {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 50;
+            font-size: 8px;
+            background: rgba(17, 17, 23, 0.9);
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .legend-title {
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            margin-bottom: 6px;
+            font-size: 8px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 2px;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 90px;
+            right: 16px;
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .btn-ctrl {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(17, 17, 23, 0.9);
+            color: var(--ink);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .btn-ctrl:hover {
+            background: var(--accent);
+            border-color: transparent;
+        }
+
+        .btn-ctrl.active {
+            background: var(--accent);
+        }
+
+        #modal {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.92);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        #modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-box {
+            width: 100%;
+            max-width: 680px;
+            max-height: 85vh;
+            background: var(--surface);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-head {
+            padding: 14px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, var(--accent), #b45309);
+        }
+
+        .modal-head h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 16px;
+            color: #fff;
+        }
+
+        .modal-head .type {
+            font-size: 9px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 3px 8px;
+            border-radius: 10px;
+            color: #fff;
+        }
+
+        .modal-head button {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .modal-body {
+            padding: 16px;
+            overflow-y: auto;
+            max-height: calc(85vh - 55px);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .info-block h4 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+
+        .info-block p {
+            font-size: 11px;
+            color: var(--ink-dim);
+            line-height: 1.5;
+        }
+
+        .tag-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: 5px;
+        }
+
+        .tag {
+            padding: 2px 7px;
+            background: rgba(217, 119, 6, 0.15);
+            color: var(--accent);
+            border-radius: 10px;
+            font-size: 8px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .tag.move {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--water);
+        }
+
+        .tag.pattern {
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--valley);
+        }
+
+        .tag.artifact {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--forest);
+        }
+
+        .btn-link {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 7px 14px;
+            background: var(--accent);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 10px;
+        }
+
+        .btn-link:hover {
+            background: #b45309;
+        }
+
+        .tt {
+            position: fixed;
+            background: var(--surface);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 6px 10px;
+            border-radius: 5px;
+            font-size: 9px;
+            pointer-events: none;
+            z-index: 200;
+            display: none;
+            max-width: 200px;
+        }
+
+        .tt.show {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="viewport">
+        <canvas id="c"></canvas>
+        <div class="texture-overlay"></div>
+        <svg id="connections"></svg>
+        <div id="labels"></div>
+    </div>
+
+    <div class="page-header">
+        <h1>ATG Master Terrain</h1>
+        <div class="sub">Unified visualization from all data sources</div>
+        <div class="data-sources">
+            <span class="data-source">trail-map</span>
+            <span class="data-source">olog</span>
+            <span class="data-source">timeline</span>
+            <span class="data-source">wag-atlas</span>
+        </div>
+    </div>
+
+    <div class="legend">
+        <div class="legend-title">Terrain Types</div>
+        <div class="legend-item">
+            <div class="legend-dot" style="background:var(--peak)"></div> Mountain/Peak
+        </div>
+        <div class="legend-item">
+            <div class="legend-dot" style="background:var(--water)"></div> River/Delta
+        </div>
+        <div class="legend-item">
+            <div class="legend-dot" style="background:var(--forest)"></div> Highlands
+        </div>
+        <div class="legend-item">
+            <div class="legend-dot" style="background:var(--valley)"></div> Valley/Basin
+        </div>
+        <div class="legend-item">
+            <div class="legend-dot" style="background:var(--plateau)"></div> Plateau/Mesa
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn-ctrl active" id="btn-conn" title="Toggle Links">⊶</button>
+        <button class="btn-ctrl" id="btn-reset" title="Reset">⟲</button>
+    </div>
+
+    <div id="timeline-bar">
+        <div class="timeline-track" id="track"></div>
+        <div class="timeline-labels"><span>Sep 2025</span><span>Oct</span><span>Nov</span><span>Dec 2025</span></div>
+    </div>
+
+    <div id="modal">
+        <div class="modal-box">
+            <div class="modal-head">
+                <h2 id="m-title">Zone</h2><span class="type" id="m-type"></span><button id="m-close">×</button>
+            </div>
+            <div class="modal-body" id="m-body"></div>
+        </div>
+    </div>
+    <div class="tt" id="tt"></div>
+
+    <script>
+        // ═══════════════════════════════════════════════════════════════════════
+        // EMBEDDED DATA - All sources merged (no CORS issues with file://)
+        // ═══════════════════════════════════════════════════════════════════════
+        const ZONES = [
+            { id: "tractor-dce-gyo", label: "TRACTOR CORE", type: "mountain", color: "#ef4444", pos: { x: 0.5, y: 0.5 }, elevation: 1.0, commits: 50, trailLevel: 2, url: "https://hartswf0.github.io/tractor-dce-gyo/", desc: "Digital Content Environment - Central hub for WAG: Words Assemble Geometries", moves: ["WAG: Words Assemble Geometries", "Words Become Worlds", "Freirean pedagogy of design", "Tool of liberation", "Natural language to 3D models", "Operative Ekphrasis"], pages: [{ label: "WAG Workshop" }, { label: "Onyx Studio" }, { label: "Homer" }], patterns: ["word-assembly", "ai-legos", "creative-environment"], artifacts: [], intent: "Develop AI-assisted word assembly and creative tools", profile: { tagline: "Word assembly & AI LEGOS experiments" } },
+            { id: "func-sub", label: "FUNCTIONAL DELTA", type: "river", color: "#3b82f6", pos: { x: 0.75, y: 0.65 }, elevation: 0.5, commits: 20, trailLevel: 2, url: "https://hartswf0.github.io/func-sub/func-index.html", desc: "A functional substrate - Training ground with SHED-INTEGRATE-GROUND", moves: ["SHED-INTEGRATE-GROUND", "6 axes, 3 phases, 2 polarities", "Dual agent scene assembly", "Operator upgrade"], pages: [{ label: "Func Index" }, { label: "Centaur Mode" }, { label: "Shed Framework" }], patterns: ["6-axis-decomposition", "operator-triad", "bayesian-update"], artifacts: [{ name: "func-index.html", type: "First-order demos" }, { name: "func-sherpa.html", type: "SHED-INTEGRATE-GROUND grid" }], intent: "Provide computational infrastructure for self-alignment at scale", profile: { tagline: "A 6-axis spatial reasoning substrate for self-alignment and transformative clarity", philosophy: "Map abstract inner states to concrete spatial operations" } },
+            { id: "1000-small-futures", label: "THOUSAND FUTURES", type: "highlands", color: "#10b981", pos: { x: 0.3, y: 0.75 }, elevation: 0.6, commits: 15, trailLevel: 2, url: "https://hartswf0.github.io/1000-small-futures/", desc: "Tools for thinking about media, narrative, belief, and culture - LEGOS framework", moves: ["LEGOS framework", "McLuhan tetrad analysis", "Ring memory buffer", "Procedurally generated emergence", "Ian Cheng inspired"], pages: [{ label: "Tetrad Analysis Engine" }, { label: "Ring Memory" }, { label: "Cartridge Browser" }], patterns: ["neurosymbolic-grounding", "ring-memory", "tetrad-analysis", "anti-tool-design"], artifacts: [{ name: "thousand-ring.html", type: "Ring Memory System" }, { name: "thousand-tetrad.html", type: "McLuhan's Four Laws engine" }], intent: "Make language spatial, computation memory-aware, and interfaces hackable", profile: { tagline: "Tools for thinking about media, narrative, belief, and culture", philosophy: "Anti-tools: single-file HTML artifacts that expose their operations" } },
+            { id: "the-fork", label: "THE FORK", type: "crossroads", color: "#8b5cf6", pos: { x: 0.55, y: 0.8 }, elevation: 0.55, commits: 10, trailLevel: 2, url: "https://hartswf0.github.io/the-fork/", desc: "Negotiate with autonomous agents that embody distinct moral frameworks", moves: ["Moral frameworks as agents", "Active vs Passive decisions", "LEGOS context engineering", "Trolley problem as 40-ton weight"], pages: [{ label: "Grid" }, { label: "The Lever" }, { label: "Railway Junction" }], patterns: ["ethical-cartridge", "moral-agent-dialogue", "scenario-branching"], artifacts: [{ name: "fork-01.html", type: "Primary ethical negotiation interface" }, { name: "gt-fork.html", type: "Game-theory forking grid" }], intent: "Enable ethical reasoning education through interactive moral agent conversations", profile: { tagline: "A laboratory for ethical negotiation through conversation with moral agents", philosophy: "Understanding the journey of moral decision-making" } },
+            { id: "role-deck", label: "ROLE DECK RANGE", type: "mountains", color: "#ef4444", pos: { x: 0.6, y: 0.25 }, elevation: 0.7, commits: 8, trailLevel: 1, url: "https://hartswf0.github.io/role-deck/HUB.html", desc: "Ethical Identity Cards - Practitioner roles mapped to Bartle Taxonomy", moves: ["Bartle Taxonomy for ethics", "PLoT - Probability of Legitimate Outcome", "Practitioner roles", "AAA contrast, big type, printable"], pages: [{ label: "Role Deck HUB" }], patterns: ["design-ethics", "workplace-negotiation", "tetrad-gamepad"], artifacts: [{ name: "HUB.html", type: "Main entry point" }], intent: "Enable ethical product design through contextual role-play and negotiation simulation", profile: { tagline: "Interactive toolkit for exploring ethical dimensions of technology" } },
+            { id: "liberty-machines", label: "LIBERTY ISLES", type: "islands", color: "#f59e0b", pos: { x: 0.85, y: 0.2 }, elevation: 0.35, commits: 1, trailLevel: 0, url: "https://hartswf0.github.io/liberty-machines/", desc: "Lessig × PLoT - Freedom is the interface, control is the architecture", moves: ["Lessig's Pathetic Dot", "Law/Norms/Market/Code", "Cigarette pack as freedom theater", "Second-order control shapes first-order freedom"], pages: [{ label: "Thank You For Being Free" }, { label: "Vape Loop" }, { label: "The Smoke of Liberty" }], patterns: ["freedom-theatre"], artifacts: [], intent: "Exploratory project", profile: { tagline: "Freedom theatre's curtain opens" } },
+            { id: "dirty-disclosure", label: "DISCLOSURE BASIN", type: "valley", color: "#8b5cf6", pos: { x: 0.2, y: 0.3 }, elevation: 0.4, commits: 1, trailLevel: 0, url: "https://hartswf0.github.io/dirty-disclosure/", desc: "AI disclosure theatre against Gregory Bateson's double bind", moves: ["Turing Test as legibility performance", "Double bind: hide=deceitful, reveal=impure", "Proof-of-transparency as proof-of-guilt", "Disclosure theatre"], pages: [{ label: "AI Disclosure Theatre" }, { label: "Nested Double Bind" }], patterns: [], artifacts: [], intent: "Exploratory project", profile: { tagline: "Dirty Disclosure project" } },
+            { id: "privacy-value-labels", label: "PRIVACY PLATEAU", type: "plateau", color: "#f59e0b", pos: { x: 0.35, y: 0.15 }, elevation: 0.3, commits: 2, trailLevel: 0, url: "https://hartswf0.github.io/privacy-value-labels/", desc: "Nutritional labels for privacy using Contextual Integrity", moves: ["Contextual Integrity", "Privacy as multi-dimensional", "Label/Deck/Learn views"], pages: [], patterns: ["privacy-labeling"], artifacts: [], intent: "Develop privacy value labeling system", profile: { tagline: "Privacy value labels system" } },
+            { id: "mfss", label: "MFSS OUTPOST", type: "outpost", color: "#f59e0b", pos: { x: 0.15, y: 0.45 }, elevation: 0.2, commits: 4, trailLevel: 0, url: "https://hartswf0.github.io/mfss/", desc: "Multi-faceted system simulation", moves: ["System Simulation", "Multi-Faceted Analysis"], pages: [], patterns: [], artifacts: [{ name: "index.html", type: "Main page" }, { name: "insta.html", type: "Instagram integration" }], intent: "Social media integration prototype", profile: { tagline: "MFSS project" } },
+            { id: "haunted-tools", label: "HAUNTED MESA", type: "plateau", color: "#f59e0b", pos: { x: 0.25, y: 0.55 }, elevation: 0.45, commits: 2, trailLevel: 1, url: "https://hartswf0.github.io/haunted-tools/", desc: "Barthesian mythology - Forms that look like work but avoid transfers of budget, time, rights, risk", moves: ["Makita Ethics Driver", "Ryobi Access Drill Kit", "DeWalt Citation Hammer", "Milwaukee Messiness Grinder", "FLEXVOLT Justice Battery", "Cordless Academic Drill", "Infinite Punch List"], pages: [{ label: "Print Catalog" }], patterns: ["semiotic-scalpel", "mythology-critique", "brand-subversion"], artifacts: [{ name: "Makita Ethics Driver", type: "Ethics as calibration rather than structure" }, { name: "Ryobi Access Drill Kit", type: "Access as aesthetic, not infrastructure" }, { name: "DeWalt Citation Hammer", type: "Citation as blunt force" }, { name: "Milwaukee Messiness Grinder", type: "Innovation as performance" }, { name: "FLEXVOLT Justice Battery", type: "Capacity substitutes for connectivity" }, { name: "Cordless Academic Drill", type: "Academic freedom becomes precarity" }, { name: "Infinite Punch List", type: "Progress becomes permanent process" }], intent: "Expose ideological freight in institutional tools through retro catalog parody", profile: { tagline: "Forms that look like work but avoid transfers", philosophy: "Brief, witty cuts that reveal how everyday objects carry ideological freight" } }
+        ];
+
+        const CONNECTIONS = [
+            { from: "tractor-dce-gyo", to: "func-sub", weight: 0.95 },
+            { from: "tractor-dce-gyo", to: "the-fork", weight: 0.9 },
+            { from: "tractor-dce-gyo", to: "1000-small-futures", weight: 0.9 },
+            { from: "1000-small-futures", to: "role-deck", weight: 0.85 },
+            { from: "dirty-disclosure", to: "privacy-value-labels", weight: 0.7 },
+            { from: "role-deck", to: "liberty-machines", weight: 0.6 },
+            { from: "func-sub", to: "1000-small-futures", weight: 0.65 },
+            { from: "1000-small-futures", to: "the-fork", weight: 0.7 },
+            { from: "haunted-tools", to: "dirty-disclosure", weight: 0.75 },
+            { from: "haunted-tools", to: "privacy-value-labels", weight: 0.65 }
+        ];
+
+        const TIMELINE = [
+            { date: "2025-09-02", label: "dirty-disclosure: first commit", sig: "minor" },
+            { date: "2025-09-02", label: "privacy-value-labels: first commit", sig: "minor" },
+            { date: "2025-09-09", label: "liberty-machines: freedom theatre opens", sig: "major" },
+            { date: "2025-09-16", label: "haunted-tools: Mythologies catalog", sig: "major" },
+            { date: "2025-09-30", label: "role-deck: Initial commit", sig: "minor" },
+            { date: "2025-10-02", label: "mfss: Create index.html", sig: "minor" },
+            { date: "2025-10-21", label: "1000-small-futures: Tetrad analysis system", sig: "major" },
+            { date: "2025-11-03", label: "the-fork: Railway Game begins", sig: "major" },
+            { date: "2025-11-04", label: "func-sub: Training Grounds launch", sig: "major" },
+            { date: "2025-11-14", label: "tractor-dce-gyo: WAG/Onyx/Homer active", sig: "major" },
+            { date: "2025-12-07", label: "tractor-dce-gyo: Latest activity", sig: "minor" }
+        ];
+
+        // ═══════════════════════════════════════════════════════════════════════
+        // CANVAS RENDERING
+        // ═══════════════════════════════════════════════════════════════════════
+        const canvas = document.getElementById('c');
+        const ctx = canvas.getContext('2d');
+        const CONFIG = { GRID_W: 140, GRID_H: 90, LEVELS: 16 };
+        let heatGrid, W, H;
+
+        function noise(x, y) { const s = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453; return s - Math.floor(s); }
+        function fbm(x, y, oct) { let v = 0, a = 0.5; for (let i = 0; i < oct; i++) { v += noise(x, y) * a; x *= 2; y *= 2; a *= 0.5; } return v; }
+
+        function init() {
+            W = window.innerWidth; H = window.innerHeight;
+            const dpr = Math.min(devicePixelRatio || 1, 2);
+            canvas.width = W * dpr; canvas.height = H * dpr;
+            ctx.scale(dpr, dpr);
+            CONFIG.GRID_H = Math.floor(CONFIG.GRID_W * (H / W));
+            heatGrid = new Float32Array(CONFIG.GRID_W * CONFIG.GRID_H);
+
+            for (let y = 0; y < CONFIG.GRID_H; y++) {
+                for (let x = 0; x < CONFIG.GRID_W; x++) {
+                    const nx = x / CONFIG.GRID_W, ny = y / CONFIG.GRID_H;
+                    let h = fbm(nx * 3.5, ny * 3.5, 5) * 0.2;
+                    ZONES.forEach(z => {
+                        const dx = nx - z.pos.x, dy = ny - z.pos.y;
+                        const d = Math.sqrt(dx * dx + dy * dy);
+                        const weight = Math.max(0.5, z.elevation * 2 + Math.log10(z.commits + 1) * 0.5);
+                        if (d < 0.16) h += (0.16 - d) * weight * (z.trailLevel + 1);
+                    });
+                    heatGrid[y * CONFIG.GRID_W + x] = Math.min(h, 4);
+                }
+            }
+            renderLabels();
+            renderConnections();
+            renderTimeline();
+            draw();
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, W, H);
+            const cw = W / CONFIG.GRID_W, ch = H / CONFIG.GRID_H;
+
+            for (let l = CONFIG.LEVELS; l >= 1; l--) {
+                const t = l * 0.18;
+                const hue = 25 + (l / CONFIG.LEVELS) * 12;
+                const alpha = 0.01 + (l / CONFIG.LEVELS) * 0.04;
+                ctx.fillStyle = `hsla(${hue}, 80%, 50%, ${alpha})`;
+                for (let y = 0; y < CONFIG.GRID_H; y++) {
+                    for (let x = 0; x < CONFIG.GRID_W; x++) {
+                        if (heatGrid[y * CONFIG.GRID_W + x] >= t) ctx.fillRect(x * cw, y * ch, cw + 0.5, ch + 0.5);
+                    }
+                }
+            }
+
+            ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+            for (let l = 1; l <= CONFIG.LEVELS; l++) {
+                const t = l * 0.18, major = l % 3 === 0;
+                ctx.beginPath();
+                ctx.lineWidth = major ? 1 : 0.35;
+                ctx.strokeStyle = '#d97706';
+                ctx.globalAlpha = major ? 0.4 : 0.1;
+                for (let y = 0; y < CONFIG.GRID_H - 1; y++) {
+                    for (let x = 0; x < CONFIG.GRID_W - 1; x++) {
+                        const idx = y * CONFIG.GRID_W + x;
+                        const v0 = heatGrid[idx], v1 = heatGrid[idx + 1], v2 = heatGrid[idx + CONFIG.GRID_W + 1], v3 = heatGrid[idx + CONFIG.GRID_W];
+                        let bits = 0;
+                        if (v0 >= t) bits |= 1; if (v1 >= t) bits |= 2; if (v2 >= t) bits |= 4; if (v3 >= t) bits |= 8;
+                        if (bits === 0 || bits === 15) continue;
+                        const lx = x * cw, ly = y * ch;
+                        const a = { x: lx + cw * 0.5, y: ly }, b = { x: lx + cw, y: ly + ch * 0.5 }, c = { x: lx + cw * 0.5, y: ly + ch }, d = { x: lx, y: ly + ch * 0.5 };
+                        switch (bits) {
+                            case 1: case 14: ctx.moveTo(d.x, d.y); ctx.lineTo(a.x, a.y); break;
+                            case 2: case 13: ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); break;
+                            case 4: case 11: ctx.moveTo(b.x, b.y); ctx.lineTo(c.x, c.y); break;
+                            case 8: case 7: ctx.moveTo(c.x, c.y); ctx.lineTo(d.x, d.y); break;
+                            case 3: case 12: ctx.moveTo(d.x, d.y); ctx.lineTo(b.x, b.y); break;
+                            case 6: case 9: ctx.moveTo(a.x, a.y); ctx.lineTo(c.x, c.y); break;
+                            case 5: ctx.moveTo(d.x, d.y); ctx.lineTo(a.x, a.y); ctx.moveTo(b.x, b.y); ctx.lineTo(c.x, c.y); break;
+                            case 10: ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.moveTo(c.x, c.y); ctx.lineTo(d.x, d.y); break;
+                        }
+                    }
+                }
+                ctx.stroke();
+            }
+            ctx.globalAlpha = 1;
+
+            ZONES.forEach(z => {
+                const px = z.pos.x * W, py = z.pos.y * H;
+                const r = 3 + z.trailLevel * 2 + Math.sqrt(z.commits) * 0.4;
+                ctx.beginPath(); ctx.arc(px, py, r, 0, Math.PI * 2);
+                ctx.fillStyle = z.color; ctx.fill();
+                ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.2; ctx.stroke();
+            });
+        }
+
+        function renderLabels() {
+            const layer = document.getElementById('labels');
+            layer.innerHTML = '';
+            ZONES.forEach(z => {
+                const el = document.createElement('div');
+                el.className = 'zone-label';
+                el.style.left = (z.pos.x * 100) + '%';
+                el.style.top = (z.pos.y * 100) + '%';
+                const meta = z.commits ? `${z.commits} commits` : z.type;
+                el.innerHTML = `${z.label}<span class="meta">${meta}</span><span class="type-badge">${z.type}</span>`;
+                el.onclick = () => showModal(z);
+                layer.appendChild(el);
+            });
+        }
+
+        function renderConnections() {
+            const svg = document.getElementById('connections');
+            svg.innerHTML = '';
+            svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+            svg.style.width = W + 'px'; svg.style.height = H + 'px';
+            CONNECTIONS.forEach(c => {
+                const fromZ = ZONES.find(z => z.id === c.from);
+                const toZ = ZONES.find(z => z.id === c.to);
+                if (!fromZ || !toZ) return;
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', fromZ.pos.x * W);
+                line.setAttribute('y1', fromZ.pos.y * H);
+                line.setAttribute('x2', toZ.pos.x * W);
+                line.setAttribute('y2', toZ.pos.y * H);
+                const opacity = c.weight ? c.weight * 0.4 : 0.25;
+                line.setAttribute('stroke', `rgba(217,119,6,${opacity})`);
+                line.setAttribute('stroke-width', '1.5');
+                line.setAttribute('stroke-dasharray', '4,4');
+                svg.appendChild(line);
+            });
+        }
+
+        function renderTimeline() {
+            const track = document.getElementById('track');
+            const startDate = new Date('2025-09-01').getTime();
+            const endDate = new Date('2025-12-15').getTime();
+            const range = endDate - startDate;
+            TIMELINE.forEach(t => {
+                const d = new Date(t.date).getTime();
+                const pct = ((d - startDate) / range) * 100;
+                const dot = document.createElement('div');
+                dot.className = 'timeline-event' + (t.sig === 'major' ? ' major' : '');
+                dot.style.left = pct + '%';
+                dot.onmouseenter = e => showTooltip(e, t.label);
+                dot.onmouseleave = hideTooltip;
+                track.appendChild(dot);
+            });
+        }
+
+        function showModal(z) {
+            document.getElementById('m-title').textContent = z.label;
+            document.getElementById('m-type').textContent = z.type;
+
+            const movesHtml = z.moves.length ? `<div class="info-block"><h4>Moves / Concepts</h4><div class="tag-row">${z.moves.map(m => `<span class="tag move">${m}</span>`).join('')}</div></div>` : '';
+            const patternsHtml = z.patterns.length ? `<div class="info-block"><h4>Patterns</h4><div class="tag-row">${z.patterns.map(p => `<span class="tag pattern">${p}</span>`).join('')}</div></div>` : '';
+            const artifactsHtml = z.artifacts.length ? `<div class="info-block"><h4>Artifacts</h4><div class="tag-row">${z.artifacts.map(a => `<span class="tag artifact" title="${a.type || ''}">${a.name}</span>`).join('')}</div></div>` : '';
+            const pagesHtml = z.pages.length ? `<div class="info-block"><h4>Pages</h4><div class="tag-row">${z.pages.map(p => `<span class="tag">${p.label}</span>`).join('')}</div></div>` : '';
+
+            document.getElementById('m-body').innerHTML = `
+            <div class="info-grid">
+                <div class="info-block"><h4>Description</h4><p>${z.desc || z.profile?.tagline || '—'}</p></div>
+                <div class="info-block"><h4>Trail Level</h4><p>Level ${z.trailLevel} · ${z.commits} commits</p></div>
+            </div>
+            ${z.profile?.philosophy ? `<div class="info-block"><h4>Philosophy</h4><p>${z.profile.philosophy}</p></div>` : ''}
+            ${z.intent ? `<div class="info-block"><h4>Intent</h4><p>${z.intent}</p></div>` : ''}
+            ${movesHtml}${patternsHtml}${artifactsHtml}${pagesHtml}
+            ${z.url ? `<a href="${z.url}" target="_blank" class="btn-link">Visit Live Demo →</a>` : ''}
+        `;
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function showTooltip(e, text) {
+            const tt = document.getElementById('tt');
+            tt.textContent = text;
+            tt.style.left = (e.clientX + 10) + 'px';
+            tt.style.top = (e.clientY - 30) + 'px';
+            tt.classList.add('show');
+        }
+        function hideTooltip() { document.getElementById('tt').classList.remove('show'); }
+
+        document.getElementById('m-close').onclick = () => document.getElementById('modal').classList.remove('active');
+        document.getElementById('modal').onclick = e => { if (e.target.id === 'modal') e.target.classList.remove('active'); };
+        document.getElementById('btn-conn').onclick = function () {
+            const svg = document.getElementById('connections');
+            svg.style.display = svg.style.display === 'none' ? 'block' : 'none';
+            this.classList.toggle('active');
+        };
+        document.getElementById('btn-reset').onclick = () => location.reload();
+        window.onresize = init;
+        init();
+    </script>
+</body>
+
+</html>

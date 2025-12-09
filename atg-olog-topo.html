@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Creator Trail Olog | Topography</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&family=JetBrains+Mono:wght@400;600&display=swap');
+
+        :root {
+            --bg-land: #0a0a0f;
+            --bg-secondary: #111117;
+            --ink-primary: #e5e5e5;
+            --ink-secondary: #888888;
+            --accent-geo: #d97706;
+            --accent-water: #3b82f6;
+            --accent-decision: #10b981;
+            --accent-pattern: #8b5cf6;
+            --accent-intent: #ec4899;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg-land);
+            color: var(--ink-primary);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #viewport {
+            position: absolute;
+            inset: 0;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .texture-overlay {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.15;
+            mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+        }
+
+        #labels-layer {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .geo-label {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            font-size: 12px;
+            color: var(--ink-primary);
+            opacity: 0.7;
+            pointer-events: auto;
+            cursor: pointer;
+            letter-spacing: 0.08em;
+            text-shadow: 0 0 20px var(--bg-land), 0 0 40px var(--bg-land);
+            transition: all 0.3s;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        .geo-label:hover {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1.15);
+        }
+
+        .geo-label .sub {
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9px;
+            font-weight: 400;
+            margin-top: 3px;
+            opacity: 0.6;
+        }
+
+        .geo-label.level-2:hover {
+            color: var(--accent-geo);
+        }
+
+        .geo-label.level-1:hover {
+            color: var(--accent-water);
+        }
+
+        .geo-label.level-0:hover {
+            color: var(--ink-secondary);
+        }
+
+        /* Right Panel - Ontology Legend */
+        #olog-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 320px;
+            height: 100vh;
+            background: rgba(17, 17, 23, 0.95);
+            backdrop-filter: blur(12px);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 24px;
+            overflow-y: auto;
+            z-index: 50;
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #olog-panel.open {
+            transform: translateX(0);
+        }
+
+        .panel-header {
+            font-family: 'Cinzel', serif;
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: var(--accent-geo);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 12px;
+        }
+
+        .olog-section {
+            margin-bottom: 24px;
+        }
+
+        .olog-section h3 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--ink-secondary);
+            margin-bottom: 12px;
+        }
+
+        .olog-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 6px;
+            font-size: 12px;
+        }
+
+        .olog-symbol {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            font-size: 14px;
+            min-width: 28px;
+            text-align: center;
+        }
+
+        .olog-item .desc {
+            color: var(--ink-secondary);
+            font-size: 11px;
+            margin-top: 2px;
+        }
+
+        /* Detail Modal */
+        #detail-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.9);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        #detail-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            width: 90%;
+            max-width: 800px;
+            max-height: 85vh;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--accent-geo), #b45309);
+            color: #fff;
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-family: 'Cinzel', serif;
+            font-size: 20px;
+        }
+
+        .modal-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 6px 14px;
+            border-radius: 6px;
+        }
+
+        .modal-body {
+            padding: 24px;
+            overflow-y: auto;
+            max-height: calc(85vh - 80px);
+        }
+
+        .detail-section {
+            margin-bottom: 20px;
+        }
+
+        .detail-section h4 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--accent-geo);
+            margin-bottom: 8px;
+        }
+
+        .detail-section p,
+        .detail-section li {
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--ink-secondary);
+        }
+
+        .detail-section ul {
+            padding-left: 20px;
+        }
+
+        .detail-section li {
+            margin-bottom: 4px;
+        }
+
+        .detail-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .tag {
+            padding: 4px 10px;
+            background: rgba(217, 119, 6, 0.2);
+            color: var(--accent-geo);
+            border-radius: 20px;
+            font-size: 10px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .tag.pattern {
+            background: rgba(139, 92, 246, 0.2);
+            color: var(--accent-pattern);
+        }
+
+        .tag.decision {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent-decision);
+        }
+
+        .btn-visit {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 10px 20px;
+            background: var(--accent-geo);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .btn-visit:hover {
+            background: #b45309;
+        }
+
+        /* Controls */
+        .controls {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 50;
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-ctrl {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: var(--ink-primary);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+
+        .btn-ctrl:hover {
+            background: var(--accent-geo);
+            border-color: transparent;
+            transform: scale(1.1);
+        }
+
+        /* Title */
+        .page-title {
+            position: fixed;
+            top: 24px;
+            left: 24px;
+            z-index: 50;
+        }
+
+        .page-title h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 24px;
+            color: var(--accent-geo);
+        }
+
+        .page-title .thesis {
+            font-size: 11px;
+            color: var(--ink-secondary);
+            max-width: 300px;
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+
+        /* Trail Level Legend */
+        .level-legend {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .level-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 10px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .level-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .level-dot.l2 {
+            background: var(--accent-geo);
+        }
+
+        .level-dot.l1 {
+            background: var(--accent-water);
+        }
+
+        .level-dot.l0 {
+            background: var(--ink-secondary);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="viewport">
+        <canvas id="c"></canvas>
+        <div class="texture-overlay"></div>
+        <div id="labels-layer"></div>
+    </div>
+
+    <div class="page-title">
+        <h1>Creator Trail Olog</h1>
+        <p class="thesis">Every time a creator works, they leave behind a trail of data. Trail-aware tools watch this
+            trail in real time.</p>
+    </div>
+
+    <div class="level-legend">
+        <div class="level-item">
+            <div class="level-dot l2"></div> LEVEL 2: Trails as Backbone
+        </div>
+        <div class="level-item">
+            <div class="level-dot l1"></div> LEVEL 1: Trails as Features
+        </div>
+        <div class="level-item">
+            <div class="level-dot l0"></div> LEVEL 0: Trails as Exhaust
+        </div>
+    </div>
+
+    <div id="olog-panel">
+        <div class="panel-header">Ontology Structure</div>
+        <div class="olog-section">
+            <h3>Objects (Types)</h3>
+            <div class="olog-item"><span class="olog-symbol" style="color:#d97706">C</span>
+                <div>Creator<div class="desc">Person producing digital content</div>
+                </div>
+            </div>
+            <div class="olog-item"><span class="olog-symbol" style="color:#3b82f6">T</span>
+                <div>Trail<div class="desc">Evolving history of creator's process</div>
+                </div>
+            </div>
+            <div class="olog-item"><span class="olog-symbol" style="color:#10b981">A</span>
+                <div>Artifact<div class="desc">Drafts, versions, clips, exports</div>
+                </div>
+            </div>
+            <div class="olog-item"><span class="olog-symbol" style="color:#ec4899">M</span>
+                <div>Metadata<div class="desc">Timestamps, tags, annotations</div>
+                </div>
+            </div>
+            <div class="olog-item"><span class="olog-symbol" style="color:#8b5cf6">D</span>
+                <div>Decision<div class="desc">Edits, choices, branches</div>
+                </div>
+            </div>
+            <div class="olog-item"><span class="olog-symbol" style="color:#f59e0b">S*</span>
+                <div>Trail-Aware Tool<div class="desc">Tool designed around trail data</div>
+                </div>
+            </div>
+            <div class="olog-item"><span class="olog-symbol" style="color:#06b6d4">P</span>
+                <div>Pattern<div class="desc">Recurring behavior from trail</div>
+                </div>
+            </div>
+            <div class="olog-item"><span class="olog-symbol" style="color:#ef4444">I</span>
+                <div>Intent<div class="desc">Creator's goals, style, vision</div>
+                </div>
+            </div>
+        </div>
+        <div class="olog-section">
+            <h3>Morphisms</h3>
+            <div class="olog-item" style="font-family:'JetBrains Mono',monospace;font-size:10px">
+                generates : C → T<br>
+                contains : T → {A, M, D}<br>
+                observes : S* → T<br>
+                infers : S* × T → P<br>
+                adapts : S* × P → S*<br>
+                supports : S* → I
+            </div>
+        </div>
+    </div>
+
+    <div id="detail-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title" id="modal-title">Project</span>
+                <button class="modal-close" id="modal-close">×</button>
+            </div>
+            <div class="modal-body" id="modal-body"></div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn-ctrl" id="btn-olog" title="Ontology Panel">◎</button>
+        <button class="btn-ctrl" id="btn-reset" title="Reset View">⟲</button>
+    </div>
+
+    <script>
+        (function () {
+            const OLOG_DATA = {
+                "projects": [
+                    { id: "the-fork", title: "The Fork", tagline: "Ethical negotiation through moral agent dialogue", url: "https://hartswf0.github.io/the-fork/", trailLevel: 2, commits: 10, dateRange: "Nov 3-19", position: { x: 0.75, y: 0.2 }, patterns: ["ethical-cartridge", "moral-agent-dialogue"], decisions: ["Cartridge-based scenarios", "Agent-based moral frameworks"], artifacts: ["fork-01.html", "gt-fork.html", "thousand-tetrad.html"], intent: "Enable ethical reasoning education" },
+                    { id: "func-sub", title: "Training Grounds", tagline: "6-axis spatial reasoning for self-alignment", url: "https://hartswf0.github.io/func-sub/", trailLevel: 2, commits: 20, dateRange: "Nov 4-10", position: { x: 0.25, y: 0.35 }, patterns: ["6-axis-decomposition", "operator-triad", "bayesian-update"], decisions: ["6-axis scoring (1-9)", "Black Metal aesthetic", "SHED→INTEGRATE→GROUND"], artifacts: ["func-index.html", "t-space-index.html", "func-orb-training.html"], intent: "Computational self-alignment at scale" },
+                    { id: "1000-small-futures", title: "1000 Small Futures", tagline: "LEGOS: Anti-tools for media thinking", url: "https://hartswf0.github.io/1000-small-futures/", trailLevel: 2, commits: 15, dateRange: "Oct 21-Nov 10", position: { x: 0.55, y: 0.55 }, patterns: ["anti-tool-design", "ring-memory", "tetrad-analysis", "neurosymbolic"], decisions: ["Ring buffer memory", "9×9 spatial grid", "McLuhan Four Laws"], artifacts: ["thousand-ring.html", "thousand-tetrad.html", "thousand-lives.html"], intent: "Make language spatial, computation memory-aware" },
+                    { id: "role-deck", title: "Role Deck", tagline: "Ethical design & workplace negotiation toolkit", url: "https://hartswf0.github.io/role-deck/HUB.html", trailLevel: 1, commits: 8, dateRange: "Sep 30-Oct 13", position: { x: 0.18, y: 0.65 }, patterns: ["design-ethics", "tetrad-gamepad"], decisions: ["FarmOS visualization", "Role-play simulation"], artifacts: ["HUB.html", "TILTH", "Feed Loop"], intent: "Enable ethical product design" },
+                    { id: "tractor-dce-gyo", title: "Tractor DCE-GYO", tagline: "Word assembly & AI LEGOS experiments", url: "https://hartswf0.github.io/tractor-dce-gyo/", trailLevel: 2, commits: 50, dateRange: "Nov 14-Dec 7", position: { x: 0.45, y: 0.25 }, patterns: ["word-assembly", "ai-legos", "creative-environment"], decisions: ["WAG integration", "Onyx framework", "Homer experiments"], artifacts: ["wag-work.html", "wag-pres.html"], intent: "AI-assisted creative tools" },
+                    { id: "mfss", title: "MFSS", tagline: "Social media integration prototype", url: "https://hartswf0.github.io/mfss/", trailLevel: 0, commits: 4, dateRange: "Oct 2", position: { x: 0.85, y: 0.45 }, patterns: [], decisions: [], artifacts: ["index.html", "insta.html"], intent: "Social integration" },
+                    { id: "liberty-machines", title: "Liberty Machines", tagline: "Freedom theatre's curtain opens", url: "https://hartswf0.github.io/liberty-machines/", trailLevel: 0, commits: 1, dateRange: "Sep 9", position: { x: 0.7, y: 0.75 }, patterns: ["freedom-theatre"], decisions: [], artifacts: [], intent: "Exploratory" },
+                    { id: "dirty-disclosure", title: "Dirty Disclosure", tagline: "Initial project setup", url: "https://hartswf0.github.io/dirty-disclosure/", trailLevel: 0, commits: 1, dateRange: "Sep 2", position: { x: 0.12, y: 0.18 }, patterns: [], decisions: [], artifacts: [], intent: "Exploratory" },
+                    { id: "privacy-value-labels", title: "Privacy Labels", tagline: "Privacy value labeling concepts", url: "https://hartswf0.github.io/privacy-value-labels/", trailLevel: 0, commits: 2, dateRange: "Sep 2", position: { x: 0.88, y: 0.18 }, patterns: ["privacy-labeling"], decisions: [], artifacts: [], intent: "Privacy system" }
+                ]
+            };
+
+            const CONFIG = { GRID_W: 160, GRID_H: 100, CONTOUR_LEVELS: 18 };
+            let heatGrid, width, height;
+            const canvas = document.getElementById('c');
+            const ctx = canvas.getContext('2d');
+
+            function noise(x, y) {
+                const sin = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453;
+                return sin - Math.floor(sin);
+            }
+            function fbm(x, y, octaves) {
+                let val = 0, amp = 0.5;
+                for (let i = 0; i < octaves; i++) { val += noise(x, y) * amp; x *= 2; y *= 2; amp *= 0.5; }
+                return val;
+            }
+
+            function init() {
+                width = window.innerWidth; height = window.innerHeight;
+                const dpr = Math.min(devicePixelRatio || 1, 2);
+                canvas.width = width * dpr; canvas.height = height * dpr;
+                ctx.scale(dpr, dpr);
+                CONFIG.GRID_H = Math.floor(CONFIG.GRID_W * (height / width));
+                heatGrid = new Float32Array(CONFIG.GRID_W * CONFIG.GRID_H);
+
+                for (let y = 0; y < CONFIG.GRID_H; y++) {
+                    for (let x = 0; x < CONFIG.GRID_W; x++) {
+                        const nx = x / CONFIG.GRID_W, ny = y / CONFIG.GRID_H;
+                        let h = fbm(nx * 3, ny * 3, 4) * 0.3;
+                        OLOG_DATA.projects.forEach(p => {
+                            const dx = nx - p.position.x, dy = ny - p.position.y;
+                            const d = Math.sqrt(dx * dx + dy * dy);
+                            const peakHeight = (p.trailLevel + 1) * 1.5;
+                            if (d < 0.2) h += (0.2 - d) * peakHeight;
+                        });
+                        heatGrid[y * CONFIG.GRID_W + x] = Math.min(h, 3);
+                    }
+                }
+                renderLabels();
+                draw();
+            }
+
+            function renderLabels() {
+                const layer = document.getElementById('labels-layer');
+                layer.innerHTML = '';
+                OLOG_DATA.projects.forEach(p => {
+                    const el = document.createElement('div');
+                    el.className = `geo-label level-${p.trailLevel}`;
+                    el.style.left = (p.position.x * 100) + '%';
+                    el.style.top = (p.position.y * 100) + '%';
+                    el.innerHTML = `${p.title}<span class="sub">${p.commits} commits · ${p.dateRange}</span>`;
+                    el.onclick = () => showDetail(p);
+                    layer.appendChild(el);
+                });
+            }
+
+            function showDetail(project) {
+                document.getElementById('modal-title').textContent = project.title;
+                const body = document.getElementById('modal-body');
+                body.innerHTML = `
+                    <div class="detail-section">
+                        <h4>Profile</h4>
+                        <p>${project.tagline}</p>
+                    </div>
+                    <div class="detail-section">
+                        <h4>Trail Level</h4>
+                        <p>Level ${project.trailLevel}: ${['Trails as Exhaust', 'Trails as Features', 'Trails as Backbone'][project.trailLevel]}</p>
+                    </div>
+                    <div class="detail-section">
+                        <h4>Artifacts (A)</h4>
+                        <div class="detail-tags">${project.artifacts.map(a => `<span class="tag">${a}</span>`).join('')}</div>
+                    </div>
+                    <div class="detail-section">
+                        <h4>Decisions (D)</h4>
+                        <div class="detail-tags">${project.decisions.map(d => `<span class="tag decision">${d}</span>`).join('')}</div>
+                    </div>
+                    <div class="detail-section">
+                        <h4>Patterns (P)</h4>
+                        <div class="detail-tags">${project.patterns.map(p => `<span class="tag pattern">${p}</span>`).join('')}</div>
+                    </div>
+                    <div class="detail-section">
+                        <h4>Intent (I)</h4>
+                        <p>${project.intent}</p>
+                    </div>
+                    <a href="${project.url}" target="_blank" class="btn-visit">Visit Live Demo →</a>
+                `;
+                document.getElementById('detail-modal').classList.add('active');
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, width, height);
+                const cw = width / CONFIG.GRID_W, ch = height / CONFIG.GRID_H;
+                const levelColors = ['#888888', '#3b82f6', '#d97706'];
+
+                // Elevation bands
+                for (let l = CONFIG.CONTOUR_LEVELS; l >= 1; l--) {
+                    const threshold = l * 0.15;
+                    const alpha = 0.02 + (l / CONFIG.CONTOUR_LEVELS) * 0.06;
+                    ctx.fillStyle = `rgba(217,119,6,${alpha})`;
+                    for (let y = 0; y < CONFIG.GRID_H; y++) {
+                        for (let x = 0; x < CONFIG.GRID_W; x++) {
+                            if (heatGrid[y * CONFIG.GRID_W + x] >= threshold) {
+                                ctx.fillRect(x * cw, y * ch, cw + 0.5, ch + 0.5);
+                            }
+                        }
+                    }
+                }
+
+                // Contour lines
+                ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+                for (let l = 1; l <= CONFIG.CONTOUR_LEVELS; l++) {
+                    const threshold = l * 0.15;
+                    const isMajor = l % 4 === 0;
+                    ctx.beginPath();
+                    ctx.lineWidth = isMajor ? 1.5 : 0.5;
+                    ctx.strokeStyle = '#d97706';
+                    ctx.globalAlpha = isMajor ? 0.5 : 0.15;
+
+                    for (let y = 0; y < CONFIG.GRID_H - 1; y++) {
+                        for (let x = 0; x < CONFIG.GRID_W - 1; x++) {
+                            const idx = y * CONFIG.GRID_W + x;
+                            const v0 = heatGrid[idx], v1 = heatGrid[idx + 1];
+                            const v2 = heatGrid[idx + CONFIG.GRID_W + 1], v3 = heatGrid[idx + CONFIG.GRID_W];
+                            let bits = 0;
+                            if (v0 >= threshold) bits |= 1;
+                            if (v1 >= threshold) bits |= 2;
+                            if (v2 >= threshold) bits |= 4;
+                            if (v3 >= threshold) bits |= 8;
+                            if (bits === 0 || bits === 15) continue;
+
+                            const lx = x * cw, ly = y * ch;
+                            const a = { x: lx + cw * 0.5, y: ly };
+                            const b = { x: lx + cw, y: ly + ch * 0.5 };
+                            const c = { x: lx + cw * 0.5, y: ly + ch };
+                            const d = { x: lx, y: ly + ch * 0.5 };
+
+                            switch (bits) {
+                                case 1: case 14: ctx.moveTo(d.x, d.y); ctx.lineTo(a.x, a.y); break;
+                                case 2: case 13: ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); break;
+                                case 4: case 11: ctx.moveTo(b.x, b.y); ctx.lineTo(c.x, c.y); break;
+                                case 8: case 7: ctx.moveTo(c.x, c.y); ctx.lineTo(d.x, d.y); break;
+                                case 3: case 12: ctx.moveTo(d.x, d.y); ctx.lineTo(b.x, b.y); break;
+                                case 6: case 9: ctx.moveTo(a.x, a.y); ctx.lineTo(c.x, c.y); break;
+                                case 5: ctx.moveTo(d.x, d.y); ctx.lineTo(a.x, a.y); ctx.moveTo(b.x, b.y); ctx.lineTo(c.x, c.y); break;
+                                case 10: ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.moveTo(c.x, c.y); ctx.lineTo(d.x, d.y); break;
+                            }
+                        }
+                    }
+                    ctx.stroke();
+                }
+                ctx.globalAlpha = 1;
+
+                // Peak markers
+                OLOG_DATA.projects.forEach(p => {
+                    const px = p.position.x * width, py = p.position.y * height;
+                    const r = 5 + p.trailLevel * 3;
+                    ctx.beginPath();
+                    ctx.arc(px, py, r, 0, Math.PI * 2);
+                    ctx.fillStyle = levelColors[p.trailLevel];
+                    ctx.fill();
+                    ctx.strokeStyle = '#fff';
+                    ctx.lineWidth = 1.5;
+                    ctx.stroke();
+                });
+            }
+
+            // Event handlers
+            document.getElementById('modal-close').onclick = () => document.getElementById('detail-modal').classList.remove('active');
+            document.getElementById('detail-modal').onclick = e => { if (e.target.id === 'detail-modal') e.target.classList.remove('active'); };
+            document.getElementById('btn-olog').onclick = () => document.getElementById('olog-panel').classList.toggle('open');
+            document.getElementById('btn-reset').onclick = () => location.reload();
+            window.onresize = init;
+            init();
+        })();
+    </script>
+</body>
+
+</html>

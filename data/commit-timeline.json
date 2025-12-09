@@ -1,0 +1,273 @@
+{
+    "generated": "2025-12-09",
+    "owner": "hartswf0",
+    "repositories": [
+        {
+            "name": "tractor-dce-gyo",
+            "url": "https://github.com/hartswf0/tractor-dce-gyo",
+            "dateRange": {
+                "start": "2025-11-14",
+                "end": "2025-12-07"
+            },
+            "totalCommits": 50,
+            "themes": [
+                "WAG",
+                "Onyx",
+                "Homer",
+                "DCE framework"
+            ],
+            "description": "Most active repo - Digital Creative Environment with WAG/Onyx/Homer systems"
+        },
+        {
+            "name": "the-fork",
+            "url": "https://github.com/hartswf0/the-fork",
+            "dateRange": {
+                "start": "2025-11-03",
+                "end": "2025-11-19"
+            },
+            "totalCommits": 10,
+            "themes": [
+                "Research hub",
+                "Project interconnection",
+                "AI systems research"
+            ],
+            "description": "Central research hub linking Railway Game, 1000 Small Futures, Synarchiv, Functional Substrate"
+        },
+        {
+            "name": "func-sub",
+            "url": "https://github.com/hartswf0/func-sub",
+            "dateRange": {
+                "start": "2025-11-04",
+                "end": "2025-11-10"
+            },
+            "totalCommits": 20,
+            "themes": [
+                "Sonic explorations",
+                "t-series",
+                "Black Metal as method",
+                "Self-alignment framework"
+            ],
+            "description": "Functional Substrate - interactive sonic web experiments and Training Grounds Oracle"
+        },
+        {
+            "name": "1000-small-futures",
+            "url": "https://github.com/hartswf0/1000-small-futures",
+            "dateRange": {
+                "start": "2025-10-21",
+                "end": "2025-11-10"
+            },
+            "totalCommits": 15,
+            "themes": [
+                "Tetrad analysis",
+                "Ring buffer",
+                "Technogenesis",
+                "Ontologies"
+            ],
+            "description": "Future simulations staging technogenesis at room scale with 57 scenario tetrad system"
+        },
+        {
+            "name": "role-deck",
+            "url": "https://github.com/hartswf0/role-deck",
+            "dateRange": {
+                "start": "2025-09-30",
+                "end": "2025-10-13"
+            },
+            "totalCommits": 8,
+            "themes": [
+                "FarmOS Ecosystem",
+                "Full Movie experience",
+                "Visualization"
+            ],
+            "description": "Role deck system with FarmOS Ecosystem visualization capabilities"
+        },
+        {
+            "name": "mfss",
+            "url": "https://github.com/hartswf0/mfss",
+            "dateRange": {
+                "start": "2025-10-02",
+                "end": "2025-10-02"
+            },
+            "totalCommits": 4,
+            "themes": [
+                "Index",
+                "Instagram integration"
+            ],
+            "description": "MFSS project with index.html and insta.html"
+        },
+        {
+            "name": "liberty-machines",
+            "url": "https://github.com/hartswf0/liberty-machines",
+            "dateRange": {
+                "start": "2025-09-09",
+                "end": "2025-09-09"
+            },
+            "totalCommits": 1,
+            "themes": [
+                "Freedom theatre"
+            ],
+            "description": "Liberty Machines - freedom theatre's curtain opens"
+        },
+        {
+            "name": "dirty-disclosure",
+            "url": "https://github.com/hartswf0/dirty-disclosure",
+            "dateRange": {
+                "start": "2025-09-02",
+                "end": "2025-09-02"
+            },
+            "totalCommits": 1,
+            "themes": [
+                "Initial setup"
+            ],
+            "description": "Dirty Disclosure project - initial commit only"
+        },
+        {
+            "name": "privacy-value-labels",
+            "url": "https://github.com/hartswf0/privacy-value-labels",
+            "dateRange": {
+                "start": "2025-09-02",
+                "end": "2025-09-02"
+            },
+            "totalCommits": 2,
+            "themes": [
+                "Privacy",
+                "Value labels",
+                "New ideas"
+            ],
+            "description": "Privacy value labels system with initial concepts"
+        },
+        {
+            "name": "haunted-tools",
+            "url": "https://github.com/hartswf0/haunted-tools",
+            "dateRange": {
+                "start": "2025-09-16",
+                "end": "2025-09-16"
+            },
+            "totalCommits": 2,
+            "themes": [
+                "Barthesian mythology",
+                "Semiotic critique",
+                "Print catalog"
+            ],
+            "description": "Haunted Tools Monthly - Print catalog using Barthes' Mythologies method to expose ideological freight in tools"
+        }
+    ],
+    "timeline": [
+        {
+            "date": "2025-09-02",
+            "repo": "dirty-disclosure",
+            "message": "first commit",
+            "significance": "Project creation"
+        },
+        {
+            "date": "2025-09-02",
+            "repo": "privacy-value-labels",
+            "message": "first commit + added some new ideas",
+            "significance": "Project creation"
+        },
+        {
+            "date": "2025-09-09",
+            "repo": "liberty-machines",
+            "message": "freedom theatre's curtain opens",
+            "significance": "Project creation"
+        },
+        {
+            "date": "2025-09-16",
+            "repo": "haunted-tools",
+            "message": "Haunted Tools Monthly catalog launched",
+            "significance": "Mythologies method"
+        },
+        {
+            "date": "2025-09-30",
+            "repo": "role-deck",
+            "message": "Initial commit",
+            "significance": "Project creation"
+        },
+        {
+            "date": "2025-10-02",
+            "repo": "mfss",
+            "message": "Create index.html, insta.html",
+            "significance": "Core structure"
+        },
+        {
+            "date": "2025-10-13",
+            "repo": "role-deck",
+            "message": "FarmOS Ecosystem visualization and Full Movie experience",
+            "significance": "Major feature"
+        },
+        {
+            "date": "2025-10-21",
+            "repo": "1000-small-futures",
+            "message": "Initial development",
+            "significance": "Project start"
+        },
+        {
+            "date": "2025-11-03",
+            "repo": "the-fork",
+            "message": "Initial development",
+            "significance": "Research hub creation"
+        },
+        {
+            "date": "2025-11-04",
+            "repo": "func-sub",
+            "message": "t-series sonic explorations begin",
+            "significance": "Sonic experiments"
+        },
+        {
+            "date": "2025-11-10",
+            "repo": "func-sub",
+            "message": "README: Black Metal as method, self-alignment framework",
+            "significance": "Philosophy update"
+        },
+        {
+            "date": "2025-11-10",
+            "repo": "1000-small-futures",
+            "message": "Tetrad analysis system (57 scenarios), ring buffer fix",
+            "significance": "Major system"
+        },
+        {
+            "date": "2025-11-14",
+            "repo": "tractor-dce-gyo",
+            "message": "WAG, Onyx, Homer work begins",
+            "significance": "Core development"
+        },
+        {
+            "date": "2025-11-19",
+            "repo": "the-fork",
+            "message": "README with unified research statement",
+            "significance": "Project unification"
+        },
+        {
+            "date": "2025-12-07",
+            "repo": "tractor-dce-gyo",
+            "message": "Latest WAG/Onyx/Homer updates",
+            "significance": "Active development"
+        }
+    ],
+    "connections": [
+        {
+            "from": "the-fork",
+            "to": "1000-small-futures",
+            "type": "links"
+        },
+        {
+            "from": "the-fork",
+            "to": "func-sub",
+            "type": "links"
+        },
+        {
+            "from": "the-fork",
+            "to": "tractor-dce-gyo",
+            "type": "links"
+        },
+        {
+            "from": "the-fork",
+            "to": "role-deck",
+            "type": "links"
+        },
+        {
+            "from": "tractor-dce-gyo",
+            "to": "func-sub",
+            "type": "shared_themes"
+        }
+    ]
+}

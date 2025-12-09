@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATG 2.0 | Atlas with Timeline</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --paper: #f8f5f0;
+            --ink: #2c2925;
+            --accent: #c54b2c;
+            --accent-light: #e57c5f;
+            --accent-blue: #2c5aa0;
+            --grid: rgba(0, 0, 0, 0.03);
+            --border: rgba(0, 0, 0, 0.08);
+            --shadow: rgba(0, 0, 0, 0.1);
+            --timeline-height: 80px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+            background: var(--paper);
+            color: var(--ink);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            grid-template-rows: auto 1fr var(--timeline-height);
+            height: 100vh;
+            gap: 1px;
+            background: var(--border);
+        }
+
+        /* Header */
+        .header {
+            grid-column: 1 / -1;
+            background: var(--paper);
+            padding: 20px 32px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+        }
+
+        .logo-main {
+            font-size: 24px;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .logo-main strong {
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .logo-sub {
+            font-size: 12px;
+            color: #666;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .control-btn {
+            padding: 8px 16px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+            color: var(--ink);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .control-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .control-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .control-btn.blue {
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        .control-btn.blue.active {
+            background: var(--accent-blue);
+            color: white;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--paper);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 20px 24px 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .sidebar-subtitle {
+            font-size: 14px;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        .atlas-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .atlas-item {
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .atlas-item:hover {
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        .atlas-item.active {
+            background: rgba(197, 75, 44, 0.05);
+            border-left: 3px solid var(--accent);
+        }
+
+        .atlas-item.active::before {
+            content: '';
+            position: absolute;
+            right: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 6px;
+        }
+
+        .item-title {
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        .item-date {
+            font-size: 12px;
+            color: #666;
+            white-space: nowrap;
+            margin-left: 12px;
+        }
+
+        .item-desc {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+
+        .item-tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .item-tag {
+            padding: 2px 8px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
+            font-size: 11px;
+            color: #666;
+        }
+
+        /* Main Area */
+        .main-area {
+            position: relative;
+            background: var(--paper);
+            overflow: hidden;
+        }
+
+        .main-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: white;
+        }
+
+        /* Site Info Overlay */
+        .site-info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: var(--paper);
+            padding: 16px 20px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            box-shadow: 0 4px 20px var(--shadow);
+            max-width: 350px;
+            z-index: 50;
+            backdrop-filter: blur(10px);
+        }
+
+        .site-title {
+            font-weight: 500;
+            font-size: 16px;
+            margin-bottom: 6px;
+            color: var(--accent);
+        }
+
+        .site-meta {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .site-date {
+            color: var(--accent-blue);
+            font-weight: 500;
+        }
+
+        .site-url {
+            font-size: 12px;
+            color: #666;
+            font-family: 'SF Mono', monospace;
+            word-break: break-all;
+            opacity: 0.8;
+        }
+
+        /* Minimap - Three Sizes */
+        .minimap {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: var(--paper);
+            border: 2px solid var(--ink);
+            border-radius: 6px;
+            box-shadow: 0 8px 32px var(--shadow);
+            z-index: 100;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .minimap.size-small {
+            width: 180px;
+            height: 180px;
+        }
+
+        .minimap.size-medium {
+            width: 320px;
+            height: 320px;
+        }
+
+        .minimap.size-large {
+            width: 500px;
+            height: 500px;
+            right: 50%;
+            bottom: 50%;
+            transform: translate(50%, 50%);
+        }
+
+        .minimap-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--paper);
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 20;
+        }
+
+        .minimap-title {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .minimap-controls {
+            display: flex;
+            gap: 4px;
+        }
+
+        .minimap-btn {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            font-size: 10px;
+            cursor: pointer;
+            color: var(--ink);
+        }
+
+        .minimap-btn:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .minimap-canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .minimap-grid {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(var(--grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .minimap.size-small .minimap-grid {
+            background-size: 18px 18px;
+        }
+
+        .minimap.size-medium .minimap-grid {
+            background-size: 32px 32px;
+        }
+
+        .minimap.size-large .minimap-grid {
+            background-size: 50px 50px;
+        }
+
+        /* Timeline */
+        .timeline {
+            grid-column: 1 / -1;
+            background: var(--paper);
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            padding: 0 32px;
+        }
+
+        .timeline-track {
+            flex: 1;
+            height: 2px;
+            background: var(--border);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .timeline-progress {
+            position: absolute;
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--accent-blue));
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .marker-dot {
+            width: 12px;
+            height: 12px;
+            background: var(--paper);
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .timeline-marker:hover .marker-dot {
+            transform: scale(1.4);
+            border-color: var(--accent);
+        }
+
+        .timeline-marker.active .marker-dot {
+            background: var(--accent);
+            border-color: var(--accent);
+            transform: scale(1.4);
+            box-shadow: 0 0 0 4px rgba(197, 75, 44, 0.2);
+        }
+
+        .marker-label {
+            position: absolute;
+            top: -30px;
+            font-size: 11px;
+            white-space: nowrap;
+            color: #666;
+            text-align: center;
+            min-width: 60px;
+        }
+
+        .marker-date {
+            position: absolute;
+            top: 20px;
+            font-size: 10px;
+            color: var(--accent-blue);
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .timeline-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .timeline-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 100px;
+        }
+
+        .current-date {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--accent-blue);
+        }
+
+        .current-position {
+            font-size: 11px;
+            color: #666;
+        }
+
+        /* Node Markers on Minimap */
+        .node-marker {
+            position: absolute;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            border: 2px solid;
+            background: var(--paper);
+            z-index: 10;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        .node-marker:hover {
+            transform: translate(-50%, -50%) scale(1.3);
+            z-index: 20;
+        }
+
+        .node-marker.active {
+            animation: marker-pulse 2s infinite;
+            transform: translate(-50%, -50%) scale(1.4);
+            z-index: 15;
+        }
+
+        @keyframes marker-pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(197, 75, 44, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(197, 75, 44, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(197, 75, 44, 0);
+            }
+        }
+
+        /* Loading */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--paper);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        /* Empty State */
+        .empty-state {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #999;
+        }
+
+        .empty-state h3 {
+            font-weight: 400;
+            margin-bottom: 12px;
+        }
+
+        /* Map Legend */
+        .map-legend {
+            position: absolute;
+            bottom: 220px;
+            right: 20px;
+            background: var(--paper);
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            box-shadow: 0 2px 10px var(--shadow);
+            z-index: 50;
+            font-size: 11px;
+        }
+
+        .legend-title {
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--accent);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .container {
+                grid-template-columns: 280px 1fr;
+            }
+
+            .minimap.size-large {
+                width: 400px;
+                height: 400px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr var(--timeline-height);
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .minimap.size-large {
+                width: 320px;
+                height: 320px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="loading" id="loading">
+        <div class="loading-spinner"></div>
+        <div>Loading ATG 2.0 Atlas...</div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <div class="logo-main"><strong>ATG</strong> 2.0</div>
+                <div class="logo-sub">ATLAS INTERFACE</div>
+            </div>
+            <div class="header-controls">
+                <button class="control-btn" id="btnPlay">
+                    <span>▶</span> AUTO
+                </button>
+                <button class="control-btn blue" id="btnZoom">
+                    <span>🔍</span> ZOOM
+                </button>
+                <button class="control-btn" id="btnFullscreen">
+                    <span>↗</span> FULL
+                </button>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">Atlas Collection</div>
+                <div class="sidebar-subtitle">12 Sites • Chronological Order</div>
+            </div>
+            <div class="atlas-list" id="atlasList">
+                <!-- Atlas items will be injected here -->
+            </div>
+        </div>
+
+        <div class="main-area" id="mainArea">
+            <div class="empty-state" id="emptyState">
+                <h3>Select a site from the atlas</h3>
+                <p style="font-size: 14px;">Click on any item to view the site</p>
+            </div>
+
+            <iframe class="main-iframe" id="mainIframe" style="display: none;"></iframe>
+
+            <div class="site-info" id="siteInfo" style="display: none;">
+                <div class="site-title" id="siteTitle">Site Title</div>
+                <div class="site-meta">
+                    <div class="site-date" id="siteDate">2024-01-15</div>
+                    <div class="site-time" id="siteTime">Phase 1</div>
+                </div>
+                <div class="site-url" id="siteUrl">https://example.com</div>
+            </div>
+
+            <div class="minimap size-small" id="minimap">
+                <div class="minimap-header">
+                    <div class="minimap-title">Terrain Map</div>
+                    <div class="minimap-controls">
+                        <button class="minimap-btn" id="btnMinimapSmall">S</button>
+                        <button class="minimap-btn" id="btnMinimapMedium">M</button>
+                        <button class="minimap-btn" id="btnMinimapLarge">L</button>
+                    </div>
+                </div>
+                <canvas class="minimap-canvas" id="minimapCanvas"></canvas>
+                <div class="minimap-grid"></div>
+            </div>
+
+            <div class="map-legend" id="mapLegend">
+                <div class="legend-title">Legend</div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: var(--accent);"></div>
+                    <div>Current Site</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: var(--accent-blue);"></div>
+                    <div>Past Sites</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #666;"></div>
+                    <div>Future Sites</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="timeline">
+            <div class="timeline-controls">
+                <button class="control-btn" id="btnPrev">← PREV</button>
+                <button class="control-btn" id="btnNext">NEXT →</button>
+            </div>
+            <div class="timeline-track" id="timelineTrack">
+                <div class="timeline-progress" id="timelineProgress"></div>
+            </div>
+            <div class="timeline-info">
+                <div class="current-date" id="currentDate">2024-01-15</div>
+                <div class="current-position">
+                    <span id="currentStep">1</span> of <span id="totalSteps">12</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // SITE DATA WITH DATES
+        const SITES = [
+            {
+                id: 1,
+                title: "Dirty Disclosure",
+                url: "https://hartswf0.github.io/dirty-disclosure/",
+                color: "#c54b2c",
+                date: "2024-01-15",
+                phase: "Concept",
+                tags: ["Data", "Visualization"],
+                description: "Data leakage visualization and exploration",
+                position: { x: 0.2, y: 0.3 }
+            },
+            {
+                id: 2,
+                title: "Privacy Value Labels",
+                url: "https://hartswf0.github.io/privacy-value-labels/#view=label",
+                color: "#2c5aa0",
+                date: "2024-01-22",
+                phase: "Design",
+                tags: ["Privacy", "UI"],
+                description: "Nutritional labels for privacy algorithms",
+                position: { x: 0.35, y: 0.15 }
+            },
+            {
+                id: 3,
+                title: "MFSS",
+                url: "https://hartswf0.github.io/mfss/",
+                color: "#5a8f2c",
+                date: "2024-02-05",
+                phase: "Prototype",
+                tags: ["Simulation", "System"],
+                description: "Multi-faceted system simulation",
+                position: { x: 0.25, y: 0.45 }
+            },
+            {
+                id: 4,
+                title: "Role Deck HUB",
+                url: "https://hartswf0.github.io/role-deck/HUB.html",
+                color: "#8f2c5a",
+                date: "2024-02-12",
+                phase: "Development",
+                tags: ["Architecture", "Roles"],
+                description: "Role-based system architecture hub",
+                position: { x: 0.5, y: 0.2 }
+            },
+            {
+                id: 5,
+                title: "Role Deck",
+                url: "https://hartswf0.github.io/role-deck/",
+                color: "#5a2c8f",
+                date: "2024-02-19",
+                phase: "Development",
+                tags: ["Interface", "System"],
+                description: "Main role deck interface",
+                position: { x: 0.45, y: 0.35 }
+            },
+            {
+                id: 6,
+                title: "Liberty Machines",
+                url: "https://hartswf0.github.io/liberty-machines/",
+                color: "#e57c5f",
+                date: "2024-02-26",
+                phase: "Research",
+                tags: ["Freedom", "Protocols"],
+                description: "Autonomous freedom protocols",
+                position: { x: 0.65, y: 0.4 }
+            },
+            {
+                id: 7,
+                title: "Func Sub",
+                url: "https://hartswf0.github.io/func-sub/func-index.html",
+                color: "#2ca08f",
+                date: "2024-03-04",
+                phase: "Experimentation",
+                tags: ["Functional", "Substrate"],
+                description: "Functional substrate exploration",
+                position: { x: 0.3, y: 0.7 }
+            },
+            {
+                id: 8,
+                title: "1000 Small Futures",
+                url: "https://hartswf0.github.io/1000-small-futures/",
+                color: "#a08f2c",
+                date: "2024-03-11",
+                phase: "Archive",
+                tags: ["Speculative", "Design"],
+                description: "Speculative design archive",
+                position: { x: 0.75, y: 0.6 }
+            },
+            {
+                id: 9,
+                title: "The Fork",
+                url: "https://hartswf0.github.io/the-fork/",
+                color: "#ff6b6b",
+                date: "2024-03-18",
+                phase: "Visualization",
+                tags: ["Divergence", "System"],
+                description: "System divergence visualization",
+                position: { x: 0.8, y: 0.3 }
+            },
+            {
+                id: 10,
+                title: "Wag Work",
+                url: "https://hartswf0.github.io/tractor-dce-gyo/wag-work.html",
+                color: "#4a4a4a",
+                date: "2024-03-25",
+                phase: "Implementation",
+                tags: ["Work", "Allocation"],
+                description: "Distributed work allocation",
+                position: { x: 0.6, y: 0.75 }
+            },
+            {
+                id: 11,
+                title: "Wag Pres",
+                url: "https://hartswf0.github.io/tractor-dce-gyo/wag-pres.html",
+                color: "#9b9b9b",
+                date: "2024-04-01",
+                phase: "Documentation",
+                tags: ["Presentation", "Docs"],
+                description: "Presentation and documentation",
+                position: { x: 0.7, y: 0.85 }
+            },
+            {
+                id: 12,
+                title: "Sonic",
+                url: "https://hartswf0.github.io/func-sub/t6-sonic.html",
+                color: "#8b572a",
+                date: "2024-04-08",
+                phase: "Experimentation",
+                tags: ["Sonic", "Functional"],
+                description: "Sonic functional experiments",
+                position: { x: 0.85, y: 0.5 }
+            }
+        ];
+
+        // STATE
+        let state = {
+            currentSite: 0,
+            isPlaying: true,
+            minimapSize: 'small', // 'small', 'medium', 'large'
+            terrainData: [],
+            nodeMarkers: [],
+            timelineMarkers: [],
+            playInterval: null,
+            mapWidth: 0,
+            mapHeight: 0
+        };
+
+        // ELEMENTS
+        const canvas = document.getElementById('minimapCanvas');
+        const ctx = canvas.getContext('2d');
+        const mainIframe = document.getElementById('mainIframe');
+        const mainArea = document.getElementById('mainArea');
+        const minimap = document.getElementById('minimap');
+
+        // INITIALIZE
+        function init() {
+            createAtlasList();
+            createTimelineMarkers();
+            resizeMinimap();
+            generateTerrain();
+            startAutoPlay();
+            drawMinimap();
+            hideLoading();
+
+            // Select first site
+            setTimeout(() => selectSite(0), 500);
+        }
+
+        function createAtlasList() {
+            const list = document.getElementById('atlasList');
+            list.innerHTML = '';
+
+            SITES.forEach((site, index) => {
+                const item = document.createElement('div');
+                item.className = 'atlas-item';
+                if (index === state.currentSite) item.classList.add('active');
+
+                item.innerHTML = `
+                    <div class="item-header">
+                        <div class="item-title">${site.title}</div>
+                        <div class="item-date">${site.date}</div>
+                    </div>
+                    <div class="item-desc">${site.description}</div>
+                    <div class="item-tags">
+                        ${site.tags.map(tag => `<span class="item-tag">${tag}</span>`).join('')}
+                    </div>
+                `;
+
+                item.addEventListener('click', () => {
+                    selectSite(index);
+                });
+
+                list.appendChild(item);
+            });
+        }
+
+        function createTimelineMarkers() {
+            const track = document.getElementById('timelineTrack');
+            track.innerHTML = '<div class="timeline-progress" id="timelineProgress"></div>';
+            state.timelineMarkers = [];
+
+            SITES.forEach((site, index) => {
+                const marker = document.createElement('div');
+                marker.className = 'timeline-marker';
+                if (index === state.currentSite) marker.classList.add('active');
+
+                const percent = index / (SITES.length - 1);
+                marker.style.left = `${percent * 100}%`;
+
+                marker.innerHTML = `
+                    <div class="marker-dot"></div>
+                    <div class="marker-label">${site.title.split(' ')[0]}</div>
+                    <div class="marker-date">${site.date}</div>
+                `;
+
+                marker.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    selectSite(index);
+                });
+
+                track.appendChild(marker);
+                state.timelineMarkers.push(marker);
+            });
+
+            document.getElementById('totalSteps').textContent = SITES.length;
+        }
+
+        function resizeMinimap() {
+            const container = minimap;
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+            state.mapWidth = canvas.width;
+            state.mapHeight = canvas.height;
+        }
+
+        function generateTerrain() {
+            state.terrainData = [];
+            const gridSize = state.minimapSize === 'small' ? 32 :
+                state.minimapSize === 'medium' ? 48 : 64;
+
+            // Generate detailed terrain based on minimap size
+            for (let y = 0; y < gridSize; y++) {
+                for (let x = 0; x < gridSize; x++) {
+                    let value = 0;
+                    const nx = x / gridSize;
+                    const ny = y / gridSize;
+
+                    // Multi-octave Perlin-like noise for detailed terrain
+                    for (let octave = 1; octave <= (state.minimapSize === 'large' ? 4 : 3); octave++) {
+                        const frequency = octave * 2;
+                        const amplitude = 1 / octave;
+                        value += (Math.sin(nx * frequency * 10) * Math.cos(ny * frequency * 10) * 0.5 + 0.5) * amplitude;
+                    }
+
+                    // Add influence from sites
+                    SITES.forEach(site => {
+                        const dx = nx - site.position.x;
+                        const dy = ny - site.position.y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        const influence = Math.exp(-distance * distance * 40);
+                        value += influence * 0.5;
+                    });
+
+                    state.terrainData[y * gridSize + x] = Math.min(value, 1.5);
+                }
+            }
+        }
+
+        function drawMinimap() {
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw terrain with higher resolution for larger sizes
+            if (state.minimapSize === 'large') {
+                drawDetailedTerrain();
+            } else {
+                drawTerrain();
+            }
+
+            // Draw contour lines (more detailed for larger sizes)
+            if (state.minimapSize === 'large') {
+                drawDetailedContours();
+            } else {
+                drawContours();
+            }
+
+            // Draw nodes
+            drawNodes();
+        }
+
+        function drawTerrain() {
+            const gridSize = state.terrainData.length === 1024 ? 32 :
+                state.terrainData.length === 2304 ? 48 : 64;
+            const cellWidth = canvas.width / gridSize;
+            const cellHeight = canvas.height / gridSize;
+
+            for (let y = 0; y < gridSize; y++) {
+                for (let x = 0; x < gridSize; x++) {
+                    const value = state.terrainData[y * gridSize + x];
+                    if (value < 0.2) continue;
+
+                    // Color gradient based on elevation
+                    const intensity = (value - 0.2) * 1.25;
+                    const r = 197 - intensity * 50;
+                    const g = 75 + intensity * 50;
+                    const b = 44 - intensity * 20;
+                    const alpha = 0.1 + intensity * 0.2;
+
+                    ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+                    ctx.fillRect(x * cellWidth, y * cellHeight, cellWidth, cellHeight);
+                }
+            }
+        }
+
+        function drawDetailedTerrain() {
+            const gridSize = 64;
+            const cellWidth = canvas.width / gridSize;
+            const cellHeight = canvas.height / gridSize;
+
+            // Use gradient for smoother terrain
+            for (let y = 0; y < gridSize; y++) {
+                for (let x = 0; x < gridSize; x++) {
+                    const value = state.terrainData[y * gridSize + x];
+
+                    // Calculate color based on elevation
+                    let r, g, b, alpha;
+
+                    if (value < 0.3) {
+                        // Low areas
+                        r = 240; g = 235; b = 220;
+                        alpha = 0.1;
+                    } else if (value < 0.7) {
+                        // Mid areas
+                        r = 210; g = 180; b = 140;
+                        alpha = 0.15 + (value - 0.3) * 0.2;
+                    } else {
+                        // High areas
+                        r = 180; g = 120; b = 80;
+                        alpha = 0.3 + (value - 0.7) * 0.3;
+                    }
+
+                    ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+                    ctx.fillRect(x * cellWidth, y * cellHeight, cellWidth, cellHeight);
+                }
+            }
+        }
+
+        function drawContours() {
+            const gridSize = state.terrainData.length === 1024 ? 32 :
+                state.terrainData.length === 2304 ? 48 : 64;
+            const cellWidth = canvas.width / gridSize;
+            const cellHeight = canvas.height / gridSize;
+            const levels = state.minimapSize === 'small' ? 4 :
+                state.minimapSize === 'medium' ? 6 : 8;
+
+            ctx.strokeStyle = 'rgba(44, 42, 40, 0.3)';
+            ctx.lineWidth = state.minimapSize === 'large' ? 1.5 : 1;
+
+            for (let level = 1; level <= levels; level++) {
+                const threshold = level / levels;
+                ctx.beginPath();
+
+                for (let y = 0; y < gridSize - 1; y++) {
+                    for (let x = 0; x < gridSize - 1; x++) {
+                        const v00 = state.terrainData[y * gridSize + x];
+                        const v10 = state.terrainData[y * gridSize + (x + 1)];
+                        const v01 = state.terrainData[(y + 1) * gridSize + x];
+                        const v11 = state.terrainData[(y + 1) * gridSize + (x + 1)];
+
+                        drawContourSegment(x, y, cellWidth, cellHeight, v00, v10, v01, v11, threshold);
+                    }
+                }
+
+                ctx.stroke();
+            }
+        }
+
+        function drawDetailedContours() {
+            const gridSize = 64;
+            const cellWidth = canvas.width / gridSize;
+            const cellHeight = canvas.height / gridSize;
+            const levels = 12; // More levels for detailed view
+
+            for (let level = 1; level <= levels; level++) {
+                const threshold = level / levels;
+                const isMajor = (level % 3 === 0);
+
+                ctx.strokeStyle = isMajor ? 'rgba(44, 42, 40, 0.5)' : 'rgba(44, 42, 40, 0.2)';
+                ctx.lineWidth = isMajor ? 1.5 : 0.8;
+                ctx.beginPath();
+
+                for (let y = 0; y < gridSize - 1; y++) {
+                    for (let x = 0; x < gridSize - 1; x++) {
+                        const v00 = state.terrainData[y * gridSize + x];
+                        const v10 = state.terrainData[y * gridSize + (x + 1)];
+                        const v01 = state.terrainData[(y + 1) * gridSize + x];
+                        const v11 = state.terrainData[(y + 1) * gridSize + (x + 1)];
+
+                        drawContourSegment(x, y, cellWidth, cellHeight, v00, v10, v01, v11, threshold);
+                    }
+                }
+
+                ctx.stroke();
+            }
+        }
+
+        function drawContourSegment(x, y, w, h, v00, v10, v01, v11, threshold) {
+            const points = [];
+
+            if ((v00 < threshold && v10 >= threshold) || (v00 >= threshold && v10 < threshold)) {
+                const t = (threshold - v00) / (v10 - v00);
+                points.push({ x: x * w + t * w, y: y * h });
+            }
+
+            if ((v10 < threshold && v11 >= threshold) || (v10 >= threshold && v11 < threshold)) {
+                const t = (threshold - v10) / (v11 - v10);
+                points.push({ x: (x + 1) * w, y: y * h + t * h });
+            }
+
+            if ((v01 < threshold && v11 >= threshold) || (v01 >= threshold && v11 < threshold)) {
+                const t = (threshold - v01) / (v11 - v01);
+                points.push({ x: x * w + t * w, y: (y + 1) * h });
+            }
+
+            if ((v00 < threshold && v01 >= threshold) || (v00 >= threshold && v01 < threshold)) {
+                const t = (threshold - v00) / (v01 - v00);
+                points.push({ x: x * w, y: y * h + t * h });
+            }
+
+            if (points.length === 2) {
+                ctx.moveTo(points[0].x, points[0].y);
+                ctx.lineTo(points[1].x, points[1].y);
+            }
+        }
+
+        function drawNodes() {
+            // Remove old markers
+            document.querySelectorAll('.node-marker').forEach(m => m.remove());
+            state.nodeMarkers = [];
+
+            const markerSize = state.minimapSize === 'small' ? 24 :
+                state.minimapSize === 'medium' ? 32 : 40;
+
+            SITES.forEach((site, index) => {
+                const marker = document.createElement('div');
+                marker.className = 'node-marker';
+                if (index === state.currentSite) marker.classList.add('active');
+
+                const x = site.position.x * canvas.width;
+                const y = site.position.y * canvas.height;
+
+                marker.style.width = `${markerSize}px`;
+                marker.style.height = `${markerSize}px`;
+                marker.style.left = `${x}px`;
+                marker.style.top = `${y}px`;
+                marker.style.borderColor = site.color;
+                marker.style.background = index <= state.currentSite ? site.color : '#666';
+                marker.textContent = site.id;
+
+                marker.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    selectSite(index);
+                });
+
+                // Add tooltip
+                marker.title = `${site.title}\n${site.date}\n${site.phase}`;
+
+                canvas.parentElement.appendChild(marker);
+                state.nodeMarkers.push(marker);
+            });
+        }
+
+        function selectSite(index) {
+            state.currentSite = index;
+            const site = SITES[index];
+
+            // Update atlas list
+            document.querySelectorAll('.atlas-item').forEach((item, i) => {
+                item.classList.toggle('active', i === index);
+            });
+
+            // Update timeline markers
+            state.timelineMarkers.forEach((marker, i) => {
+                marker.classList.toggle('active', i === index);
+            });
+
+            // Update timeline progress
+            const percent = index / (SITES.length - 1);
+            document.getElementById('timelineProgress').style.width = `${percent * 100}%`;
+
+            // Update step counter and date
+            document.getElementById('currentStep').textContent = index + 1;
+            document.getElementById('currentDate').textContent = site.date;
+
+            // Load site in iframe
+            loadSite(site);
+
+            // Update site info
+            document.getElementById('siteTitle').textContent = site.title;
+            document.getElementById('siteDate').textContent = site.date;
+            document.getElementById('siteTime').textContent = site.phase;
+            document.getElementById('siteUrl').textContent = site.url;
+            document.getElementById('siteInfo').style.display = 'block';
+
+            // Redraw map with updated active node
+            drawMinimap();
+        }
+
+        function loadSite(site) {
+            // Hide empty state, show iframe
+            document.getElementById('emptyState').style.display = 'none';
+            mainIframe.style.display = 'block';
+
+            // Load site
+            mainIframe.src = site.url;
+        }
+
+        function setMinimapSize(size) {
+            state.minimapSize = size;
+            minimap.className = `minimap size-${size}`;
+
+            // Update active button
+            document.getElementById('btnMinimapSmall').classList.toggle('active', size === 'small');
+            document.getElementById('btnMinimapMedium').classList.toggle('active', size === 'medium');
+            document.getElementById('btnMinimapLarge').classList.toggle('active', size === 'large');
+
+            // Resize and redraw after transition
+            setTimeout(() => {
+                resizeMinimap();
+                generateTerrain();
+                drawMinimap();
+            }, 100);
+        }
+
+        function startAutoPlay() {
+            if (state.playInterval) clearInterval(state.playInterval);
+
+            state.playInterval = setInterval(() => {
+                if (state.isPlaying) {
+                    const nextSite = (state.currentSite + 1) % SITES.length;
+                    selectSite(nextSite);
+                }
+            }, 6000); // 6 seconds per site
+        }
+
+        function hideLoading() {
+            const loading = document.getElementById('loading');
+            loading.style.opacity = '0';
+            setTimeout(() => {
+                loading.style.display = 'none';
+            }, 300);
+        }
+
+        // EVENT LISTENERS
+        function setupEventListeners() {
+            // Play/pause
+            document.getElementById('btnPlay').addEventListener('click', () => {
+                state.isPlaying = !state.isPlaying;
+                document.getElementById('btnPlay').classList.toggle('active', state.isPlaying);
+
+                if (state.isPlaying) {
+                    document.getElementById('btnPlay').innerHTML = '<span>▶</span> AUTO';
+                    startAutoPlay();
+                } else {
+                    document.getElementById('btnPlay').innerHTML = '<span>⏸</span> PAUSED';
+                    if (state.playInterval) clearInterval(state.playInterval);
+                }
+            });
+
+            // Minimap size controls
+            document.getElementById('btnMinimapSmall').addEventListener('click', () => setMinimapSize('small'));
+            document.getElementById('btnMinimapMedium').addEventListener('click', () => setMinimapSize('medium'));
+            document.getElementById('btnMinimapLarge').addEventListener('click', () => setMinimapSize('large'));
+
+            // Zoom button toggles between medium and large
+            document.getElementById('btnZoom').addEventListener('click', () => {
+                if (state.minimapSize === 'large') {
+                    setMinimapSize('medium');
+                } else {
+                    setMinimapSize('large');
+                }
+            });
+
+            // Fullscreen
+            document.getElementById('btnFullscreen').addEventListener('click', () => {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(err => {
+                        console.log(`Error attempting to enable fullscreen: ${err.message}`);
+                    });
+                } else {
+                    document.exitFullscreen();
+                }
+            });
+
+            // Navigation
+            document.getElementById('btnPrev').addEventListener('click', () => {
+                const prevSite = (state.currentSite - 1 + SITES.length) % SITES.length;
+                selectSite(prevSite);
+            });
+
+            document.getElementById('btnNext').addEventListener('click', () => {
+                const nextSite = (state.currentSite + 1) % SITES.length;
+                selectSite(nextSite);
+            });
+
+            // Click on timeline track
+            document.getElementById('timelineTrack').addEventListener('click', (e) => {
+                const rect = e.target.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const percent = x / rect.width;
+                const index = Math.round(percent * (SITES.length - 1));
+                selectSite(index);
+            });
+
+            // Resize
+            window.addEventListener('resize', () => {
+                resizeMinimap();
+                drawMinimap();
+            });
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                switch (e.key) {
+                    case ' ':
+                        state.isPlaying = !state.isPlaying;
+                        document.getElementById('btnPlay').click();
+                        break;
+                    case 'ArrowRight':
+                        document.getElementById('btnNext').click();
+                        break;
+                    case 'ArrowLeft':
+                        document.getElementById('btnPrev').click();
+                        break;
+                    case 'z':
+                        document.getElementById('btnZoom').click();
+                        break;
+                    case 'f':
+                        document.getElementById('btnFullscreen').click();
+                        break;
+                    case '1':
+                        setMinimapSize('small');
+                        break;
+                    case '2':
+                        setMinimapSize('medium');
+                        break;
+                    case '3':
+                        setMinimapSize('large');
+                        break;
+                }
+            });
+        }
+
+        // INITIALIZE
+        window.addEventListener('load', () => {
+            init();
+            setupEventListeners();
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ATG 2.0 | Living Atlas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap');
+
+        :root {
+            --bg-paper: #e6e2d3;
+            --ink-primary: #2a2622;
+            --ink-secondary: #5e5a55;
+            --accent-geo: #b45309;
+            --accent-active: #0f766e;
+            --grid-guide: rgba(42, 38, 34, 0.05);
+        }
+
+        body.dark-mode {
+            --bg-paper: #0a0a0a;
+            --ink-primary: #e5e5e5;
+            --ink-secondary: #737373;
+            --accent-geo: #fb923c;
+            --accent-active: #2dd4bf;
+            --grid-guide: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            background-color: #000;
+            /* Deep void behind the map */
+            color: var(--ink-primary);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* --- LAYERS --- */
+
+        /* 1. The Underlay (Iframe Container) */
+        #iframe-layer {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            /* Pass clicks to canvas unless active */
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        #iframe-layer.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        #project-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #fff;
+        }
+
+        /* 2. The Map (Canvas) */
+        #viewport {
+            position: absolute;
+            inset: 0;
+            z-index: 10;
+            cursor: crosshair;
+            transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .texture-overlay {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.4;
+            mix-blend-mode: multiply;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+            z-index: 11;
+        }
+
+        body.dark-mode .texture-overlay {
+            mix-blend-mode: overlay;
+            opacity: 0.1;
+        }
+
+        /* 3. Interface Layer */
+        #ui-layer {
+            position: absolute;
+            inset: 0;
+            z-index: 20;
+            pointer-events: none;
+        }
+
+        /* Geographic Labels */
+        .geo-label {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            color: var(--ink-primary);
+            opacity: 0.5;
+            pointer-events: auto;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            text-align: center;
+            letter-spacing: 0.1em;
+            text-shadow: 0 0 20px var(--bg-paper);
+            mix-blend-mode: multiply;
+        }
+
+        body.dark-mode .geo-label {
+            mix-blend-mode: normal;
+        }
+
+        .geo-label:hover {
+            opacity: 1;
+            transform: translate(-50%, -55%) scale(1.05);
+            color: var(--accent-geo);
+            z-index: 50;
+        }
+
+        .geo-label .sub {
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            margin-top: 4px;
+            font-weight: 400;
+            opacity: 0;
+            transform: translateY(5px);
+            transition: all 0.3s;
+            color: var(--ink-secondary);
+        }
+
+        .geo-label:hover .sub {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Hide labels when portal is open to avoid clutter */
+        body.portal-open .geo-label {
+            opacity: 0 !important;
+            pointer-events: none;
+        }
+
+        /* --- CONTROLS --- */
+        .hud-top {
+            position: fixed;
+            top: 32px;
+            left: 32px;
+            pointer-events: none;
+        }
+
+        .close-portal-btn {
+            position: fixed;
+            top: 32px;
+            right: 32px;
+            width: 56px;
+            height: 56px;
+            background: var(--ink-primary);
+            color: var(--bg-paper);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            pointer-events: auto;
+            opacity: 0;
+            transform: scale(0.8) rotate(-90deg);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+        }
+
+        body.portal-open .close-portal-btn {
+            opacity: 1;
+            transform: scale(1) rotate(0deg);
+        }
+
+        .close-portal-btn:hover {
+            background: var(--accent-geo);
+            transform: scale(1.1);
+        }
+
+        .control-dock {
+            position: fixed;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-paper);
+            padding: 10px 24px;
+            border-radius: 50px;
+            border: 1px solid var(--ink-secondary);
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+            pointer-events: auto;
+            transition: transform 0.4s;
+        }
+
+        body.portal-open .control-dock {
+            transform: translateX(-50%) translateY(200%);
+        }
+
+        .icon-btn {
+            color: var(--ink-primary);
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .icon-btn:hover {
+            color: var(--accent-geo);
+        }
+
+        /* Hover Action Panel */
+        .action-panel {
+            position: fixed;
+            transform: translate(-50%, -120%);
+            background: var(--bg-paper);
+            border: 1px solid var(--ink-secondary);
+            border-radius: 12px;
+            padding: 8px 12px;
+            display: none;
+            gap: 8px;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            pointer-events: auto;
+        }
+
+        .action-panel.visible {
+            display: flex;
+        }
+
+        .action-panel::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid var(--ink-secondary);
+        }
+
+        .action-btn {
+            background: var(--ink-primary);
+            color: var(--bg-paper);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .action-btn:hover {
+            background: var(--accent-geo);
+            transform: translateY(-2px);
+        }
+
+        .action-btn.secondary {
+            background: transparent;
+            color: var(--ink-primary);
+            border: 1px solid var(--ink-secondary);
+        }
+
+        .action-btn.secondary:hover {
+            border-color: var(--accent-geo);
+            color: var(--accent-geo);
+        }
+
+        .action-panel-title {
+            font-family: 'Cinzel', serif;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--ink-primary);
+            margin-right: 8px;
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 1. The Iframe (The Content World) -->
+    <div id="iframe-layer">
+        <iframe id="project-frame" src=""></iframe>
+    </div>
+
+    <!-- 2. The Map (The Topography) -->
+    <div id="viewport">
+        <canvas id="c"></canvas>
+        <div class="texture-overlay"></div>
+    </div>
+
+    <!-- 3. UI Layer -->
+    <div id="ui-layer">
+        <div id="labels-container"></div>
+    </div>
+
+    <!-- 4. HUD -->
+    <div class="hud-top">
+        <h1 class="text-4xl font-serif font-bold italic tracking-tighter text-[var(--ink-primary)]">
+            ATG 2.0 <span
+                class="not-italic text-xs font-sans font-normal text-[var(--ink-secondary)] tracking-widest ml-2 uppercase border border-[var(--ink-secondary)] px-2 py-1 rounded-full bg-[var(--bg-paper)]">Composite
+                Atlas</span>
+        </h1>
+        <div class="mt-2 flex gap-4 text-[10px] font-mono text-[var(--ink-secondary)]">
+            <span id="coord-display">POS: 0.00, 0.00</span>
+            <span id="status-display">STATUS: SCANNING</span>
+        </div>
+    </div>
+
+    <!-- 5. Action Panel (appears on hover) -->
+    <div class="action-panel" id="actionPanel">
+        <span class="action-panel-title" id="actionTitle">Region</span>
+        <button class="action-btn" id="btnEnter">Enter</button>
+        <button class="action-btn secondary" id="btnNewTab">New Tab</button>
+    </div>
+
+    <!-- Close Button (when iframe is open) -->
+    <div class="close-portal-btn" id="btnClose">
+        <span style="font-size: 24px; font-weight: bold;">&times;</span>
+    </div>
+
+    <!-- 6. Controls -->
+    <div class="control-dock">
+        <button id="btnTheme" class="icon-btn"><i data-lucide="moon" class="w-5 h-5"></i></button>
+        <div class="w-px h-4 bg-[var(--ink-secondary)] opacity-30"></div>
+        <button id="btnReset" class="icon-btn"><i data-lucide="rotate-ccw" class="w-5 h-5"></i></button>
+    </div>
+
+    <script>
+        (function () {
+            lucide.createIcons();
+
+            // --- CONFIG ---
+            const CONFIG = {
+                GRID_W: 160,
+                GRID_H: 90,
+                RENDER_SCALE: 2,
+                SPEED: 1.0,
+                AGENTS: 24
+            };
+
+            // --- DATA LOADING ---
+            let ATLAS_DATA = [];
+
+            // Spatial positions for each region type
+            const REGION_POSITIONS = {
+                "FullyConnected": { x: 0.2, y: 0.25 },
+                "NoConnection": { x: 0.8, y: 0.2 },
+                "MixedBinaryLinks": { x: 0.5, y: 0.5 },
+                "AllMiddlingLinks": { x: 0.2, y: 0.75 },
+                "StreamOfConsciousness1": { x: 0.75, y: 0.7 },
+                "DevDiary": { x: 0.5, y: 0.2 },
+                "EkphrasticExperiments": { x: 0.15, y: 0.5 },
+                "CoreTrajectories": { x: 0.85, y: 0.5 },
+                "Contributors": { x: 0.5, y: 0.15 },
+                "Films": { x: 0.5, y: 0.85 }
+            };
+
+            async function loadAtlasData() {
+                try {
+                    const response = await fetch('./data/wag-atlas.json');
+                    if (!response.ok) throw new Error('Not found');
+                    const data = await response.json();
+
+                    Object.keys(data).forEach(id => {
+                        const region = data[id];
+                        const pos = REGION_POSITIONS[id] || { x: 0.3 + Math.random() * 0.4, y: 0.3 + Math.random() * 0.4 };
+                        ATLAS_DATA.push({
+                            id: id,
+                            label: region.label || id,
+                            type: region.type || 'mountain',
+                            x: pos.x,
+                            y: pos.y,
+                            url: region.url || '#',
+                            desc: region.desc || ''
+                        });
+                    });
+                    console.log(`Loaded ${ATLAS_DATA.length} regions from WAG Atlas`);
+                } catch (e) {
+                    console.warn('Using default atlas data:', e);
+                    useDefaultAtlasData();
+                }
+            }
+
+            function useDefaultAtlasData() {
+                ATLAS_DATA = [
+                    { id: "FullyConnected", label: "The Connected Range", type: "mountains", x: 0.2, y: 0.25, url: "https://hartswf0.github.io/role-deck/", desc: "High connectivity zone." },
+                    { id: "NoConnection", label: "Isles of Solitude", type: "islands", x: 0.8, y: 0.2, url: "https://hartswf0.github.io/liberty-machines/", desc: "Isolated data points." },
+                    { id: "MixedBinaryLinks", label: "Binary Basin", type: "valley", x: 0.5, y: 0.5, url: "https://hartswf0.github.io/dirty-disclosure/", desc: "Deterministic flow patterns." },
+                    { id: "AllMiddlingLinks", label: "Middling Plains", type: "plains", x: 0.2, y: 0.75, url: "https://hartswf0.github.io/privacy-value-labels/#view=label", desc: "Uniform link weights." },
+                    { id: "StreamOfConsciousness1", label: "River Alpha", type: "river", x: 0.75, y: 0.7, url: "https://hartswf0.github.io/func-sub/func-index.html", desc: "Linear associative chain." },
+                    { id: "DevDiary", label: "Dev Highlands", type: "plateau", x: 0.5, y: 0.2, url: "https://hartswf0.github.io/1000-small-futures/", desc: "Dense cluster of features." }
+                ];
+            }
+
+            // --- STATE ---
+            let heatGrid, renderGrid;
+            let agents = [];
+            let width, height;
+
+            // Region State
+            let activeRegion = null;
+
+            // --- NOISE ---
+            function pseudoRandom(x, y) {
+                return Math.sin(x * 12.9898 + y * 78.233) * 43758.5453 - Math.floor(Math.sin(x * 12.9898 + y * 78.233) * 43758.5453);
+            }
+            function noise(x, y) {
+                const i = Math.floor(x); const j = Math.floor(y);
+                const u = x - i; const v = y - j;
+                const su = u * u * (3 - 2 * u); const sv = v * v * (3 - 2 * v);
+                const a = pseudoRandom(i, j); const b = pseudoRandom(i + 1, j);
+                const c = pseudoRandom(i, j + 1); const d = pseudoRandom(i + 1, j + 1);
+                return (a * (1 - su) + b * su) * (1 - sv) + (c * (1 - su) + d * su) * sv;
+            }
+
+            // --- AGENTS ---
+            class Agent {
+                constructor() {
+                    this.pos = { x: Math.random(), y: Math.random() };
+                    this.targetRegion = ATLAS_DATA[Math.floor(Math.random() * ATLAS_DATA.length)];
+                    this.targetPos = { x: this.targetRegion.x, y: this.targetRegion.y };
+                    this.color = ['#c2410c', '#0f766e', '#b45309'][Math.floor(Math.random() * 3)];
+                }
+                update() {
+                    const aspect = width / height;
+                    const dx = (this.targetPos.x - this.pos.x) * aspect;
+                    const dy = (this.targetPos.y - this.pos.y);
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < 0.02) {
+                        this.targetRegion = ATLAS_DATA[Math.floor(Math.random() * ATLAS_DATA.length)];
+                        this.targetPos = {
+                            x: this.targetRegion.x + (Math.random() - 0.5) * 0.15,
+                            y: this.targetRegion.y + (Math.random() - 0.5) * 0.15
+                        };
+                        deposit(this.pos.x, this.pos.y, 0.04, 0.3); // Settlement heat
+                    } else {
+                        const speed = 0.0003;
+                        this.pos.x += (dx / dist) * speed / aspect;
+                        this.pos.y += (dy / dist) * speed;
+                        // Wander
+                        this.pos.x += (Math.random() - 0.5) * 0.002;
+                        this.pos.y += (Math.random() - 0.5) * 0.002;
+
+                        if (Math.random() > 0.6) deposit(this.pos.x, this.pos.y, 0.01, 0.02); // Path heat
+                    }
+                }
+            }
+
+            function deposit(nx, ny, radPct, val) {
+                const gx = Math.floor(nx * CONFIG.GRID_W);
+                const gy = Math.floor(ny * CONFIG.GRID_H);
+                const r = Math.ceil(radPct * CONFIG.GRID_W);
+                for (let y = gy - r; y <= gy + r; y++) {
+                    for (let x = gx - r; x <= gx + r; x++) {
+                        if (x >= 0 && x < CONFIG.GRID_W && y >= 0 && y < CONFIG.GRID_H) {
+                            const d = Math.sqrt((x - gx) ** 2 + (y - gy) ** 2);
+                            if (d < r) heatGrid[y * CONFIG.GRID_W + x] += val * 0.1;
+                        }
+                    }
+                }
+            }
+
+            // --- SYSTEM ---
+            const canvas = document.getElementById('c');
+            const ctx = canvas.getContext('2d');
+            const labelsContainer = document.getElementById('labels-container');
+            const iframeLayer = document.getElementById('iframe-layer');
+            const projectFrame = document.getElementById('project-frame');
+            const btnClose = document.getElementById('btnClose');
+            const coordDisplay = document.getElementById('coord-display');
+
+            async function init() {
+                // Load data first
+                await loadAtlasData();
+
+                handleResize();
+                heatGrid = new Float32Array(CONFIG.GRID_W * CONFIG.GRID_H);
+
+                // Build Terrain
+                for (let y = 0; y < CONFIG.GRID_H; y++) {
+                    for (let x = 0; x < CONFIG.GRID_W; x++) {
+                        const nx = x / CONFIG.GRID_W; const ny = y / CONFIG.GRID_H;
+                        // Base Noise
+                        let h = noise(nx * 3, ny * 3) * 0.6 + noise(nx * 8 + 10, ny * 8 + 10) * 0.2;
+
+                        // Region shaping
+                        ATLAS_DATA.forEach(r => {
+                            const d = Math.sqrt((nx - r.x) ** 2 * (width / height) + (ny - r.y) ** 2);
+                            if (r.type === 'mountains' && d < 0.15) h += (0.15 - d) * 3.0;
+                            if (r.type === 'islands' && d < 0.15) h += Math.max(0, Math.sin(d * 40) * 0.5);
+                            if (r.type === 'valley' && d < 0.1) h -= (0.1 - d) * 1.0;
+                        });
+
+                        heatGrid[y * CONFIG.GRID_W + x] = Math.max(0, h);
+                    }
+                }
+
+                for (let i = 0; i < CONFIG.AGENTS; i++) agents.push(new Agent());
+                createLabels();
+
+                // Events
+                window.addEventListener('resize', handleResize);
+                canvas.addEventListener('mousemove', handleHover);
+
+                // Action panel buttons
+                document.getElementById('btnEnter').addEventListener('click', () => {
+                    if (hoveredRegion) enterRegion(hoveredRegion);
+                });
+                document.getElementById('btnNewTab').addEventListener('click', () => {
+                    if (hoveredRegion) openInNewTab(hoveredRegion);
+                });
+
+                // Close portal with ESC key
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && activeRegion) closePortal();
+                });
+
+                // Close button
+                document.getElementById('btnClose').addEventListener('click', closePortal);
+
+                document.getElementById('btnTheme').addEventListener('click', () => {
+                    document.body.classList.toggle('dark-mode');
+                    lucide.createIcons();
+                });
+                document.getElementById('btnReset').addEventListener('click', () => window.location.reload());
+
+                requestAnimationFrame(loop);
+            }
+
+            function createLabels() {
+                labelsContainer.innerHTML = '';
+                ATLAS_DATA.forEach(r => {
+                    const el = document.createElement('div');
+                    el.className = 'geo-label';
+                    el.style.left = (r.x * 100) + '%';
+                    el.style.top = (r.y * 100) + '%';
+                    el.innerHTML = `${r.label} <span class="sub">${r.type.toUpperCase()}</span>`;
+                    labelsContainer.appendChild(el);
+                });
+            }
+
+            function handleResize() {
+                width = window.innerWidth;
+                height = window.innerHeight;
+                const dpr = Math.min(window.devicePixelRatio || 1, 2);
+                canvas.width = width * dpr;
+                canvas.height = height * dpr;
+                ctx.scale(dpr, dpr);
+
+                CONFIG.GRID_W = 160;
+                CONFIG.GRID_H = Math.floor(160 * (height / width));
+            }
+
+            let hoveredRegion = null;
+
+            // Find which region owns terrain at a given normalized position
+            function findRegionAtPosition(nx, ny) {
+                // Sample the heat grid at this position
+                const gx = Math.floor(nx * CONFIG.GRID_W);
+                const gy = Math.floor(ny * CONFIG.GRID_H);
+                if (gx < 0 || gx >= CONFIG.GRID_W || gy < 0 || gy >= CONFIG.GRID_H) return null;
+
+                const elevation = heatGrid[gy * CONFIG.GRID_W + gx];
+
+                // Only consider elevated terrain as clickable
+                if (elevation < 0.25) return null;
+
+                // Find the nearest region to this position (terrain ownership)
+                let closest = null;
+                let minDist = Infinity;
+                ATLAS_DATA.forEach(r => {
+                    const dx = nx - r.x;
+                    const dy = ny - r.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    // Only consider if within reasonable range of a peak
+                    if (dist < 0.2 && dist < minDist) {
+                        minDist = dist;
+                        closest = r;
+                    }
+                });
+                return closest;
+            }
+
+            function handleHover(e) {
+                if (activeRegion) return;
+
+                const rect = canvas.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / width;
+                const y = (e.clientY - rect.top) / height;
+
+                coordDisplay.innerText = `POS: ${x.toFixed(2)}, ${y.toFixed(2)}`;
+
+                // Use terrain-based detection
+                const hit = findRegionAtPosition(x, y);
+
+                if (hit !== hoveredRegion) {
+                    hoveredRegion = hit;
+                    canvas.style.cursor = hit ? 'pointer' : 'crosshair';
+                    document.getElementById('status-display').innerText = hit ? `DETECTED: ${hit.label}` : "STATUS: SCANNING";
+                    document.getElementById('status-display').style.color = hit ? 'var(--accent-active)' : 'inherit';
+
+                    // Update action panel
+                    const actionPanel = document.getElementById('actionPanel');
+                    if (hit) {
+                        actionPanel.classList.add('visible');
+                        document.getElementById('actionTitle').textContent = hit.label;
+                        // Position at region center
+                        actionPanel.style.left = (hit.x * width) + 'px';
+                        actionPanel.style.top = (hit.y * height) + 'px';
+                    } else {
+                        actionPanel.classList.remove('visible');
+                    }
+                }
+            }
+
+            function handleClick(e) {
+                // Clicks no longer do anything - use action buttons
+            }
+
+            function enterRegion(region) {
+                activeRegion = region;
+                document.body.classList.add('portal-open');
+                iframeLayer.classList.add('active');
+                projectFrame.src = region.url;
+                document.getElementById('actionPanel').classList.remove('visible');
+            }
+
+            function openInNewTab(region) {
+                window.open(region.url, '_blank');
+            }
+
+            function closePortal() {
+                document.body.classList.remove('portal-open');
+                activeRegion = null;
+                iframeLayer.classList.remove('active');
+                projectFrame.src = '';
+            }
+
+            // --- RENDER LOOP ---
+            function loop() {
+                agents.forEach(a => a.update());
+
+                ctx.clearRect(0, 0, width, height);
+                const isDark = document.body.classList.contains('dark-mode');
+                const bg = getComputedStyle(document.body).getPropertyValue('--bg-paper').trim();
+                const ink = getComputedStyle(document.body).getPropertyValue('--ink-primary').trim();
+                const accent = getComputedStyle(document.body).getPropertyValue('--accent-geo').trim();
+
+                // 1. Fill Background
+                ctx.fillStyle = bg;
+                ctx.fillRect(0, 0, width, height);
+
+                // 2. Draw Terrain (Heatmap + Contours)
+                const cw = width / CONFIG.GRID_W;
+                const ch = height / CONFIG.GRID_H;
+
+                // Batch rendering
+                for (let y = 0; y < CONFIG.GRID_H; y++) {
+                    for (let x = 0; x < CONFIG.GRID_W; x++) {
+                        const idx = y * CONFIG.GRID_W + x;
+                        const val = heatGrid[idx];
+
+                        // Highlight terrain that belongs to hovered region
+                        let isZone = false;
+                        if (!activeRegion && hoveredRegion && val >= 0.25) {
+                            const nx = x / CONFIG.GRID_W;
+                            const ny = y / CONFIG.GRID_H;
+                            // Check if this cell would be owned by the hovered region
+                            const cellOwner = findRegionAtPosition(nx, ny);
+                            if (cellOwner === hoveredRegion) isZone = true;
+                        }
+
+                        if (val > 0.1 || isZone) {
+                            let alpha = Math.min(val * 0.3, 0.7);
+                            if (isZone) alpha = Math.max(alpha, 0.35); // Brighter highlight
+
+                            ctx.fillStyle = isDark
+                                ? `rgba(251, 146, 60, ${alpha})`
+                                : `rgba(180, 83, 9, ${alpha})`;
+                            ctx.fillRect(x * cw, y * ch, cw + 0.5, ch + 0.5);
+                        }
+                    }
+                }
+
+                // Contours
+                const levels = 8;
+                ctx.lineWidth = 1;
+                ctx.strokeStyle = ink;
+                ctx.globalAlpha = 0.4;
+                ctx.beginPath();
+
+                for (let y = 0; y < CONFIG.GRID_H - 1; y++) {
+                    for (let x = 0; x < CONFIG.GRID_W - 1; x++) {
+                        const idx = y * CONFIG.GRID_W + x;
+                        const val = heatGrid[idx];
+                        const right = heatGrid[idx + 1];
+                        const down = heatGrid[idx + CONFIG.GRID_W];
+
+                        const l1 = Math.floor(val * levels);
+                        const l2 = Math.floor(right * levels);
+                        const l3 = Math.floor(down * levels);
+
+                        if (l1 !== l2) { ctx.moveTo((x + 1) * cw, y * ch); ctx.lineTo((x + 1) * cw, (y + 1) * ch); }
+                        if (l1 !== l3) { ctx.moveTo(x * cw, (y + 1) * ch); ctx.lineTo((x + 1) * cw, (y + 1) * ch); }
+                    }
+                }
+                ctx.stroke();
+                ctx.globalAlpha = 1.0;
+
+                // 3. Grid Lines (Guide)
+                ctx.strokeStyle = getComputedStyle(document.body).getPropertyValue('--grid-guide').trim();
+                ctx.beginPath();
+                for (let x = 0; x < width; x += 100) { ctx.moveTo(x, 0); ctx.lineTo(x, height); }
+                for (let y = 0; y < height; y += 100) { ctx.moveTo(0, y); ctx.lineTo(width, y); }
+                ctx.stroke();
+
+                // 4. Agents
+                ctx.fillStyle = ink;
+                agents.forEach(a => {
+                    const sx = a.pos.x * width;
+                    const sy = a.pos.y * height;
+                    ctx.fillRect(sx, sy, 3, 3);
+                });
+
+
+
+                // 6. Hover Reticle
+                if (!activeRegion && hoveredRegion) {
+                    const rx = hoveredRegion.x * width;
+                    const ry = hoveredRegion.y * height;
+                    const s = 40;
+
+                    ctx.strokeStyle = accent;
+                    ctx.lineWidth = 1.5;
+                    ctx.beginPath();
+                    ctx.moveTo(rx - s, ry - s + 10); ctx.lineTo(rx - s, ry - s); ctx.lineTo(rx - s + 10, ry - s);
+                    ctx.moveTo(rx + s, ry - s + 10); ctx.lineTo(rx + s, ry - s); ctx.lineTo(rx + s - 10, ry - s);
+                    ctx.moveTo(rx - s, ry + s - 10); ctx.lineTo(rx - s, ry + s); ctx.lineTo(rx - s + 10, ry + s);
+                    ctx.moveTo(rx + s, ry + s - 10); ctx.lineTo(rx + s, ry + s); ctx.lineTo(rx + s - 10, ry + s);
+                    ctx.stroke();
+                }
+
+                requestAnimationFrame(loop);
+            }
+
+            init();
+
+        })();
+    </script>
+</body>
+
+</html>

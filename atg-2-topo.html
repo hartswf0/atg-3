@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ATG 2.0 | Meta-Topography</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&display=swap');
+
+        :root {
+            --bg-land: #e6e2d3;
+            --ink-primary: #2a2622;
+            --ink-secondary: #5e5a55;
+            --accent-geo: #cd5c5c;
+            --accent-water: #aabebb;
+        }
+
+        body.dark-mode {
+            --bg-land: #111111;
+            --ink-primary: #e5e5e5;
+            --ink-secondary: #888888;
+            --accent-geo: #d97706;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg-land);
+            color: var(--ink-primary);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #viewport {
+            position: absolute;
+            inset: 0;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .texture-overlay {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.2;
+            mix-blend-mode: multiply;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.3'/%3E%3C/svg%3E");
+        }
+
+        #labels-layer {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .geo-label {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--ink-primary);
+            opacity: 0.6;
+            pointer-events: auto;
+            cursor: pointer;
+            letter-spacing: 0.1em;
+            text-shadow: 0 0 15px var(--bg-land);
+            transition: all 0.3s;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        .geo-label:hover {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1.15);
+            color: var(--accent-geo);
+        }
+
+        .geo-label .sub {
+            display: block;
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            font-weight: 400;
+            margin-top: 2px;
+            opacity: 0.7;
+        }
+
+        /* Iframe Overlay */
+        #iframe-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.85);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        #iframe-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .iframe-container {
+            width: 90%;
+            max-width: 1200px;
+            height: 85%;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .iframe-header {
+            background: var(--ink-primary);
+            color: var(--bg-land);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .iframe-title {
+            font-family: 'Cinzel', serif;
+            font-size: 16px;
+        }
+
+        .iframe-close {
+            background: none;
+            border: none;
+            color: inherit;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 4px 12px;
+        }
+
+        .iframe-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        #site-iframe {
+            flex: 1;
+            border: none;
+            width: 100%;
+        }
+
+        /* Controls */
+        .controls {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 50;
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-ctrl {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(4px);
+            border: 1px solid var(--ink-secondary);
+            color: var(--ink-primary);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.2s;
+        }
+
+        .btn-ctrl:hover {
+            background: var(--accent-geo);
+            color: #fff;
+            border-color: transparent;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="viewport">
+        <canvas id="c"></canvas>
+        <div class="texture-overlay"></div>
+        <div id="labels-layer"></div>
+    </div>
+    <div id="iframe-overlay">
+        <div class="iframe-container">
+            <div class="iframe-header">
+                <span class="iframe-title" id="iframe-title">Site</span>
+                <button class="iframe-close" id="btn-close-iframe">X</button>
+            </div>
+            <iframe id="site-iframe" src="about:blank"></iframe>
+        </div>
+    </div>
+    <div class="controls">
+        <button class="btn-ctrl" id="btn-theme" title="Toggle Theme">T</button>
+        <button class="btn-ctrl" id="btn-reset" title="Reset">R</button>
+    </div>
+    <script>
+        (function () {
+            const SITES = [
+                { id: 1, title: "Dirty Disclosure", url: "https://hartswf0.github.io/dirty-disclosure/", color: "#c54b2c", date: "2024-01-15", phase: "Concept", position: { x: 0.15, y: 0.25 } },
+                { id: 2, title: "Privacy Value Labels", url: "https://hartswf0.github.io/privacy-value-labels/#view=label", color: "#2c5aa0", date: "2024-01-22", phase: "Design", position: { x: 0.35, y: 0.12 } },
+                { id: 3, title: "MFSS", url: "https://hartswf0.github.io/mfss/", color: "#5a8f2c", date: "2024-02-05", phase: "Prototype", position: { x: 0.22, y: 0.45 } },
+                { id: 4, title: "Role Deck HUB", url: "https://hartswf0.github.io/role-deck/HUB.html", color: "#8f2c5a", date: "2024-02-12", phase: "Development", position: { x: 0.5, y: 0.18 } },
+                { id: 5, title: "Role Deck", url: "https://hartswf0.github.io/role-deck/", color: "#5a2c8f", date: "2024-02-19", phase: "Development", position: { x: 0.42, y: 0.35 } },
+                { id: 6, title: "Liberty Machines", url: "https://hartswf0.github.io/liberty-machines/", color: "#e57c5f", date: "2024-02-26", phase: "Research", position: { x: 0.68, y: 0.38 } },
+                { id: 7, title: "Func Sub", url: "https://hartswf0.github.io/func-sub/func-index.html", color: "#2ca08f", date: "2024-03-04", phase: "Experimentation", position: { x: 0.28, y: 0.72 } },
+                { id: 8, title: "1000 Small Futures", url: "https://hartswf0.github.io/1000-small-futures/", color: "#a08f2c", date: "2024-03-11", phase: "Archive", position: { x: 0.78, y: 0.58 } },
+                { id: 9, title: "The Fork", url: "https://hartswf0.github.io/the-fork/", color: "#ff6b6b", date: "2024-03-18", phase: "Visualization", position: { x: 0.82, y: 0.25 } },
+                { id: 10, title: "Wag Work", url: "https://hartswf0.github.io/tractor-dce-gyo/wag-work.html", color: "#4a4a4a", date: "2024-03-25", phase: "Implementation", position: { x: 0.58, y: 0.75 } },
+                { id: 11, title: "Wag Pres", url: "https://hartswf0.github.io/tractor-dce-gyo/wag-pres.html", color: "#9b9b9b", date: "2024-04-01", phase: "Documentation", position: { x: 0.72, y: 0.85 } },
+                { id: 12, title: "Sonic", url: "https://hartswf0.github.io/func-sub/t6-sonic.html", color: "#8b572a", date: "2024-04-08", phase: "Experimentation", position: { x: 0.88, y: 0.48 } }
+            ];
+
+            const CONFIG = { GRID_W: 160, GRID_H: 100, CONTOUR_LEVELS: 20 };
+            let heatGrid, width, height;
+            const canvas = document.getElementById('c');
+            const ctx = canvas.getContext('2d');
+
+            function noise(x, y) {
+                const sin = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453;
+                return sin - Math.floor(sin);
+            }
+            function fbm(x, y, octaves) {
+                let val = 0, amp = 0.5;
+                for (let i = 0; i < octaves; i++) {
+                    val += noise(x, y) * amp;
+                    x *= 2; y *= 2; amp *= 0.5;
+                }
+                return val;
+            }
+
+            function init() {
+                width = window.innerWidth; height = window.innerHeight;
+                const dpr = Math.min(devicePixelRatio || 1, 2);
+                canvas.width = width * dpr; canvas.height = height * dpr;
+                ctx.scale(dpr, dpr);
+                CONFIG.GRID_H = Math.floor(CONFIG.GRID_W * (height / width));
+                heatGrid = new Float32Array(CONFIG.GRID_W * CONFIG.GRID_H);
+
+                // Generate terrain with peaks at site positions
+                for (let y = 0; y < CONFIG.GRID_H; y++) {
+                    for (let x = 0; x < CONFIG.GRID_W; x++) {
+                        const nx = x / CONFIG.GRID_W, ny = y / CONFIG.GRID_H;
+                        let h = fbm(nx * 4, ny * 4, 4) * 0.4;
+                        // Add peaks at site positions
+                        SITES.forEach(s => {
+                            const dx = nx - s.position.x, dy = ny - s.position.y;
+                            const d = Math.sqrt(dx * dx + dy * dy);
+                            if (d < 0.15) h += (0.15 - d) * 4;
+                        });
+                        heatGrid[y * CONFIG.GRID_W + x] = Math.min(h, 2.5);
+                    }
+                }
+                renderLabels();
+                draw();
+            }
+
+            function renderLabels() {
+                const layer = document.getElementById('labels-layer');
+                layer.innerHTML = '';
+                SITES.forEach(s => {
+                    const el = document.createElement('div');
+                    el.className = 'geo-label';
+                    el.style.left = (s.position.x * 100) + '%';
+                    el.style.top = (s.position.y * 100) + '%';
+                    el.innerHTML = `${s.title}<span class="sub">${s.phase} - ${s.date}</span>`;
+                    el.onclick = () => openSite(s);
+                    layer.appendChild(el);
+                });
+            }
+
+            function openSite(site) {
+                document.getElementById('iframe-title').textContent = site.title + ' - ' + site.phase;
+                document.getElementById('site-iframe').src = site.url;
+                document.getElementById('iframe-overlay').classList.add('active');
+            }
+
+            function closeSite() {
+                document.getElementById('iframe-overlay').classList.remove('active');
+                document.getElementById('site-iframe').src = 'about:blank';
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, width, height);
+                const cw = width / CONFIG.GRID_W, ch = height / CONFIG.GRID_H;
+                const isDark = document.body.classList.contains('dark-mode');
+                const ink = isDark ? '#e5e5e5' : '#2a2622';
+
+                // Draw filled elevation bands
+                for (let l = CONFIG.CONTOUR_LEVELS; l >= 1; l--) {
+                    const threshold = l * 0.12;
+                    const alpha = 0.03 + (l / CONFIG.CONTOUR_LEVELS) * 0.08;
+                    ctx.fillStyle = isDark ? `rgba(255,200,100,${alpha})` : `rgba(180,120,60,${alpha})`;
+                    for (let y = 0; y < CONFIG.GRID_H; y++) {
+                        for (let x = 0; x < CONFIG.GRID_W; x++) {
+                            if (heatGrid[y * CONFIG.GRID_W + x] >= threshold) {
+                                ctx.fillRect(x * cw, y * ch, cw + 0.5, ch + 0.5);
+                            }
+                        }
+                    }
+                }
+
+                // Draw sharp contour lines
+                ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+                for (let l = 1; l <= CONFIG.CONTOUR_LEVELS; l++) {
+                    const threshold = l * 0.12;
+                    const isMajor = l % 4 === 0;
+                    ctx.beginPath();
+                    ctx.lineWidth = isMajor ? 1.8 : 0.6;
+                    ctx.strokeStyle = ink;
+                    ctx.globalAlpha = isMajor ? 0.7 : 0.25;
+
+                    for (let y = 0; y < CONFIG.GRID_H - 1; y++) {
+                        for (let x = 0; x < CONFIG.GRID_W - 1; x++) {
+                            const idx = y * CONFIG.GRID_W + x;
+                            const v0 = heatGrid[idx], v1 = heatGrid[idx + 1];
+                            const v2 = heatGrid[idx + CONFIG.GRID_W + 1], v3 = heatGrid[idx + CONFIG.GRID_W];
+                            let bits = 0;
+                            if (v0 >= threshold) bits |= 1;
+                            if (v1 >= threshold) bits |= 2;
+                            if (v2 >= threshold) bits |= 4;
+                            if (v3 >= threshold) bits |= 8;
+                            if (bits === 0 || bits === 15) continue;
+
+                            const lx = x * cw, ly = y * ch;
+                            const a = { x: lx + cw * 0.5, y: ly };
+                            const b = { x: lx + cw, y: ly + ch * 0.5 };
+                            const c = { x: lx + cw * 0.5, y: ly + ch };
+                            const d = { x: lx, y: ly + ch * 0.5 };
+
+                            switch (bits) {
+                                case 1: case 14: ctx.moveTo(d.x, d.y); ctx.lineTo(a.x, a.y); break;
+                                case 2: case 13: ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); break;
+                                case 4: case 11: ctx.moveTo(b.x, b.y); ctx.lineTo(c.x, c.y); break;
+                                case 8: case 7: ctx.moveTo(c.x, c.y); ctx.lineTo(d.x, d.y); break;
+                                case 3: case 12: ctx.moveTo(d.x, d.y); ctx.lineTo(b.x, b.y); break;
+                                case 6: case 9: ctx.moveTo(a.x, a.y); ctx.lineTo(c.x, c.y); break;
+                                case 5: ctx.moveTo(d.x, d.y); ctx.lineTo(a.x, a.y); ctx.moveTo(b.x, b.y); ctx.lineTo(c.x, c.y); break;
+                                case 10: ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.moveTo(c.x, c.y); ctx.lineTo(d.x, d.y); break;
+                            }
+                        }
+                    }
+                    ctx.stroke();
+                }
+                ctx.globalAlpha = 1;
+
+                // Draw peak markers
+                SITES.forEach(s => {
+                    const px = s.position.x * width, py = s.position.y * height;
+                    ctx.beginPath();
+                    ctx.arc(px, py, 6, 0, Math.PI * 2);
+                    ctx.fillStyle = s.color;
+                    ctx.fill();
+                    ctx.strokeStyle = isDark ? '#fff' : '#000';
+                    ctx.lineWidth = 1.5;
+                    ctx.stroke();
+                });
+            }
+
+            document.getElementById('btn-close-iframe').onclick = closeSite;
+            document.getElementById('iframe-overlay').onclick = e => { if (e.target.id === 'iframe-overlay') closeSite(); };
+            document.getElementById('btn-theme').onclick = () => { document.body.classList.toggle('dark-mode'); draw(); };
+            document.getElementById('btn-reset').onclick = () => location.reload();
+            window.onresize = init;
+            init();
+        })();
+    </script>
+</body>
+
+</html>

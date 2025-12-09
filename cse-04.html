@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>ATG 2.0 · Habit Topography</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <style>
+        :root {
+            --accent: #c4a77d;
+            /* sand */
+            --accent2: #8fb8a0;
+            /* sage */
+            --warm: #d4956a;
+            /* orange clay */
+            --bg: #050507;
+            --panel: #0c0c12;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+            background: radial-gradient(circle at 0% 0%, #202024, #050507);
+            color: #ccc;
+            min-height: 100vh;
+            padding: 14px 10px 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            -webkit-font-smoothing: antialiased;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        header {
+            text-align: center;
+            width: 100%;
+            max-width: 620px;
+        }
+
+        h1 {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: var(--accent);
+            opacity: 0.95;
+        }
+
+        .subtitle {
+            font-size: 0.62rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--accent2);
+            opacity: 0.8;
+            margin-top: 3px;
+        }
+
+        .subtitle span {
+            color: var(--warm);
+        }
+
+        #canvas-wrap {
+            position: relative;
+            width: min(94vw, 560px);
+            height: min(94vw, 560px);
+            background: radial-gradient(circle at 50% 20%, #161620, #07070b);
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow:
+                0 0 50px rgba(0, 0, 0, 0.6),
+                0 0 0 1px rgba(196, 167, 125, 0.18),
+                inset 0 0 80px rgba(0, 0, 0, 0.9);
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            cursor: crosshair;
+        }
+
+        #overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(2, 2, 4, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: opacity 0.4s ease;
+        }
+
+        #overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #overlay-text {
+            padding: 14px 26px;
+            border-radius: 999px;
+            border: 1px solid rgba(143, 184, 160, 0.5);
+            color: var(--accent);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.22em;
+            background: rgba(5, 5, 10, 0.9);
+            cursor: pointer;
+            animation: pulse 1.9s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            50% {
+                opacity: 0.6;
+                transform: translateY(-2px);
+            }
+        }
+
+        .scrubber {
+            width: 100%;
+            max-width: 560px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 4px;
+        }
+
+        .scrubber-label {
+            font-size: 0.65rem;
+            color: var(--accent2);
+            min-width: 80px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            background: #11111a;
+            border-radius: 999px;
+            height: 8px;
+            flex: 1;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 0 3px #050507;
+            cursor: pointer;
+        }
+
+        .btn {
+            padding: 8px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(143, 184, 160, 0.5);
+            background: rgba(10, 18, 16, 0.9);
+            color: var(--accent2);
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.15s ease;
+        }
+
+        .btn:hover {
+            background: rgba(143, 184, 160, 0.22);
+        }
+
+        .btn.active {
+            background: rgba(212, 149, 106, 0.3);
+            border-color: rgba(212, 149, 106, 0.9);
+            color: #fef7ee;
+        }
+
+        .controls {
+            width: 100%;
+            max-width: 560px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 4px;
+        }
+
+        select {
+            background: #151520;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--accent2);
+            padding: 7px 12px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            outline: none;
+            min-width: 130px;
+            cursor: pointer;
+        }
+
+        .slider-mini-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--accent2);
+        }
+
+        .slider-mini-wrap input[type="range"] {
+            width: 110px;
+            height: 6px;
+        }
+
+        .stats {
+            width: 100%;
+            max-width: 560px;
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            font-size: 0.62rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .stats span {
+            color: var(--accent);
+        }
+
+        .vu {
+            width: 100%;
+            max-width: 560px;
+            height: 4px;
+            background: #121218;
+            border-radius: 999px;
+            overflow: hidden;
+            margin-top: 4px;
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06);
+        }
+
+        .vu-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent2), var(--warm));
+            transition: width 0.08s linear;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                max-width: 480px;
+            }
+
+            .stats {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>ATG · Associative Terrain Graph</h1>
+        <div class="subtitle" id="subtitle">
+            Habit Topography for <span>Trail-Aware Tools</span>
+        </div>
+    </header>
+
+    <div id="canvas-wrap">
+        <canvas id="atgCanvas"></canvas>
+        <div id="overlay">
+            <div id="overlay-text">Tap to Blaze Trail</div>
+        </div>
+    </div>
+
+    <div class="scrubber">
+        <div class="scrubber-label" id="step-label">0 / 0</div>
+        <input type="range" id="scrub" min="0" max="100" step="1" value="0" />
+        <button class="btn" id="btn-play">▶ Play</button>
+    </div>
+
+    <div class="controls">
+        <select id="view-mode">
+            <option value="contour">Contour</option>
+            <option value="heat">Heatmap</option>
+        </select>
+
+        <div class="slider-mini-wrap">
+            Density
+            <input type="range" id="density" min="0.5" max="2.0" step="0.1" value="1.0" />
+        </div>
+
+        <div class="slider-mini-wrap">
+            Trail
+            <input type="range" id="trail-weight" min="0.5" max="2.0" step="0.1" value="1.0" />
+        </div>
+    </div>
+
+    <div class="stats">
+        <div>Phase: <span id="stat-phase">—</span></div>
+        <div>Role: <span id="stat-role">—</span></div>
+        <div>Elevation: <span id="stat-elev">0.00</span></div>
+    </div>
+
+    <div class="vu">
+        <div class="vu-fill" id="vu"></div>
+    </div>
+
+    <script>
+        // =============================
+        // ATG 2.0 · Habit Topography
+        // =============================
+
+        const canvas = document.getElementById("atgCanvas");
+        const ctx = canvas.getContext("2d");
+        const wrap = document.getElementById("canvas-wrap");
+        const overlay = document.getElementById("overlay");
+        const subtitleEl = document.getElementById("subtitle");
+        const stepLabelEl = document.getElementById("step-label");
+        const viewSel = document.getElementById("view-mode");
+        const densitySlider = document.getElementById("density");
+        const trailSlider = document.getElementById("trail-weight");
+        const scrub = document.getElementById("scrub");
+        const playBtn = document.getElementById("btn-play");
+        const vuFill = document.getElementById("vu");
+
+        const statPhase = document.getElementById("stat-phase");
+        const statRole = document.getElementById("stat-role");
+        const statElev = document.getElementById("stat-elev");
+
+        let W = 0, H = 0, dpr = 1;
+
+        const GRID = 60;      // logical field
+        const RENDER = 120;   // sampling for contours/heat
+
+        const field = new Float32Array(GRID * GRID);
+        const renderGrid = new Float32Array(RENDER * RENDER);
+
+        const PHASES = ["Setup", "Warmup", "Live", "Highlights", "Post"];
+        const ROLES = ["Tech", "Performer", "Editor", "Community"];
+
+        // One canonical "creator trail" through phase × role space
+        const events = [
+            { phase: "Setup", role: "Tech", label: "Scene check", intensity: 1.0 },
+            { phase: "Warmup", role: "Performer", label: "Chat intro", intensity: 0.9 },
+            { phase: "Live", role: "Performer", label: "Gameplay focus", intensity: 1.2 },
+            { phase: "Live", role: "Community", label: "Chat Q&A", intensity: 1.0 },
+            { phase: "Live", role: "Tech", label: "Audio fix", intensity: 0.8 },
+            { phase: "Highlights", role: "Editor", label: "Clip passes", intensity: 1.3 },
+            { phase: "Post", role: "Community", label: "Raid / outro", intensity: 1.0 }
+        ];
+
+        // Positions will be filled after we know canvas size
+        // each event: {canvas:{x,y}, grid:{gx,gy}, ...}
+        let viewMode = "contour";
+        let densityScale = 1.0;
+        let trailWeight = 1.0;
+        let currentIndex = 0;        // float: 0..events.length-1
+        let playing = false;
+
+        let lastTime = performance.now();
+
+        // ---------- Mapping & Field ----------
+
+        function computeEventPositions() {
+            const pad = Math.min(W, H) * 0.14;
+            const mapW = W - pad * 2;
+            const mapH = H - pad * 2;
+
+            events.forEach(ev => {
+                const pi = PHASES.indexOf(ev.phase);
+                const ri = ROLES.indexOf(ev.role);
+                const xn = PHASES.length > 1 ? pi / (PHASES.length - 1) : 0.5;
+                const yn = ROLES.length > 1 ? ri / (ROLES.length - 1) : 0.5;
+
+                const x = pad + xn * mapW;
+                const y = pad + yn * mapH;
+
+                const gx = Math.round((x / W) * (GRID - 1));
+                const gy = Math.round((y / H) * (GRID - 1));
+
+                ev.canvas = { x, y };
+                ev.grid = { gx, gy };
+            });
+        }
+
+        function stampNode(gx, gy, intensity) {
+            const baseRadius = GRID * 0.18;
+            const radius = baseRadius * densityScale;
+            const sigma2 = (radius * 0.7) * (radius * 0.7);
+
+            const xmin = Math.max(0, Math.floor(gx - radius));
+            const xmax = Math.min(GRID - 1, Math.ceil(gx + radius));
+            const ymin = Math.max(0, Math.floor(gy - radius));
+            const ymax = Math.min(GRID - 1, Math.ceil(gy + radius));
+
+            for (let y = ymin; y <= ymax; y++) {
+                const dy = y - gy;
+                for (let x = xmin; x <= xmax; x++) {
+                    const dx = x - gx;
+                    const dist2 = dx * dx + dy * dy;
+                    if (dist2 > radius * radius) continue;
+                    const falloff = Math.exp(-dist2 / (2 * sigma2));
+                    field[y * GRID + x] += intensity * falloff;
+                }
+            }
+        }
+
+        function stampPathSegment(g1, g2, weight) {
+            const steps = 35;
+            for (let i = 0; i <= steps; i++) {
+                const t = i / steps;
+                const gx = g1.gx + (g2.gx - g1.gx) * t;
+                const gy = g1.gy + (g2.gy - g1.gy) * t;
+                stampNode(gx, gy, weight * trailWeight * 0.25);
+            }
+        }
+
+        function rebuildField() {
+            field.fill(0);
+
+            if (!events.length) {
+                renderGrid.fill(0);
+                return;
+            }
+
+            const maxIdx = Math.max(0, Math.min(events.length - 1, currentIndex));
+            const fullSteps = Math.floor(maxIdx);
+            const frac = maxIdx - fullSteps;
+
+            // Nodes up to fullSteps
+            for (let i = 0; i <= fullSteps; i++) {
+                const ev = events[i];
+                stampNode(ev.grid.gx, ev.grid.gy, ev.intensity);
+            }
+
+            // Partial contribution towards next node
+            if (frac > 0 && fullSteps < events.length - 1) {
+                const next = events[fullSteps + 1];
+                stampNode(next.grid.gx, next.grid.gy, next.intensity * frac);
+            }
+
+            // Ridges along path
+            for (let i = 0; i < fullSteps; i++) {
+                const e1 = events[i];
+                const e2 = events[i + 1];
+                stampPathSegment(e1.grid, e2.grid, (e1.intensity + e2.intensity) * 0.5);
+            }
+
+            // Partial ridge between last full and next
+            if (frac > 0 && fullSteps < events.length - 1) {
+                const e1 = events[fullSteps];
+                const e2 = events[fullSteps + 1];
+                const midGrid = {
+                    gx: e1.grid.gx + (e2.grid.gx - e1.grid.gx) * frac,
+                    gy: e1.grid.gy + (e2.grid.gy - e1.grid.gy) * frac
+                };
+                stampPathSegment(e1.grid, midGrid, (e1.intensity + e2.intensity) * 0.5);
+            }
+
+            // Normalise to 0..1 and upscale to render grid
+            let min = Infinity, max = -Infinity;
+            for (let i = 0; i < field.length; i++) {
+                const v = field[i];
+                if (v < min) min = v;
+                if (v > max) max = v;
+            }
+            if (!isFinite(min) || max <= min) {
+                renderGrid.fill(0);
+                return;
+            }
+            const span = max - min;
+
+            const factor = (GRID - 1) / (RENDER - 1);
+            for (let y = 0; y < RENDER; y++) {
+                for (let x = 0; x < RENDER; x++) {
+                    const lx = x * factor;
+                    const ly = y * factor;
+                    const x0 = Math.floor(lx), y0 = Math.floor(ly);
+                    const x1 = Math.min(x0 + 1, GRID - 1), y1 = Math.min(y0 + 1, GRID - 1);
+                    const tx = lx - x0, ty = ly - y0;
+
+                    const v00 = (field[y0 * GRID + x0] - min) / span;
+                    const v10 = (field[y0 * GRID + x1] - min) / span;
+                    const v01 = (field[y1 * GRID + x0] - min) / span;
+                    const v11 = (field[y1 * GRID + x1] - min) / span;
+
+                    const top = v00 * (1 - tx) + v10 * tx;
+                    const bot = v01 * (1 - tx) + v11 * tx;
+                    renderGrid[y * RENDER + x] = top * (1 - ty) + bot * ty;
+                }
+            }
+
+            // Update "elevation" + VU meter
+            let mean = 0;
+            for (let i = 0; i < renderGrid.length; i++) mean += renderGrid[i];
+            mean /= renderGrid.length;
+            statElev.textContent = mean.toFixed(2);
+            vuFill.style.width = `${Math.min(mean * 220, 100).toFixed(1)}%`;
+        }
+
+        // ---------- Drawing ----------
+
+        function drawBackground() {
+            ctx.fillStyle = "#06060a";
+            ctx.fillRect(0, 0, W, H);
+
+            // Subtle grid
+            ctx.strokeStyle = "rgba(255,255,255,0.03)";
+            ctx.lineWidth = 1;
+            const step = Math.min(W, H) / 10;
+            ctx.beginPath();
+            for (let x = step * 0.5; x < W; x += step) {
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, H);
+            }
+            for (let y = step * 0.5; y < H; y += step) {
+                ctx.moveTo(0, y);
+                ctx.lineTo(W, y);
+            }
+            ctx.stroke();
+        }
+
+        function drawHeat() {
+            const cellW = W / RENDER;
+            const cellH = H / RENDER;
+            for (let y = 0; y < RENDER; y++) {
+                for (let x = 0; x < RENDER; x++) {
+                    const v = renderGrid[y * RENDER + x];
+                    if (v < 0.01) continue;
+                    const intensity = v;
+                    // ACG-ish palette: deep teal → sage → warm sand
+                    const hue = 170 - intensity * 70;            // teal → yellow
+                    const sat = 55 + intensity * 30;
+                    const light = 22 + intensity * 30;
+                    const alpha = 0.25 + intensity * 0.6;
+                    ctx.fillStyle = `hsla(${hue}, ${sat}%, ${light}%, ${alpha})`;
+                    ctx.fillRect(x * cellW, y * cellH, cellW + 1, cellH + 1);
+                }
+            }
+        }
+
+        function drawContours() {
+            const cellW = W / (RENDER - 1);
+            const cellH = H / (RENDER - 1);
+            const levels = 12;
+
+            for (let l = 1; l <= levels; l++) {
+                const thr = l / (levels + 2); // avoid extremes
+                const hue = 32 + (l / levels) * 30; // sand to moss
+                const sat = 45 + (l / levels) * 20;
+                const alpha = 0.12 + (l / levels) * 0.5;
+
+                ctx.strokeStyle = `hsla(${hue}, ${sat}%, 50%, ${alpha})`;
+                ctx.lineWidth = 0.6 + (l / levels) * 1.0;
+                ctx.beginPath();
+
+                for (let y = 0; y < RENDER - 1; y++) {
+                    for (let x = 0; x < RENDER - 1; x++) {
+                        const idx = y * RENDER + x;
+                        const v0 = renderGrid[idx];
+                        const v1 = renderGrid[idx + 1];
+                        const v2 = renderGrid[idx + 1 + RENDER];
+                        const v3 = renderGrid[idx + RENDER];
+
+                        const b0 = v0 > thr ? 8 : 0;
+                        const b1 = v1 > thr ? 4 : 0;
+                        const b2 = v2 > thr ? 2 : 0;
+                        const b3 = v3 > thr ? 1 : 0;
+                        const bin = b0 | b1 | b2 | b3;
+                        if (bin === 0 || bin === 15) continue;
+
+                        const safeT = (a, b) => {
+                            if (b === a) return 0.5;
+                            return (thr - a) / (b - a);
+                        };
+
+                        const a = { x: x + safeT(v0, v1), y: y };
+                        const b = { x: x + 1, y: y + safeT(v1, v2) };
+                        const c = { x: x + safeT(v3, v2), y: y + 1 };
+                        const d = { x: x, y: y + safeT(v0, v3) };
+
+                        const sx = p => p.x * cellW;
+                        const sy = p => p.y * cellH;
+
+                        switch (bin) {
+                            case 1: case 14: ctx.moveTo(sx(c), sy(c)); ctx.lineTo(sx(d), sy(d)); break;
+                            case 2: case 13: ctx.moveTo(sx(b), sy(b)); ctx.lineTo(sx(c), sy(c)); break;
+                            case 3: case 12: ctx.moveTo(sx(b), sy(b)); ctx.lineTo(sx(d), sy(d)); break;
+                            case 4: case 11: ctx.moveTo(sx(a), sy(a)); ctx.lineTo(sx(b), sy(b)); break;
+                            case 5:
+                                ctx.moveTo(sx(a), sy(a)); ctx.lineTo(sx(d), sy(d));
+                                ctx.moveTo(sx(b), sy(b)); ctx.lineTo(sx(c), sy(c));
+                                break;
+                            case 6: case 9: ctx.moveTo(sx(a), sy(a)); ctx.lineTo(sx(c), sy(c)); break;
+                            case 7: case 8: ctx.moveTo(sx(a), sy(a)); ctx.lineTo(sx(d), sy(d)); break;
+                            case 10:
+                                ctx.moveTo(sx(a), sy(a)); ctx.lineTo(sx(b), sy(b));
+                                ctx.moveTo(sx(c), sy(c)); ctx.lineTo(sx(d), sy(d));
+                                break;
+                        }
+                    }
+                }
+                ctx.stroke();
+            }
+        }
+
+        function drawTrail() {
+            if (!events.length) return;
+
+            ctx.save();
+
+            const idx = Math.max(0, Math.min(events.length - 1, currentIndex));
+            const full = Math.floor(idx);
+            const frac = idx - full;
+
+            // Path
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = "rgba(0, 0, 0, 0.85)";
+            ctx.beginPath();
+            ctx.moveTo(events[0].canvas.x, events[0].canvas.y);
+
+            for (let i = 1; i <= full; i++) {
+                const p = events[i].canvas;
+                ctx.lineTo(p.x, p.y);
+            }
+
+            let marker = events[full].canvas;
+            if (frac > 0 && full < events.length - 1) {
+                const a = events[full].canvas;
+                const b = events[full + 1].canvas;
+                const x = a.x + (b.x - a.x) * frac;
+                const y = a.y + (b.y - a.y) * frac;
+                ctx.lineTo(x, y);
+                marker = { x, y };
+            }
+
+            ctx.stroke();
+
+            // Nodes (small dots)
+            events.forEach((ev, i) => {
+                const visited = i <= full;
+                ctx.beginPath();
+                ctx.arc(ev.canvas.x, ev.canvas.y, visited ? 4 : 3, 0, Math.PI * 2);
+                ctx.fillStyle = visited ? "rgba(196,167,125,0.95)" : "rgba(80,80,80,0.8)";
+                ctx.fill();
+            });
+
+            // Marker
+            ctx.shadowBlur = 18;
+            ctx.shadowColor = "rgba(212,149,106,0.95)";
+            ctx.fillStyle = "#d4956a";
+            ctx.strokeStyle = "rgba(0,0,0,0.8)";
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.arc(marker.x, marker.y, 7, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            ctx.restore();
+        }
+
+        function drawHUD() {
+            // tiny legend circles in top-right
+            ctx.save();
+            const r = 4;
+            const pad = 10;
+            const x0 = W - pad - r;
+            const y0 = pad + r;
+
+            ctx.beginPath();
+            ctx.arc(x0, y0, r, 0, Math.PI * 2);
+            ctx.fillStyle = "#c4a77d";
+            ctx.fill();
+
+            ctx.font = "9px system-ui, sans-serif";
+            ctx.textAlign = "right";
+            ctx.textBaseline = "middle";
+            ctx.fillStyle = "rgba(220,220,220,0.85)";
+            ctx.fillText("Habit ridge", x0 - 10, y0);
+
+            ctx.restore();
+        }
+
+        function render() {
+            drawBackground();
+            if (viewMode === "heat") {
+                drawHeat();
+            } else {
+                // faint heat under contours for depth
+                ctx.save();
+                ctx.globalAlpha = 0.55;
+                drawHeat();
+                ctx.restore();
+                drawContours();
+            }
+            drawTrail();
+            drawHUD();
+        }
+
+        // ---------- UI / State ----------
+
+        function updateInfo() {
+            if (!events.length) {
+                subtitleEl.textContent = "No trail loaded";
+                stepLabelEl.textContent = "0 / 0";
+                statPhase.textContent = "—";
+            }
+            const idx = Math.round(Math.max(0, Math.min(events.length - 1, currentIndex)));
+            const ev = events[idx];
+            stepLabelEl.textContent = `${idx + 1} / ${events.length}`;
+            subtitleEl.innerHTML = `Creator trail across <span>${ev.phase}</span> / ${ev.role}`;
+            statPhase.textContent = ev.phase;
+            statRole.textContent = ev.role;
+
+            const pct = (currentIndex / Math.max(1, events.length - 1)) * 100;
+            scrub.value = pct;
+        }
+
+        function resize() {
+            const rect = wrap.getBoundingClientRect();
+            W = rect.width;
+            H = rect.height;
+            dpr = Math.min(window.devicePixelRatio || 1, 2);
+            canvas.width = W * dpr;
+            canvas.height = H * dpr;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            computeEventPositions();
+            rebuildField();
+            render();
+        }
+
+        function togglePlay() {
+            playing = !playing;
+            playBtn.textContent = playing ? "⏸ Pause" : "▶ Play";
+            playBtn.classList.toggle("active", playing);
+        }
+
+        // ---------- Loop ----------
+
+        function loop(now) {
+            const dt = (now - lastTime) / 1000;
+            lastTime = now;
+
+            if (playing && events.length > 1) {
+                const speed = 0.35; // indices per second
+                currentIndex += speed * dt;
+                if (currentIndex > events.length - 1) {
+                    currentIndex -= (events.length - 1);
+                }
+                rebuildField();
+                updateInfo();
+            }
+
+            render();
+            requestAnimationFrame(loop);
+        }
+
+        // ---------- Events ----------
+
+        viewSel.addEventListener("change", e => {
+            viewMode = e.target.value;
+        });
+
+        densitySlider.addEventListener("input", e => {
+            densityScale = parseFloat(e.target.value);
+            rebuildField();
+        });
+
+        trailSlider.addEventListener("input", e => {
+            trailWeight = parseFloat(e.target.value);
+            rebuildField();
+        });
+
+        scrub.addEventListener("input", e => {
+            const pct = parseInt(e.target.value, 10) / 100;
+            currentIndex = pct * (events.length - 1);
+            rebuildField();
+            updateInfo();
+        });
+
+        playBtn.addEventListener("click", () => {
+            togglePlay();
+        });
+
+        canvas.addEventListener("click", () => {
+            overlay.classList.add("hidden");
+            if (!playing) togglePlay();
+        });
+
+        overlay.addEventListener("click", () => {
+            overlay.classList.add("hidden");
+            if (!playing) togglePlay();
+        });
+
+        window.addEventListener("resize", resize);
+
+        // ---------- Init ----------
+
+        window.addEventListener("load", () => {
+            resize();
+            currentIndex = 0;
+            rebuildField();
+            updateInfo();
+            requestAnimationFrame(loop);
+        });
+    </script>
+</body>
+
+</html>
