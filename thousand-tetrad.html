@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thousand-Tetrad | From Failure to Design Pattern</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+        :root {
+            --bg: #0a0a0a;
+            --card: #141414;
+            --border: #262626;
+            --fg: #fafafa;
+            --muted: #a3a3a3;
+            --accent: #3b82f6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--fg);
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 48px 24px;
+        }
+
+        header {
+            margin-bottom: 48px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--muted);
+            margin-bottom: 24px;
+        }
+
+        .meta {
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+
+        .meta a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin: 48px 0 16px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 32px 0 12px;
+            color: var(--accent);
+        }
+
+        p {
+            margin-bottom: 16px;
+            color: #d4d4d4;
+        }
+
+        blockquote {
+            border-left: 3px solid var(--accent);
+            padding: 16px 20px;
+            margin: 24px 0;
+            background: var(--card);
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+        }
+
+        blockquote strong {
+            color: var(--fg);
+            font-style: normal;
+        }
+
+        ul,
+        ol {
+            margin: 16px 0 24px 24px;
+            color: #d4d4d4;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--card);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+
+        .video-embed {
+            margin: 32px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .video-embed iframe {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border: none;
+        }
+
+        .video-caption {
+            padding: 12px 16px;
+            background: var(--card);
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+
+        .link-card {
+            display: block;
+            padding: 16px 20px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin: 16px 0;
+            text-decoration: none;
+            color: var(--fg);
+            transition: all 0.15s;
+        }
+
+        .link-card:hover {
+            border-color: var(--accent);
+            transform: translateX(4px);
+        }
+
+        .link-card strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .link-card span {
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+
+        .diagram {
+            padding: 24px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin: 24px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            overflow-x: auto;
+        }
+
+        .diagram .header {
+            color: var(--accent);
+        }
+
+        .diagram .grid {
+            color: #a78bfa;
+        }
+
+        .diagram .chat {
+            color: #34d399;
+        }
+
+        .diagram .footer {
+            color: #fbbf24;
+        }
+
+        .collab-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .collab-card {
+            padding: 16px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        .collab-card strong {
+            color: var(--accent);
+        }
+
+        .collab-card p {
+            margin: 8px 0 0;
+            font-size: 0.85rem;
+        }
+
+        .insight-box {
+            padding: 20px 24px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            margin: 32px 0;
+        }
+
+        .insight-box strong {
+            display: block;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+
+        footer {
+            margin-top: 64px;
+            padding-top: 32px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Thousand-Tetrad</h1>
+            <p class="subtitle">From the Failure of TILTH to a Design Pattern for Scenario Simulation</p>
+            <p class="meta">
+                Part of <a href="index.html">LMC-6650 Values in Design</a> ·
+                <a href="https://hartswf0.github.io/tractor-dce-gyo/">Launch Tool</a> ·
+                67 Scenarios · 12 Categories
+            </p>
+        </header>
+
+        <section>
+            <h2>The Failure of TILTH</h2>
+
+            <a href="https://hartswf0.github.io/role-deck/tilth-investigation.html" class="link-card">
+                <strong>TILTH Investigation</strong>
+                <span>The speculative company that taught void management</span>
+            </a>
+
+            <p>TILTH was a speculative company—a world inside of a world, a speculative investigation of a speculative
+                company. The scenarios became convoluted quickly. It was hard to show enough of the world for it to gain
+                coherency.</p>
+
+            <p>The project was stuck in the <strong>trough of quality</strong>: almost good enough to stand alone, but
+                the hard parts of completion (final polish, coding refinements) got exponentially more challenging as
+                the project context grew.</p>
+
+            <blockquote>
+                <strong>The core tension:</strong> Designing tools that design the world vs. designing for designers.
+                TILTH was a chance to test my own tools and find opportunities to explore collaborations—a way of
+                bootstrapping other projects.
+            </blockquote>
+
+            <h3>Constraints That Mattered</h3>
+            <ul>
+                <li>Must work on a mobile phone</li>
+                <li>Make prompting and simulation exploration easier</li>
+                <li>Became a place to understand affordances</li>
+            </ul>
+
+            <h3>What TILTH Taught</h3>
+            <p>The bigger question emerged: <strong>how to deal with many branching worlds?</strong> TILTH got harder to
+                use each time I went back and added to it. I needed infrastructure that gets <em>better</em> and
+                <em>richer</em> the more you use it—not worse.</p>
+        </section>
+
+        <section>
+            <h2>The Genesis of Thousand-Tetrad</h2>
+
+            <p>The impetus came from realizing that much better speculative worlds had already been created. Rather than
+                building worlds, I could be parasitic off existing universes—focusing on novel affordances and the
+                technical tool-building process instead of keeping track of the world itself.</p>
+
+            <h3>Inspirations</h3>
+            <ul>
+                <li><strong>Ted Chiang</strong> — stories that present ethical dilemmas in stunning detail</li>
+                <li><strong>Life After BOB</strong> — AI ethics scenarios I had observed through working with simulation
+                    architects</li>
+                <li><strong>1000 Lives</strong> — Shuruq Tramontini's work on AI consciousness narratives</li>
+            </ul>
+
+            <blockquote>
+                <strong>Goal:</strong> Improve and grow with simulations. Learn from both the technical project and the
+                collaborators. Reach a technical threshold to be recognized as a future collaborator on such projects.
+            </blockquote>
+
+            <h3>The Core Question</h3>
+            <p>Build a <strong>design pattern</strong> that can be scaled and operationalized across any scenario—one
+                that stays invariant regardless of the world being explored.</p>
+        </section>
+
+        <section>
+            <h2>The Design Pattern</h2>
+
+            <div class="diagram">
+                <span class="header">┌──────────────────────────────────────────────────────┐</span>
+                <span class="header">│ [Corner] HEADER / OPERATORS [Corner] │</span>
+                <span class="header">└──────────────────────────────────────────────────────┘</span>
+                <span class="grid">┌──────────────────────────────────────────────────────┐</span>
+                <span class="grid">│ │</span>
+                <span class="grid">│ 9 × 9 G R I D │</span>
+                <span class="grid">│ │</span>
+                <span class="grid">│ Any entity can be controlled via grid or chat │</span>
+                <span class="grid">│ Anything can be branched │</span>
+                <span class="grid">│ │</span>
+                <span class="grid">└──────────────────────────────────────────────────────┘</span>
+                <span class="chat">┌──────────────────────────────────────────────────────┐</span>
+                <span class="chat">│ C H A T │</span>
+                <span class="chat">│ Any new UI loads through here │</span>
+                <span class="chat">└──────────────────────────────────────────────────────┘</span>
+                <span class="footer">┌──────────────────────────────────────────────────────┐</span>
+                <span class="footer">│ [Corner] Scene Selector │ Tetrad Op [Corner] │</span>
+                <span class="footer">└──────────────────────────────────────────────────────┘</span>
+            </div>
+
+            <p>This became the invariant structure: a 9×9 grid with a chat beneath it, a header with two corner buttons
+                and operators in the middle, a footer with scene selector and tetrad operators. <strong>Any new UI loads
+                    through the chat. Any entity can be controlled via the chat or the grid. Anything can be
+                    branched.</strong></p>
+
+            <h3>The Discovery Moment</h3>
+
+            <a href="https://hartswf0.github.io/nexadoc-jar/" class="link-card">
+                <strong>Nexadoc-Jar: The Origin</strong>
+                <span>Where prompt/completion chains met ekphrasis</span>
+            </a>
+
+            <p>The pattern was first discovered investigating ways of showing prompt/completion chains with ekphrasis.
+                The complexity of TILTH gave way to the simplicity of the anecdote:</p>
+
+            <a href="https://hartswf0.github.io/nexadoc-jar/epir.html" class="link-card">
+                <strong>The Jar</strong>
+                <span>Based on Wallace Stevens's "Anecdote of a Jar" — the aha moment</span>
+            </a>
+
+            <blockquote>
+                I placed a jar in Tennessee,<br>
+                And round it was, upon a hill.<br>
+                It made the slovenly wilderness<br>
+                Surround that hill.
+            </blockquote>
+
+            <p>The jar is the void. It doesn't fill the wilderness—it organizes it. This became the foundation for void
+                management: the LLM manages a bounded space, not an unbounded world.</p>
+        </section>
+
+        <section>
+            <h2>The Tetrad Operators</h2>
+
+            <p>McLuhan's tetrad—Enhance, Obsolesce, Retrieve, Reverse—became the D-pad of a speculative design game.
+                What if these four laws of media were operationalized as a prompt controller?</p>
+
+            <a href="https://hartswf0.github.io/role-deck/tetrad-pad.html" class="link-card">
+                <strong>Tetrad Pad</strong>
+                <span>Early experiment in tetrad as controller (requires API key)</span>
+            </a>
+
+            <p>This builds on previous work in LEGOS: <strong>L</strong>ocation, <strong>E</strong>ntities,
+                <strong>G</strong>oals, <strong>O</strong>bstacles, <strong>S</strong>hifts/Solutions.</p>
+
+            <a href="https://hartswf0.github.io/LEGOS/" class="link-card">
+                <strong>LEGOS Framework</strong>
+                <span>The scene-building grammar beneath the tetrad</span>
+            </a>
+        </section>
+
+        <section>
+            <h2>Collaborator Testing</h2>
+
+            <div class="collab-list">
+                <div class="collab-card">
+                    <strong>Tehri Marttila</strong>
+                    <p>Portuguese computational humanities researcher. Weekly meetings. Pushed toward lower-cost,
+                        open-source LLMs. Tested deeply, built collaborative forest/branching paths project. Valuable
+                        friction: the system prompt could be used for free on any LLM—the grid and branching affordances
+                        didn't translate without OpenAI integration.</p>
+                </div>
+                <div class="collab-card">
+                    <strong>Jordan Caldwell</strong>
+                    <p>Black Metal as method. Complex training ground built primarily for a physical book. Workshop
+                        visit was too short to realize technical ambition—the system couldn't absorb the variety of her
+                        world quickly enough.</p>
+                </div>
+                <div class="collab-card">
+                    <strong>Kayla Evans</strong>
+                    <p>Met at Responsible AI Summit. Interested in ethical negotiation training. Wanted to be creative
+                        director. I could barely keep the codebase together—encouraged hands-on engagement to see the
+                        frictions I was fighting.</p>
+                </div>
+                <div class="collab-card">
+                    <strong>Shuruq Tramontini</strong>
+                    <p>1000 Lives. Works with Unreal Engine. The tool was meant to support her thousand small-scale
+                        futures—extremely bounded, opposite of TILTH's convolution.</p>
+                </div>
+            </div>
+
+            <h3>The Technical Uncanny Valley</h3>
+            <p>Over a hundred test scenes built. API costs mounted. Found myself in a space not technical enough for
+                computer scientists (Parag Mital at NeurIPS, emergentic.ai's multi-agent architectures) but too
+                technical for design collaborators. Didn't meet the threshold <em>yet</em>—but learned enormously about
+                software engineering, simulation architecture, and most importantly: <strong>context
+                    engineering</strong>.</p>
+        </section>
+
+        <section>
+            <h2>Demo Videos</h2>
+
+            <div class="video-embed">
+                <iframe src="https://www.youtube.com/embed/Pvx9OBBRNn0" allowfullscreen></iframe>
+                <div class="video-caption">Experiment Walkthrough — Tetrad analysis across scenarios</div>
+            </div>
+
+            <div class="video-embed">
+                <iframe src="https://www.youtube.com/embed/X_hDTkllpAc" allowfullscreen></iframe>
+                <div class="video-caption">Interface Demo — 9×9 grid navigation and scenario loading</div>
+            </div>
+        </section>
+
+        <section>
+            <h2>The Key Realization: Void Management</h2>
+
+            <div class="insight-box">
+                <strong>The Shift</strong>
+                Using LLM to construct scenes led to frustration with fine-grain controls. Assembly of the scene was the
+                issue. This was resolved by seeing places where LLMs got in the way. The shift: <strong>LLM managing a
+                    void instead of a scene</strong>. The LLM becomes a gatekeeper, not a world-builder.
+            </div>
+
+            <h3>Problems Encountered</h3>
+            <ul>
+                <li><strong>Context window degradation</strong> — scene graphs and ring buffer memory needed</li>
+                <li><strong>Export problem</strong> — how to share something generated with LLM collaboration that isn't
+                    just a "vibe coded" website or raw text? (ONYX Studio attempts to address this)</li>
+                <li><strong>Sunken cost fallacy</strong> — total overhaul of system would be costly, API bleeding</li>
+            </ul>
+
+            <h3>The Path Forward</h3>
+            <p>These collaborations pushed toward novel 3D scenes—more clearly representing scenarios. This led to HOLO
+                Project and eventually TRACTOR-DCE-GYO: a major pivot, creating a whole suite of tools, learning linear
+                algebra, shifting from LEGOS-multi-channel scene graphs to richer disc-data.json formats.</p>
+
+            <a href="https://hartswf0.github.io/holo-project/holo-project.html" class="link-card">
+                <strong>HOLO Project</strong>
+                <span>Embedding narrative camera movement into prebaked format—films/scenarios shareable without LLM
+                    access</span>
+            </a>
+        </section>
+
+        <section>
+            <h2>Technical Lineage</h2>
+
+            <p>This work connects to broader research in simulation and narrative:</p>
+
+            <ul>
+                <li><a href="https://www.researchgate.net/publication/7070973_From_linear_story_generation_to_branching_story_graphs"
+                        style="color: var(--accent)">Mark Riedl & R. Michael Young</a> — "From linear story generation
+                    to branching story graphs" (IEEE 2006)</li>
+                <li><a href="https://arxiv.org/abs/2304.03442" style="color: var(--accent)">Generative Agents</a> —
+                    Stanford's "Interactive Simulacra of Human Behavior" (Park et al. 2023)</li>
+                <li><a href="https://pkmital.com/home/" style="color: var(--accent)">Parag Mital</a> — Scene synthesis,
+                    cultural automation, emergentic.ai multi-agent platform</li>
+            </ul>
+
+            <p>The aspiration: teach courses that bridge these domains, contribute to panels like <a
+                    href="https://neurips.cc/virtual/2025/loc/san-diego/panel/131735"
+                    style="color: var(--accent)">"Emergent Stories: AI Agents and New Narratives"</a> at NeurIPS.</p>
+        </section>
+
+        <section>
+            <h2>67 Scenarios Across 12 Categories</h2>
+
+            <p>Rather than building convoluted worlds, Thousand-Tetrad provides a scaffold for exploring existing ones:
+            </p>
+
+            <ul>
+                <li><strong>Media</strong> (7) — Microdrama, Social Media, Cryptocurrency, Video Call, Podcast, AI
+                    Assistant</li>
+                <li><strong>Medical</strong> (6) — Migraine, Cocaine Intox, Organophosphate, COPD, Aortic Stenosis</li>
+                <li><strong>Digital Humanities</strong> (8) — Print Scholar, Digital Scholar, Administrator, Student,
+                    Telegraph, Attention Crisis, Collaboration, Extended Cognition</li>
+                <li><strong>1000 Lives</strong> (6) — Chalice Study, Z Character, Thousand Lives, New Year 2074, Life
+                    After BOB, Plot Structures</li>
+                <li><strong>Feed Loop</strong> (8) — Eight episodes: Maya (addictive design), Dev (AI bias), Priya
+                    (security), Jordan (deceptive UX), Maria (worker organizing), Sarah (cultural AI), Amit
+                    (surveillance), Sam (mission drift)</li>
+                <li><strong>Black Metal</strong> (4) — Florilegia, Companion 180, Dark Voyage, Training Grounds</li>
+                <li><strong>Ekphrastic</strong> (2) — Stevens Jar, Achilles Shield</li>
+                <li><strong>Cultural Theory</strong> (3) — Barthes Wrestling, Benjamin Angel, Sankofa Bird</li>
+                <li><strong>Novel Contexts</strong> (5) — Chess Position, Psychogeography, Fermentation, Ritual Space,
+                    Gentrification</li>
+                <li><strong>Mythic</strong> (5) — Tower Defense, Tower of Babel, Sisyphus, Labyrinth, Orpheus</li>
+                <li><strong>Animated</strong> (4) — Mouse of Silver, Hunters Without, Tales of Ba Sing Se, Sozin's Comet
+                </li>
+                <li><strong>Persuasion</strong> (5) — HAL 9000, Dobby, Cyclops, Her Finale, 12 Angry Men #8</li>
+            </ul>
+        </section>
+
+        <footer>
+            <p>Thousand-Tetrad · Part of <a href="index.html">LMC-6650 Values in Design</a></p>
+            <p style="margin-top:12px;"><strong>Void Management Pattern:</strong> Build the key first, then discover
+                what doors it opens.</p>
+        </footer>
+    </div>
+</body>
+
+</html>

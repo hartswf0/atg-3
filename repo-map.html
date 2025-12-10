@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATG 3.0 | Repository Map</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: #0a0a0a;
+            color: #fafafa;
+            line-height: 1.6;
+            padding: 24px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #737373;
+            margin-bottom: 32px;
+        }
+
+        h2 {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #525252;
+            margin: 40px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #262626;
+        }
+
+        .category {
+            margin-bottom: 32px;
+        }
+
+        .category-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #a3a3a3;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .category-title .count {
+            font-size: 0.7rem;
+            background: #262626;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-weight: 400;
+        }
+
+        .items {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .item {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #d4d4d4;
+            transition: all 0.1s;
+        }
+
+        .item:hover {
+            background: #1a1a1a;
+        }
+
+        .item-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            min-width: 200px;
+        }
+
+        .item-desc {
+            font-size: 0.8rem;
+            color: #737373;
+        }
+
+        .item.current .item-name {
+            color: #3b82f6;
+        }
+
+        .item.stable .item-name {
+            color: #22c55e;
+        }
+
+        .item.experiment .item-name {
+            color: #f59e0b;
+        }
+
+        .item.deprecated .item-name {
+            color: #525252;
+            text-decoration: line-through;
+        }
+
+        .legend {
+            display: flex;
+            gap: 24px;
+            font-size: 0.75rem;
+            color: #737373;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+
+        .legend span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .legend .dot.current {
+            background: #3b82f6;
+        }
+
+        .legend .dot.stable {
+            background: #22c55e;
+        }
+
+        .legend .dot.experiment {
+            background: #f59e0b;
+        }
+
+        .legend .dot.deprecated {
+            background: #525252;
+        }
+
+        .insight {
+            background: #141414;
+            border-left: 3px solid #3b82f6;
+            padding: 16px 20px;
+            margin: 24px 0;
+            font-size: 0.9rem;
+        }
+
+        .insight strong {
+            color: #3b82f6;
+        }
+
+        footer {
+            margin-top: 48px;
+            padding-top: 24px;
+            border-top: 1px solid #262626;
+            font-size: 0.8rem;
+            color: #525252;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>ATG 3.0 Repository Map</h1>
+        <p class="subtitle">23 HTML files. Here's what each one is and why it exists.</p>
+
+        <div class="legend">
+            <span>
+                <div class="dot current"></div> Current focus
+            </span>
+            <span>
+                <div class="dot stable"></div> Stable / Working
+            </span>
+            <span>
+                <div class="dot experiment"></div> Experiment
+            </span>
+            <span>
+                <div class="dot deprecated"></div> Superseded
+            </span>
+        </div>
+
+        <h2>The Core (What Matters)</h2>
+
+        <div class="category">
+            <div class="category-title">Entry Points</div>
+            <div class="items">
+                <a href="index.html" class="item stable"><span class="item-name">index.html</span><span
+                        class="item-desc">Main terminal interface — links to everything</span></a>
+            </div>
+        </div>
+
+        <div class="category">
+            <div class="category-title">The Paper</div>
+            <div class="items">
+                <a href="void-management-annotated.html" class="item stable"><span
+                        class="item-name">void-management-annotated.html</span><span class="item-desc">The thesis with
+                        inline annotations</span></a>
+                <a href="void-management-slides.html" class="item stable"><span
+                        class="item-name">void-management-slides.html</span><span class="item-desc">Presentation deck
+                        version</span></a>
+            </div>
+        </div>
+
+        <div class="category">
+            <div class="category-title">Project Navigation</div>
+            <div class="items">
+                <a href="creator-trail-hub.html" class="item stable"><span
+                        class="item-name">creator-trail-hub.html</span><span class="item-desc">10 projects with leverage
+                        analysis</span></a>
+                <a href="intervention-atlas.html" class="item stable"><span
+                        class="item-name">intervention-atlas.html</span><span class="item-desc">Projects as intervention
+                        map</span></a>
+            </div>
+        </div>
+
+        <div class="category">
+            <div class="category-title">Tool Documentation</div>
+            <div class="items">
+                <a href="thousand-tetrad.html" class="item current"><span
+                        class="item-name">thousand-tetrad.html</span><span class="item-desc">TILTH → Thousand-Tetrad →
+                        Void Management narrative</span></a>
+            </div>
+        </div>
+
+        <h2>Terrain Visualizations (Evolution)</h2>
+
+        <div class="insight">
+            <strong>Why so many?</strong> These represent iterations toward an invariant pattern. Each version tested
+            different approaches to showing project relationships on a topographic map. The sprawl itself demonstrates
+            the TILTH pathology — each addition made the whole harder to maintain.
+        </div>
+
+        <div class="category">
+            <div class="category-title">ATG Version 2 <span class="count">3</span></div>
+            <div class="items">
+                <a href="atg-2-atlas.html" class="item deprecated"><span class="item-name">atg-2-atlas.html</span><span
+                        class="item-desc">First atlas attempt</span></a>
+                <a href="atg-2-hi.html" class="item deprecated"><span class="item-name">atg-2-hi.html</span><span
+                        class="item-desc">High-fidelity variant</span></a>
+                <a href="atg-2-topo.html" class="item deprecated"><span class="item-name">atg-2-topo.html</span><span
+                        class="item-desc">Topographic with iframe modal</span></a>
+            </div>
+        </div>
+
+        <div class="category">
+            <div class="category-title">ATG Version 3 <span class="count">3</span></div>
+            <div class="items">
+                <a href="atg-3-unified.html" class="item current"><span class="item-name">atg-3-unified.html</span><span
+                        class="item-desc">Current: clean card grid + fullscreen modal</span></a>
+                <a href="atg-3-full-index.html" class="item experiment"><span
+                        class="item-name">atg-3-full-index.html</span><span class="item-desc">54 items (projects + docs
+                        + POML) on terrain</span></a>
+                <a href="atg-3-topo.html" class="item deprecated"><span class="item-name">atg-3-topo.html</span><span
+                        class="item-desc">Topo variant (superseded)</span></a>
+            </div>
+        </div>
+
+        <div class="category">
+            <div class="category-title">Other Terrain <span class="count">3</span></div>
+            <div class="items">
+                <a href="atg-master-terrain.html" class="item deprecated"><span
+                        class="item-name">atg-master-terrain.html</span><span class="item-desc">Attempted unification
+                        (complex)</span></a>
+                <a href="atg-unified-terrain.html" class="item deprecated"><span
+                        class="item-name">atg-unified-terrain.html</span><span class="item-desc">Another unification
+                        attempt</span></a>
+                <a href="atg-olog-topo.html" class="item experiment"><span
+                        class="item-name">atg-olog-topo.html</span><span class="item-desc">Olog-based
+                        topology</span></a>
+            </div>
+        </div>
+
+        <h2>CSE Iterations (Style Experiments)</h2>
+
+        <div class="insight">
+            <strong>CSE = Creator Scenario Engine</strong> — Five iterations testing visual styles. Each informed the
+            next. cse-04 introduced the orange accent; cse-03 had the simple UI. These fed into atg-3-unified.
+        </div>
+
+        <div class="category">
+            <div class="items">
+                <a href="cse-01.html" class="item deprecated"><span class="item-name">cse-01.html</span><span
+                        class="item-desc">First iteration</span></a>
+                <a href="cse-02.html" class="item deprecated"><span class="item-name">cse-02.html</span><span
+                        class="item-desc">Refinement</span></a>
+                <a href="cse-03.html" class="item experiment"><span class="item-name">cse-03.html</span><span
+                        class="item-desc">Simple UI — source for "alive" feel</span></a>
+                <a href="cse-04.html" class="item experiment"><span class="item-name">cse-04.html</span><span
+                        class="item-desc">Orange accent — aesthetic source</span></a>
+                <a href="cse-05.html" class="item deprecated"><span class="item-name">cse-05.html</span><span
+                        class="item-desc">Latest iteration</span></a>
+            </div>
+        </div>
+
+        <h2>Other Tools</h2>
+
+        <div class="category">
+            <div class="items">
+                <a href="project-genome.html" class="item stable"><span
+                        class="item-name">project-genome.html</span><span class="item-desc">Project DNA
+                        visualization</span></a>
+                <a href="tractor-field.html" class="item experiment"><span
+                        class="item-name">tractor-field.html</span><span class="item-desc">TRACTOR field
+                        interface</span></a>
+                <a href="uto.html" class="item experiment"><span class="item-name">uto.html</span><span
+                        class="item-desc">Utility tool</span></a>
+            </div>
+        </div>
+
+        <h2>The Lesson</h2>
+
+        <div class="insight">
+            <strong>This map is itself an example of void management.</strong> The 23 files existed. Rather than hiding
+            them (archiving), we placed a jar (this map) that makes the wilderness sensible. The invariant pattern:
+            categorize, explain the evolution, mark what's current vs superseded.
+        </div>
+
+        <footer>
+            ATG 3.0 · LMC-6650 Values in Design · Georgia Tech
+        </footer>
+    </div>
+</body>
+
+</html>

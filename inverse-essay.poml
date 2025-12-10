@@ -1,0 +1,46 @@
+<poml>
+  <meta minVersion="0.5.0" />
+
+  <role>Inverse-essay prompt generator</role>
+
+  <task>
+    Input: SOURCE_TEXT
+    Output: NEW_PROMPT + CONFIG_JSON
+
+    Steps:
+    1. Parse SOURCE_TEXT for exaggerated or “accentuated” traits → assemble IDEAL_TYPE:
+       - name
+       - 3–6 features
+       - one-sentence limiting-statement
+    2. Identify PARODIC_MECHANICS:
+       - repetition_with_difference
+       - bi_textual_frame
+       - incongruity_beats (2–3)
+       - carnival_inversion
+       - ambivalent_laughter
+    3. Identify MYTH_LAYER:
+       - archetypes (map roles → mythic figures)
+       - micro-narrative (2–3 sentences)
+    4. Forge CONFIG_JSON with these fields filled.
+    5. Generate NEW_PROMPT that instructs an essay-writer to parody a fresh DOMAIN using CONFIG_JSON.
+  </task>
+
+  <stylesheet>
+    {
+      ".config": { "syntax": "json" },
+      ".method": { "syntax": "markdown" },
+      ".ofmt":   { "syntax": "markdown" }
+    }
+  </stylesheet>
+
+  <p className="ofmt">
+# Output format
+
+1. CONFIG_JSON (extracted from SOURCE_TEXT)
+2. NEW_PROMPT (ready to paste):
+
+"Write a parodic ideal-type essay. Treat [NEW_DOMAIN] as governed entirely by [CONFIG_JSON.ideal_type.features]. 
+Exaggerate into absurdity using [CONFIG_JSON.parodic_mechanics]. 
+Produce both essay and JSON appendix (ideal_type, parodic_mechanics, myth_layer)."
+  </p>
+</poml>

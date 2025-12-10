@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Void Management: Annotated Slide Breakdown</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0a0a0f;
+            --surface: #12121a;
+            --surface2: #1a1a24;
+            --text: #e8e8f0;
+            --dim: #888899;
+            --accent: #6366f1;
+            --accent2: #a855f7;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --blue: #3b82f6;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', -apple-system, system-ui, sans-serif;
+            line-height: 1.7;
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--dim);
+        }
+
+        .toc {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 50px;
+        }
+
+        .toc h2 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--accent);
+        }
+
+        .toc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .toc-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            background: var(--surface2);
+            border-radius: 6px;
+            text-decoration: none;
+            color: var(--text);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .toc-item:hover {
+            background: var(--accent);
+        }
+
+        .toc-num {
+            background: var(--accent);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .slide-section {
+            margin-bottom: 80px;
+            scroll-margin-top: 40px;
+        }
+
+        .slide-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .slide-number {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .slide-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .slide-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 900px) {
+            .slide-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .slide-preview {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .slide-preview h3 {
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-bottom: 15px;
+        }
+
+        .preview-box {
+            background: var(--bg);
+            border-radius: 8px;
+            padding: 20px;
+            font-size: 0.95rem;
+            min-height: 200px;
+        }
+
+        .annotations {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 30px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .annotation-section {
+            margin-bottom: 25px;
+        }
+
+        .annotation-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .annotation-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .annotation-text {
+            font-size: 1rem;
+            color: var(--text);
+        }
+
+        .annotation-text ul {
+            margin-left: 20px;
+            margin-top: 8px;
+        }
+
+        .annotation-text li {
+            margin-bottom: 6px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+
+        .tag.thesis {
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--accent);
+        }
+
+        .tag.evidence {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--success);
+        }
+
+        .tag.theory {
+            background: rgba(168, 85, 247, 0.2);
+            color: var(--accent2);
+        }
+
+        .tag.practice {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--blue);
+        }
+
+        .tag.emotional {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
+        .quote {
+            font-style: italic;
+            border-left: 3px solid var(--accent);
+            padding-left: 15px;
+            margin: 10px 0;
+            color: var(--dim);
+        }
+
+        .key-move {
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .key-move-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+
+        code {
+            background: var(--surface2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9em;
+        }
+
+        .time-guide {
+            display: inline-block;
+            background: var(--surface2);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: var(--dim);
+            margin-left: 10px;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin: 60px 0;
+        }
+
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.9rem;
+        }
+
+        .summary-table th {
+            background: var(--surface2);
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .summary-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Void Management: Annotated Slide Breakdown</h1>
+            <p class="subtitle">A 15-slide presentation on LLM creative tool architecture</p>
+            <p style="color: var(--dim); margin-top: 15px;">Total time: ~20 minutes | Each slide: ~80 seconds</p>
+        </header>
+
+        <!-- TABLE OF CONTENTS -->
+        <div class="toc">
+            <h2>Slide Overview</h2>
+            <div class="toc-grid">
+                <a href="#slide1" class="toc-item"><span class="toc-num">1</span> Title</a>
+                <a href="#slide2" class="toc-item"><span class="toc-num">2</span> The Problem</a>
+                <a href="#slide3" class="toc-item"><span class="toc-num">3</span> Core Thesis</a>
+                <a href="#slide4" class="toc-item"><span class="toc-num">4</span> Scene vs. Void</a>
+                <a href="#slide5" class="toc-item"><span class="toc-num">5</span> Evidence Table</a>
+                <a href="#slide6" class="toc-item"><span class="toc-num">6</span> TILTH Case</a>
+                <a href="#slide7" class="toc-item"><span class="toc-num">7</span> Thousand-Tetrad</a>
+                <a href="#slide8" class="toc-item"><span class="toc-num">8</span> Diagrams</a>
+                <a href="#slide9" class="toc-item"><span class="toc-num">9</span> LEGOS v8 Code</a>
+                <a href="#slide10" class="toc-item"><span class="toc-num">10</span> Cross-Domain</a>
+                <a href="#slide11" class="toc-item"><span class="toc-num">11</span> Theory</a>
+                <a href="#slide12" class="toc-item"><span class="toc-num">12</span> Falsifiability</a>
+                <a href="#slide13" class="toc-item"><span class="toc-num">13</span> Implications</a>
+                <a href="#slide14" class="toc-item"><span class="toc-num">14</span> Feeling Test</a>
+                <a href="#slide15" class="toc-item"><span class="toc-num">15</span> Conclusion</a>
+            </div>
+        </div>
+
+        <!-- SLIDE 1 -->
+        <section class="slide-section" id="slide1">
+            <div class="slide-header">
+                <div class="slide-number">1</div>
+                <div class="slide-title">Title Slide <span class="time-guide">30 sec</span></div>
+            </div>
+            <div class="slide-content">
+                <div class="slide-preview">
+                    <h3>On Screen</h3>
+                    <div class="preview-box">
+                        <strong style="font-size: 1.5rem; color: var(--accent);">Void Management</strong><br>
+                        <span style="color: var(--dim);">A New Architecture for LLM Creative Tools</span><br><br>
+                        <em>"Why AI tools fail when they construct scenes, and succeed when they prepare possibility
+                            spaces."</em><br><br>
+                        Watson Franklin Hartsoe III<br>
+                        Georgia Institute of Technology · LMC-6650<br>
+                        December 2025
+                    </div>
+                </div>
+                <div class="annotations">
+                    <div class="annotation-section">
+                        <div class="annotation-label">Purpose</div>
+                        <div class="annotation-text">
+                            Establish the surprising claim immediately. The title "Void Management" is intentionally
+                            paradoxical—you manage nothing? The subtitle clarifies: you manage the emptiness that allows
+                            others to fill.
+                        </div>
+                    </div>
+                    <div class="annotation-section">
+                        <div class="annotation-label">Tags</div>
+                        <div class="annotation-text">
+                            <span class="tag thesis">THESIS STATEMENT</span>
+                            <span class="tag emotional">HOOK</span>
+                        </div>
+                    </div>
+                    <div class="annotation-section">
+                        <div class="annotation-label">Speaker Notes</div>
+                        <div class="annotation-text">
+                            "This presentation makes a single architectural claim about how LLM creative tools should be
+                            designed. The claim emerged from a semester of failures and one crucial success."
+                        </div>
+                    </div>
+                    <div class="key-move">
+                        <div class="key-move-label">Key Move</div>
+                        Don't oversell. Let the paradox ("manage the void") create curiosity.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 2 -->
+        <section class="slide-section" id="slide2">
+            <div class="slide-header">
+                <div class="slide-number">2</div>
+                <div class="slide-title">The Problem <span class="time-guide">90 sec</span></div>
+            </div>
+            <div class="slide-content">
+                <div class="slide-preview">
+                    <h3>On Screen</h3>
+                    <div class="preview-box">
+                        <div class="quote" style="font-size: 1.2rem;">
+                            "Every LLM creative tool I've used eventually becomes unusable. They accumulate complexity
+                            until coherence collapses."
+                        </div>
+                        <p style="margin-top: 20px;">This isn't a bug. It's an architectural pattern.</p>
+                        <p style="color: var(--dim);">The question is: why does this happen, and can we prevent it?</p>
+                    </div>
+                </div>
+                <div class="annotations">
+                    <div class="annotation-section">
+                        <div class="annotation-label">Purpose</div>
+                        <div class="annotation-text">
+                            Name the pain point every sophisticated AI user recognizes. Build solidarity: "You've
+                            experienced this too."
+                        </div>
+                    </div>
+                    <div class="annotation-section">
+                        <div class="annotation-label">Tags</div>
+                        <div class="annotation-text">
+                            <span class="tag emotional">PAIN POINT</span>
+                            <span class="tag thesis">PROBLEM FRAMING</span>
+                        </div>
+                    </div>
+                    <div class="annotation-section">
+                        <div class="annotation-label">Speaker Notes</div>
+                        <div class="annotation-text">
+                            "Raise hands: who has started a creative project with ChatGPT, gotten 20 messages deep, and
+                            realized they couldn't finish it? Couldn't export it? Couldn't even remember what they'd
+                            decided earlier?"<br><br>
+                            "This is complexity grey—where you can't tell broken from designed."
+                        </div>
+                    </div>
+                    <div class="key-move">
+                        <div class="key-move-label">Key Move</div>
+                        Make it personal. The quote is first-person. The audience should see themselves.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 3 -->
+        <section class="slide-section" id="slide3">
+            <div class="slide-header">
+                <div class="slide-number">3</div>
+                <div class="slide-title">Core Thesis <span class="time-guide">90 sec</span></div>
+            </div>
+            <div class="slide-content">
+                <div class="slide-preview">
+                    <h3>On Screen</h3>
+                    <div class="preview-box">
+                        <div
+                            style="background: var(--surface); padding: 20px; border-radius: 8px; border-left: 4px solid var(--accent);">
+                            <strong style="color: var(--accent);">Void Management Architecture</strong><br><br>
+                            When LLMs manage <strong>scenes</strong> (constructing content directly), complexity
+                            accumulates until coherence collapses.<br><br>
+                            When LLMs manage <strong>voids</strong> (preparing possibility spaces that humans
+                            instantiate), agency is preserved and outputs become exportable.
+                        </div>
+                    </div>
+                </div>
+                <div class="annotations">
+                    <div class="annotation-section">
+                        <div class="annotation-label">Purpose</div>
+                        <div class="annotation-text">
+                            State the thesis in its full, falsifiable form. This is the slide everything else supports.
+                        </div>
+                    </div>
+                    <div class="annotation-section">
+                        <div class="annotation-label">Tags</div>
+                        <div class="annotation-text">
+                            <span class="tag thesis">CORE CLAIM</span>
+                        </div>
+                    </div>
+                    <div class="annotation-section">
+                        <div class="annotation-label">Speaker Notes</div>
+                        <div class="annotation-text">
+                            "This is the distinction. Scene vs. void. When the AI makes specific content—objects,
+                            positions, relationships—it's managing a scene. When the AI prepares an empty
+                            structure—dimensions, axes, transformation vocabulary—it's managing a void."<br><br>
+                            "The rest of this talk is evidence for why this distinction matters."
+                        </div>
+                    </div>
+                    <div class="key-move">
+                        <div class="key-move-label">Key Move</div>
+                        Read the definition verbatim. Let it land. Pause after.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 4 -->
+        <section class="slide-section" id="slide4">
+            <div class="slide-header">
+                <div class="slide-number">4</div>
+                <div class="slide-title">Scene vs. Void: The Distinction <span class="time-guide">120 sec</span></div>
+            </div>
+            <div class="slide-content">
+                <div class="slide-preview">
+                    <h3>On Screen</h3>
+                    <div class="preview-box">
+                        <table class="summary-table" style="font-size: 0.85rem;">
+                            <tr>
+                                <th style="color: var(--danger);">Scene Management ✗</th>
+                                <th style="color: var(--success);">Void Management ✓</th>
+                            </tr>
+                            <tr>
+                                <td>LLM generates specific content</td>
+                                <td>LLM prepares empty structure</td>
+                            </tr>
+                            <tr>
+                                <td>LLM decides positions, relationships</td>
+                                <td>LLM defines dimensions, not content</td>
+                            </tr>
+                            <tr>
+                                <td>Each generation adds complexity</td>
+                                <td>Complexity stays user-scale</td>
+                            </tr>
+                            <tr>
+                                <td>User understands ALL to modify ANY</td>
+                                <td>User fills with THEIR specifics</td>
+                            </tr>
+                            <tr>
+                                <td>Outputs die with session</td>
+                                <td>Structure transfers, exports</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="annotations">
+                    <div class="annotation-section">
+                        <div class="annotation-label">Purpose</div>
+                        <div class="annotation-text">
+                            Make the abstract distinction concrete with behavioral differences. The audience should be
+                            able to classify any AI interaction after this slide.
+                        </div>
+                    </div>
+                    <div class="annotation-section">
+                        <div class="annotation-label">Tags</div>
+                        <div class="annotation-text">
+                            <span class="tag thesis">OPERATIONALIZATION</span>
+                            <span class="tag practice">PRACTICAL</span>
+                        </div>
+                    </div>
+                    <div class="annotation-section">
+                        <div class="annotation-label">Speaker Notes</div>
+                        <div class="annotation-text">
+                            Walk through each row with examples:
+                            <ul>
+                                <li>"Specific content" = "Write me a story about a robot" (scene)</li>
+                                <li>"Empty structure" = "What are the 6 elements of any story?" (void)</li>
+                                <li>"Dies with session" = Chat history you can't export vs JSON you can share</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="key-move">
+                        <div class="key-move-label">Key Move</div>
+                        Point to each row. Don't rush. This is the operational definition.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 5 -->
+        <section class="slide-section" id="slide5">
+            <div class="slide-header">
+                <div class="slide-number">5</div>
+                <div class="slide-title">The Evidence <span class="time-guide">90 sec</span></div>
+            </div>
+            <div class="slide-content">
+                <div class="slide-preview">
+                    <h3>On Screen</h3>
+                    <div class="preview-box">
+                        <table class="summary-table" style="font-size: 0.85rem;">
+                            <tr>
+                                <th>Project</th>
+                                <th>Architecture</th>
+                                <th>Outcome</th>
+                            </tr>
+                            <tr>
+                                <td>TILTH (Phase 0)</td>
+                                <td><span class="tag"
+                                        style="background: rgba(239,68,68,0.2); color: var(--danger);">Scene</span></td>
+                                <td>Collapsed</td>
+                            </tr>
+                            <tr>
+                                <td>Thousand-Tetrad (Phase 1)</td>
+                                <td><span class="tag"
+                                        style="background: rgba(34,197,94,0.2); color: var(--success);">Void</span></td>
+                                <td>Works</td>
+                            </tr>
+                            <tr>
+                                <td>HOLO (Phase 2)</td>
+                                <td><span class="tag"
+                                        style="background: rgba(245,158,11,0.2); color: var(--warning);">Scene→Void</span>
+                                </td>
+                                <td>Saved by pivot</td>
+                            </tr>
+                            <tr>
+                                <td>disc-data.json</td>
+                                <td><span class="tag"
+                                        style="background: rgba(34,197,94,0.2); color: var(--success);">Void</span></td>
+                                <td>Shareable</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="annotations">
+                    <div class="annotation-section">
+                        <div class="annotation-label">Purpose</div>
+                        <div class="annotation-text">
+                            Show the correlation: scene = failure, void = success, transition = recovery. This is the
+                            empirical core.
+                        </div>
+                    </div>
+                    <div class="annotation-section">
+                        <div class="annotation-label">Tags</div>
+                        <div class="annotation-text">
+                            <span class="tag evidence">EVIDENCE</span>
+                            <span class="tag thesis">CORRELATION</span>
+                        </div>
+                    </div>
+                    <div class="annotation-section">
+                        <div class="annotation-label">Speaker Notes</div>
+                        <div class="annotation-text">
+                            "Four phases. In Phase 0, I built a scene-based system—it collapsed. In Phase 1, I switched
+                            to void-based—it works. In Phase 2, I started with scene, pivoted to void, and saved the
+                            project."<br><br>
+                            "This isn't cherry-picking. Every project fits the pattern."
+                        </div>
+                    </div>
+                    <div class="key-move">
+                        <div class="key-move-label">Key Move</div>
+                        Color-coding does the persuasion. Red = fail. Green = work. Let the visual sink in.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 6 -->
+        <section class="slide-section" id="slide6">
+            <div class="slide-header">
+                <div class="slide-number">6</div>
+                <div class="slide-title">Case Study: TILTH (The Failure) <span class="time-guide">120 sec</span></div>
+            </div>
+            <div class="slide-content">
+                <div class="slide-preview">
+                    <h3>On Screen</h3>
+                    <div class="preview-box">
+                        <p><strong>What I built:</strong> AI generating synthetic organizational data—role decks,
+                            personas, simulations, tetrads, quizzes, scenarios...</p>
+                        <div
+                            style="background: rgba(239,68,68,0.1); border-left: 4px solid var(--danger); padding: 15px; margin-top: 15px; border-radius: 4px;">
+                            <strong style="color: var(--danger);">Why It Failed</strong><br>
+                            "Complexity Grey"—couldn't tell broken from designed.<br>
+                            Each generation added context. Context exceeded coherence.
+                        </div>
+                    </div>
+                </div>
+                <div class="annotations">
+                    <div class="annotation-section">
+                        <div class="annotation-label">Purpose</div>
+                        <div class="annotation-text">
+                            Show vulnerability. "I tried the obvious thing and it failed." This builds credibility for
+                            the solution.
+                        </div>
+                    </div>
+                    <div class="annotation-section">
+                        <div class="annotation-label">Tags</div>
+                        <div class="annotation-text">
+                            <span class="tag evidence">CASE STUDY</span>
+                            <span class="tag emotional">FAILURE NARRATIVE</span>
+                        </div>
+                    </div>
+                    <div class="annotation-section">
+                        <div class="annotation-label">Speaker Notes</div>
+                        <div class="annotation-text">
+                            "I spent weeks on this. Layer after layer. The AI generated content, I tried to organize it,
+                            the AI generated more. Until I couldn't tell what was broken versus what I'd designed that
+                            way."<br><br>
+                            "This is what happens when the LLM manages the scene."
+                        </div>
+                    </div>
+                    <div class="key-move">
+                        <div class="key-move-label">Key Move</div>
+                        Pause on "complexity grey." Define it: "the zone where broken and designed become
+                        indistinguishable."
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 7 -->
+        <section class="slide-section" id="slide7">
+            <div class="slide-header">
+                <div class="slide-number">7</div>
+                <div class="slide-title">Case Study: Thousand-Tetrad (The Discovery) <span class="time-guide">120
+                        sec</span></div>
+            </div>
+            <div class="slide-content">
+                <div class="slide-preview">
+                    <h3>On Screen</h3>
+                    <div class="preview-box">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div style="background: rgba(34,197,94,0.1); padding: 15px; border-radius: 8px;">
+                                <strong style="color: var(--success);">The Invariant Substrate</strong>
+                                <ul style="font-size: 0.9rem; margin-top: 10px;">
+                                    <li>9×9 grid—fixed</li>
+                                    <li>Tetrad operators—vocabulary</li>
+                                    <li>Chat layer—control</li>
+                                    <li>Phone constraint—simplicity</li>
+                                </ul>
+                            </div>
+                            <div style="padding: 15px;">
+                                <strong>The Void Pattern</strong><br>
+                                <span style="font-size: 0.9rem;">Grid is <em>empty</em>. Tetrad is <em>vocabulary</em>.
+                                    User <em>fills</em> with their scenario.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="annotations">
+                    <div class="annotation-section">
+                        <div class="annotation-label">Purpose</div>
+                        <div class="annotation-text">
+                            Show the contrast: same creator, different architecture, opposite outcome. This is the
+                            pivot.
+                        </div>
+                    </div>
+                    <div class="annotation-section">
+                        <div class="annotation-label">Tags</div>
+                        <div class="annotation-text">
+                            <span class="tag evidence">CASE STUDY</span>
+                            <span class="tag thesis">SOLUTION</span>
+                        </div>
+                    </div>
+                    <div class="annotation-section">
+                        <div class="annotation-label">Speaker Notes</div>
+                        <div class="annotation-text">
+                            "The grid is 9×9. It never changes. The tetrad (Enhance, Obsolesce, Retrieve, Reverse) is
+                            transformation vocabulary—not content. The chat controls which cell you're in. The phone
+                            constraint forces bounded complexity."<br><br>
+                            "Same substrate handles privacy, ethics, speculation—anything. Because the LLM manages the
+                            void, not the scene."
+                        </div>
+                    </div>
+                    <div class="key-move">
+                        <div class="key-move-label">Key Move</div>
+                        "Same substrate handles anything"—this is the claim that void management is domain-independent.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 8 -->
+        <section class="slide-section" id="slide8">
+            <div class="slide-header">
+                <div class="slide-number">8</div>
+                <div class="slide-title">The Architectures Compared <span class="time-guide">90 sec</span></div>
+            </div>
+            <div class="slide-content">
+                <div class="slide-preview">
+                    <h3>On Screen</h3>
+                    <div class="preview-box"
+                        style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; white-space: pre; line-height: 1.3;">
+                        <span style="color: var(--danger);">SCENE (Fails)</span> <span
+                            style="color: var(--success);">VOID (Works)</span>
+
+                        Request Request
+                        │ │
+                        ▼ ▼
+                        ┌─────────┐ ┌─────────┐
+                        │ LLM │ │ LLM │
+                        │GENERATES│ │PREPARES │
+                        │ SCENE │ │ VOID │
+                        └────┬────┘ └────┬────┘
+                        │ │
+                        ▼ ▼
+                        Complex Scene User Fills
+                        │ │
+                        ▼ ▼
+                        COMPLEXITY ↑↑↑ EXPORTABLE ✓
+                    </div>
+                </div>
+                <div class="annotations">
+                    <div class="annotation-section">
+                        <div class="annotation-label">Purpose</div>
+                        <div class="annotation-text">
+                            Visual representation for spatial learners. The diagrams encode the argument structurally.
+                        </div>
+                    </div>
+                    <div class="annotation-section">
+                        <div class="annotation-label">Tags</div>
+                        <div class="annotation-text">
+                            <span class="tag thesis">DIAGRAM</span>
+                            <span class="tag practice">ARCHITECTURE</span>
+                        </div>
+                    </div>
+                    <div class="annotation-section">
+                        <div class="annotation-label">Speaker Notes</div>
+                        <div class="annotation-text">
+                            "Left side: LLM generates a scene. Complex scene. Complexity increases. Right side: LLM
+                            prepares a void. User fills. Exportable."<br><br>
+                            "The key difference is the arrow after the LLM. Does it point to 'Complex Scene' or to 'User
+                            Fills'?"
+                        </div>
+                    </div>
+                    <div class="key-move">
+                        <div class="key-move-label">Key Move</div>
+                        Trace the arrows with your hand. Physical gesture reinforces the flow.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 9 -->
+        <section class="slide-section" id="slide9">
+            <div class="slide-header">
+                <div class="slide-number">9</div>
+                <div class="slide-title">The Proof in Code: LEGOS v8 <span class="time-guide">90 sec</span></div>
+            </div>
+            <div class="slide-content">
+                <div class="slide-preview">
+                    <h3>On Screen</h3>
+                    <div class="preview-box" style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;">
+                        <span style="color: var(--accent);">&lt;rule id="sophisticated-composition"&gt;</span>
+                        <span style="color: var(--dim);">/** THE VIGNETTE PROTOCOL: */</span>
+                        - <span style="color: var(--accent);">Imply, Don't Saturate</span>
+                        - <span style="color: var(--accent);">Representative Arrays:</span>
+                        Instead of "Wall of 100,"
+                        build "Gatehouse of 12."
+                        <span style="color: var(--accent);">&lt;/rule&gt;</span>
+                    </div>
+                </div>
+                <div class="annotations">
+                    <div class="annotation-section">
+                        <div class="annotation-label">Purpose</div>
+                        <div class="annotation-text">
+                            Show that the principle is operationalized in actual code. This is the existence proof.
+                        </div>
+                    </div>
+                    <div class="annotation-section">
+                        <div class="annotation-label">Tags</div>
+                        <div class="annotation-text">
+                            <span class="tag evidence">CODE PROOF</span>
+                            <span class="tag practice">IMPLEMENTATION</span>
+                        </div>
+                    </div>
+                    <div class="annotation-section">
+                        <div class="annotation-label">Speaker Notes</div>
+                        <div class="annotation-text">
+                            "This is from LEGOS v8, the system prompt that powers the LEGO scene builder."<br><br>
+                            "'Imply, Don't Saturate'—this is void management in one phrase. Don't build all 100 bricks.
+                            Build 12 that <em>imply</em> 100. Let the viewer's imagination be the final brick."
+                        </div>
+                    </div>
+                    <div class="key-move">
+                        <div class="key-move-label">Key Move</div>
+                        "Imply, Don't Saturate" is the quotable line. Say it twice.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 10 -->
+        <section class="slide-section" id="slide10">
+            <div class="slide-header">
+                <div class="slide-number">10</div>
+                <div class="slide-title">Everything Else Is a Consequence <span class="time-guide">120 sec</span></div>
+            </div>
+            <div class="slide-content">
+                <div class="slide-preview">
+                    <h3>On Screen</h3>
+                    <div class="preview-box">
+                        <table class="summary-table" style="font-size: 0.85rem;">
+                            <tr>
+                                <th>Domain</th>
+                                <th>Scene Failure</th>
+                                <th>Void Solution</th>
+                            </tr>
+                            <tr>
+                                <td><strong>Ethics Tools</strong></td>
+                                <td>Predefined cards</td>
+                                <td>Empty dimensions</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Disclosure</strong></td>
+                                <td>"List your prompts"</td>
+                                <td>Trail visibility</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Collaboration</strong></td>
+                                <td>Share finished scene</td>
+                                <td>Share void to fill</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Export</strong></td>
+                                <td>Requires LLM memory</td>
+                                <td>JSON works standalone</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="annotations">
+                    <div class="annotation-section">
+                        <div class="annotation-label">Purpose</div>
+                        <div class="annotation-text">
+                            Extend the claim beyond creative tools. The void/scene distinction explains failures in
+                            ethics, disclosure, and collaboration too.
+                        </div>
+                    </div>
+                    <div class="annotation-section">
+                        <div class="annotation-label">Tags</div>
+                        <div class="annotation-text">
+                            <span class="tag thesis">GENERALIZATION</span>
+                            <span class="tag theory">CROSS-DOMAIN</span>
+                        </div>
+                    </div>
+                    <div class="annotation-section">
+                        <div class="annotation-label">Speaker Notes</div>
+                        <div class="annotation-text">
+                            "Ethics tools fail because they give you predefined scenes—cards with dilemmas already
+                            written. What if they gave you empty dimensions?"<br><br>
+                            "Disclosure fails because ACM assumes you can list discrete scene-based prompts. For 150
+                            hours of void-based collaboration, what prompts do you list?"<br><br>
+                            "Same pattern everywhere."
+                        </div>
+                    </div>
+                    <div class="key-move">
+                        <div class="key-move-label">Key Move</div>
+                        "Everything else is a consequence"—the claim is that void/scene is the generative distinction.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 11 -->
+        <section class="slide-section" id="slide11">
+            <div class="slide-header">
+                <div class="slide-number">11</div>
+                <div class="slide-title">Theoretical Grounding <span class="time-guide">90 sec</span></div>
+            </div>
+            <div class="slide-content">
+                <div class="slide-preview">
+                    <h3>On Screen</h3>
+                    <div class="preview-box">
+                        <div
+                            style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; font-size: 0.85rem;">
+                            <div
+                                style="background: var(--surface); padding: 12px; border-radius: 6px; text-align: center;">
+                                <strong style="color: var(--accent);">Meadows</strong><br>
+                                Level 1 Leverage: Mindset
+                            </div>
+                            <div
+                                style="background: var(--surface); padding: 12px; border-radius: 6px; text-align: center;">
+                                <strong style="color: var(--accent);">Scott</strong><br>
+                                Mētis vs Techne
+                            </div>
+                            <div
+                                style="background: var(--surface); padding: 12px; border-radius: 6px; text-align: center;">
+                                <strong style="color: var(--accent);">Lessig</strong><br>
+                                Code as Regulation
+                            </div>
+                            <div
+                                style="background: var(--surface); padding: 12px; border-radius: 6px; text-align: center;">
+                                <strong style="color: var(--accent);">Barthes</strong><br>
+                                Form Evokes
+                            </div>
+                            <div
+                                style="background: var(--surface); padding: 12px; border-radius: 6px; text-align: center;">
+                                <strong style="color: var(--accent);">McLuhan</strong><br>
+                                Tetrad as Void
+                            </div>
+                            <div
+                                style="background: var(--surface); padding: 12px; border-radius: 6px; text-align: center;">
+                                <strong style="color: var(--accent);">Wong</strong><br>
+                                Room to Maneuver
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="annotations">
+                    <div class="annotation-section">
+                        <div class="annotation-label">Purpose</div>
+                        <div class="annotation-text">
+                            Anchor the claim in established frameworks. This isn't just personal reflection—it connects
+                            to existing thought.
+                        </div>
+                    </div>
+                    <div class="annotation-section">
+                        <div class="annotation-label">Tags</div>
+                        <div class="annotation-text">
+                            <span class="tag theory">THEORETICAL</span>
+                        </div>
+                    </div>
+                    <div class="annotation-section">
+                        <div class="annotation-label">Speaker Notes</div>
+                        <div class="annotation-text">
+                            "Meadows: this is Level 1 leverage—changing the mindset. Scott: void transfers structure
+                            (techne) while respecting the user's context (mētis). Lessig: the void constrains
+                            generatively without prescribing. Barthes: form evokes, content saturates."<br><br>
+                            Don't explain all six—pick 2-3 based on audience.
+                        </div>
+                    </div>
+                    <div class="key-move">
+                        <div class="key-move-label">Key Move</div>
+                        Name-drop strategically. For academic audiences, emphasize Scott and Meadows. For designers,
+                        emphasize Barthes.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 12 -->
+        <section class="slide-section" id="slide12">
+            <div class="slide-header">
+                <div class="slide-number">12</div>
+                <div class="slide-title">The Falsification Test <span class="time-guide">60 sec</span></div>
+            </div>
+            <div class="slide-content">
+                <div class="slide-preview">
+                    <h3>On Screen</h3>
+                    <div class="preview-box">
+                        <div
+                            style="background: var(--surface); padding: 20px; border-radius: 8px; border-left: 4px solid var(--accent);">
+                            <strong style="color: var(--accent);">If the thesis is true:</strong><br><br>
+                            1. Every failure → scene management<br>
+                            2. Every success → void management<br>
+                            3. Transitions → correlate with scene→void
+                        </div>
+                        <p style="margin-top: 20px; color: var(--success);">
+                            ✓ No counterexamples found across 10 projects.
+                        </p>
+                    </div>
+                </div>
+                <div class="annotations">
+                    <div class="annotation-section">
+                        <div class="annotation-label">Purpose</div>
+                        <div class="annotation-text">
+                            Show intellectual rigor. The claim is falsifiable and we've tested it.
+                        </div>
+                    </div>
+                    <div class="annotation-section">
+                        <div class="annotation-label">Tags</div>
+                        <div class="annotation-text">
+                            <span class="tag thesis">FALSIFIABILITY</span>
+                            <span class="tag evidence">RIGOR</span>
+                        </div>
+                    </div>
+                    <div class="annotation-section">
+                        <div class="annotation-label">Speaker Notes</div>
+                        <div class="annotation-text">
+                            "A counterexample that would weaken this thesis: a success using scene management, or a
+                            failure using void management."<br><br>
+                            "Across 10 projects, 4 phases, 150+ hours—no counterexamples."
+                        </div>
+                    </div>
+                    <div class="key-move">
+                        <div class="key-move-label">Key Move</div>
+                        Invite the audience to find counterexamples. "If you can think of one, I want to hear it."
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 13 -->
+        <section class="slide-section" id="slide13">
+            <div class="slide-header">
+                <div class="slide-number">13</div>
+                <div class="slide-title">Implications for AI Tool Design <span class="time-guide">90 sec</span></div>
+            </div>
+            <div class="slide-content">
+                <div class="slide-preview">
+                    <h3>On Screen</h3>
+                    <div class="preview-box">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div>
+                                <strong>Design Principles</strong>
+                                <ul style="font-size: 0.9rem; margin-top: 10px;">
+                                    <li>Define voids, not scenes</li>
+                                    <li>Imply, don't saturate</li>
+                                    <li>Bound complexity</li>
+                                    <li>Preserve human instantiation</li>
+                                    <li>Enable export</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <strong>Anti-Patterns</strong>
+                                <ul style="font-size: 0.9rem; margin-top: 10px;">
+                                    <li>LLM "completing" user's work</li>
+                                    <li>Unbounded generation</li>
+                                    <li>Session-dependent outputs</li>
+                                    <li>Saturation over implication</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="annotations">
+                    <div class="annotation-section">
+                        <div class="annotation-label">Purpose</div>
+                        <div class="annotation-text">
+                            Give actionable takeaways. The audience should be able to apply these to their own tool
+                            design.
+                        </div>
+                    </div>
+                    <div class="annotation-section">
+                        <div class="annotation-label">Tags</div>
+                        <div class="annotation-text">
+                            <span class="tag practice">ACTIONABLE</span>
+                            <span class="tag thesis">PRINCIPLES</span>
+                        </div>
+                    </div>
+                    <div class="annotation-section">
+                        <div class="annotation-label">Speaker Notes</div>
+                        <div class="annotation-text">
+                            "Left column: what to do. Right column: what to avoid."<br><br>
+                            "'LLM completing user's work'—this is the trap. It feels helpful. But every completion adds
+                            scene complexity."
+                        </div>
+                    </div>
+                    <div class="key-move">
+                        <div class="key-move-label">Key Move</div>
+                        "These are things you can check in your own AI tools tomorrow."
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 14 -->
+        <section class="slide-section" id="slide14">
+            <div class="slide-header">
+                <div class="slide-number">14</div>
+                <div class="slide-title">The Feeling Test <span class="time-guide">90 sec</span></div>
+            </div>
+            <div class="slide-content">
+                <div class="slide-preview">
+                    <h3>On Screen</h3>
+                    <div class="preview-box">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div style="background: rgba(239,68,68,0.1); padding: 15px; border-radius: 8px;">
+                                <strong style="color: var(--danger);">Try This (Scene)</strong><br>
+                                <span style="font-size: 0.9rem;">"Create a detailed ethical scenario with all
+                                    stakeholders and concerns."</span><br><br>
+                                <em style="color: var(--dim); font-size: 0.85rem;">Notice: Heavy. Trapped.</em>
+                            </div>
+                            <div style="background: rgba(34,197,94,0.1); padding: 15px; border-radius: 8px;">
+                                <strong style="color: var(--success);">Try This (Void)</strong><br>
+                                <span style="font-size: 0.9rem;">"What are 6 dimensions for analyzing ANY ethical
+                                    scenario?"</span><br><br>
+                                <em style="color: var(--dim); font-size: 0.85rem;">Notice: Light. Reusable.</em>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="annotations">
+                    <div class="annotation-section">
+                        <div class="annotation-label">Purpose</div>
+                        <div class="annotation-text">
+                            Move from intellectual to experiential. The audience should FEEL the difference.
+                        </div>
+                    </div>
+                    <div class="annotation-section">
+                        <div class="annotation-label">Tags</div>
+                        <div class="annotation-text">
+                            <span class="tag emotional">EXPERIENTIAL</span>
+                            <span class="tag practice">EXERCISE</span>
+                        </div>
+                    </div>
+                    <div class="annotation-section">
+                        <div class="annotation-label">Speaker Notes</div>
+                        <div class="annotation-text">
+                            "Try these tonight. The first one will feel heavy. You're trapped in someone else's
+                            assumptions."<br><br>
+                            "The second one will feel light. You can fill it with anything. The structure
+                            transfers."<br><br>
+                            "Voids are light. Scenes are heavy. You can feel it."
+                        </div>
+                    </div>
+                    <div class="key-move">
+                        <div class="key-move-label">Key Move</div>
+                        "Voids are light. Scenes are heavy." — The embodied mantra.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 15 -->
+        <section class="slide-section" id="slide15">
+            <div class="slide-header">
+                <div class="slide-number">15</div>
+                <div class="slide-title">Conclusion <span class="time-guide">60 sec</span></div>
+            </div>
+            <div class="slide-content">
+                <div class="slide-preview">
+                    <h3>On Screen</h3>
+                    <div class="preview-box">
+                        <div class="quote" style="font-size: 1.1rem; margin-bottom: 20px;">
+                            "This is not a preference. It is an architectural constraint.<br><br>
+                            Scene management fails because complexity accumulates.<br>
+                            Void management works because complexity stays with the user who owns it."
+                        </div>
+                        <p style="margin-top: 20px; color: var(--dim); font-size: 0.95rem;">
+                            <strong>The proof:</strong> TILTH (fail) → HOLO (pivot) → Thousand-Tetrad (work)<br>
+                            <strong>The feeling:</strong> Voids are light; scenes are heavy.<br>
+                            <strong>The architecture:</strong> Prepare possibility, don't construct content.
+                        </p>
+                    </div>
+                </div>
+                <div class="annotations">
+                    <div class="annotation-section">
+                        <div class="annotation-label">Purpose</div>
+                        <div class="annotation-text">
+                            Land the thesis. Repeat the core claim. Leave the audience with the one thing to remember.
+                        </div>
+                    </div>
+                    <div class="annotation-section">
+                        <div class="annotation-label">Tags</div>
+                        <div class="annotation-text">
+                            <span class="tag thesis">CONCLUSION</span>
+                            <span class="tag emotional">LANDING</span>
+                        </div>
+                    </div>
+                    <div class="annotation-section">
+                        <div class="annotation-label">Speaker Notes</div>
+                        <div class="annotation-text">
+                            "One more time: LLM should manage void, not scene."<br><br>
+                            "If you remember one thing from this talk, remember that distinction. And try the feeling
+                            test tonight."
+                        </div>
+                    </div>
+                    <div class="key-move">
+                        <div class="key-move-label">Key Move</div>
+                        End on the embodied insight: "Voids are light; scenes are heavy." Then stop. Don't over-explain.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <hr>
+
+        <!-- SUMMARY -->
+        <section class="slide-section">
+            <h2 style="font-size: 1.8rem; margin-bottom: 30px;">Presentation Summary</h2>
+
+            <table class="summary-table">
+                <tr>
+                    <th>Slide</th>
+                    <th>Type</th>
+                    <th>Time</th>
+                    <th>Key Function</th>
+                </tr>
+                <tr>
+                    <td>1-2</td>
+                    <td>Opening</td>
+                    <td>2 min</td>
+                    <td>Hook + problem</td>
+                </tr>
+                <tr>
+                    <td>3-4</td>
+                    <td>Thesis</td>
+                    <td>3.5 min</td>
+                    <td>Core claim + distinction</td>
+                </tr>
+                <tr>
+                    <td>5-8</td>
+                    <td>Evidence</td>
+                    <td>7 min</td>
+                    <td>Cases + diagrams</td>
+                </tr>
+                <tr>
+                    <td>9-10</td>
+                    <td>Code + Generalization</td>
+                    <td>3.5 min</td>
+                    <td>Proof + cross-domain</td>
+                </tr>
+                <tr>
+                    <td>11-12</td>
+                    <td>Theory + Rigor</td>
+                    <td>2.5 min</td>
+                    <td>Grounding + falsifiability</td>
+                </tr>
+                <tr>
+                    <td>13-15</td>
+                    <td>Application + Close</td>
+                    <td>4 min</td>
+                    <td>Principles + feeling + landing</td>
+                </tr>
+            </table>
+
+            <p style="margin-top: 30px; color: var(--dim);">
+                <strong>Total:</strong> ~20 minutes with breathing room<br>
+                <strong>Core mantra:</strong> "LLM should manage void, not scene."<br>
+                <strong>Embodied mantra:</strong> "Voids are light; scenes are heavy."
+            </p>
+        </section>
+
+    </div>
+</body>
+
+</html>

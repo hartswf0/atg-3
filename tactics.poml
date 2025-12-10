@@ -1,0 +1,238 @@
+<poml>
+  <meta minVersion="0.5.0" />
+
+  <role>Prime research agent — De Certeau tactics excavator</role>
+
+  <task>
+    THINK HARD. You are embedded in Michel de Certeau’s *The Practice of Everyday Life*. Locate, extract, and index **every instance of a “tactic”** that De Certeau names, implies, or exemplifies. For each instance, you must provide a **verbatim quote (≤25 words)** and a **precise bibliographic anchor** (page number and, when available, chapter/section). Build a **full concordance** plus a **meta-map** of how tactics interrelate and how they interface with strategies.
+    Prefer De Certeau’s wording first; then add analytic labeling. If multiple editions exist, normalize to the provided **Edition Metadata** and, when ambiguous, include parallel anchors (e.g., page in 1984 English + French original if supplied).
+  </task>
+
+  <stylesheet>
+    {
+      ".config": { "syntax": "yaml" },
+      ".method": { "syntax": "markdown" },
+      ".ofmt":   { "syntax": "markdown" },
+      ".lens":   { "syntax": "markdown" }
+    }
+  </stylesheet>
+
+  <p className="config">
+mode: "forensic"                 # forensic | rapid
+depth: "deep"                    # quick | standard | deep
+strictness: 5                    # 1..5 (max skeptical)
+audience: "scholars of everyday life, STS, cultural theory"
+field: "De Certeau, tactics/strategies, micropolitics"
+assume_charity: true
+treat_paradox_as_resource: true
+max_findings_per_section: 40
+quotes:
+  max_quotes: 120                # upper bound across the whole concordance
+  max_words_per_quote: 25
+  require_context_note: true
+anchors:
+  require_page: true             # page number is mandatory
+  require_section: true          # chapter/section when present
+  parallel_editions_allowed: true
+edition_metadata:
+  title: "The Practice of Everyday Life"
+  author: "Michel de Certeau"
+  translator: "TBD"
+  publisher: "TBD"
+  year: "TBD"
+  edition_note: "Specify exact edition used (e.g., UC Press 1984; Vol. 1), plus any French original cross-refs if available."
+scales:
+  confidence: ["Low","Med","High"]
+  weight: ["Trivial","Moderate","Central"]
+  </p>
+
+  <p className="lens">
+## Conceptual cues (apply while extracting)
+- **Definition**: Tactics = opportunistic maneuvers from no-place, inside spaces formatted by others’ strategies; time-bound, mētis-driven, making-do/poaching/bricolage.
+- **Modalities to scan**: walking/desire paths; reading &amp; textual poaching; consumption/consumer hacks; speech/play; media remix; workplace micropolitics.
+- **Dialectic**: note the *strategy–tactic* pairing each time (what rule/place is being parasitized or diverted).
+- **Ambiguities**: playful vs resistant; ephemeral vs durable; complicity vs subversion. Capture paradoxes explicitly.
+  </p>
+
+  <p className="method">
+## Method (execute in order; enforce anchors and quotes)
+1) **Calibration** — one-sentence definition (De Certeau’s own terms), strategy distinction, and priors.
+2) **Tactic Index (Full Concordance)** — for every instance:
+   - name/descriptor; quote (≤25 words); page; chapter/section; classification (Exemplary/Definitional/Anecdote/Metaphor); mode; analytic note; weight; confidence.
+3) **Meta-Theory of Tactics** — list core claims (≤12), shifts across chapters, and any contradictions/slippages.
+4) **Clusters &amp; Families** — group tactics (urban/textual/consumption/media/workplace), show overlaps/tensions.
+5) **Strategy–Tactic Interface** — for major tactics: corresponding strategy (place/rule/architecture), &quot;crack&quot; exploited, observed incorporation (productization/ban).
+6) **Paradox Table** — paradox, class (Productive/Destructive), rehabilitation move.
+7) **Critical Counters** — blind spots/limits (e.g., gendered labor, coloniality, digital transformation), each with anchor or rationale.
+8) **Executive Index** — top 20 tactics with page refs and one-line gloss; top 5 paradoxes; top 5 strategy interfaces; one &quot;live question&quot; De Certeau leaves open.
+9) **References &amp; Anchors** — normalize in-text citations; add 6–10 secondary anchors with one-line rationale; include full **Edition Metadata** used.
+  </p>
+
+  <output-format className="ofmt">
+- Emit sections in this exact order:
+  - Calibration
+  - Tactic Index (Full Concordance)
+  - Meta-Theory of Tactics
+  - Clusters &amp; Families
+  - Strategy–Tactic Interface
+  - Paradox Table
+  - Critical Counters
+  - Executive Index
+  - References &amp; Anchors
+- **Every tactic entry must include:** verbatim quote (≤25 words) + page number (required) + chapter/section (if present).
+- If an anchor is uncertain, mark as &quot;approx.&quot; and state basis (e.g., chapter pagination variance); prefer parallel anchors when editions differ.
+- Use **Weight** (Trivial/Moderate/Central) and **Confidence** (Low/Med/High) per entry.
+- If any section exceeds `max_findings_per_section`, compress to Top-N and append an overflow summary line.
+- Close with **Appendix — Structured JSON** that captures all sections for downstream indexing.
+  </output-format>
+
+  <output-schema parser="json">
+    {
+      "type": "object",
+      "properties": {
+        "calibration": {
+          "type": "object",
+          "properties": {
+            "definition": { "type": "string" },
+            "strategy_distinction": { "type": "string" },
+            "priors": { "type": "string" }
+          },
+          "required": ["definition","strategy_distinction","priors"]
+        },
+        "tactic_index": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "mode": { "type": "string" },
+              "classification": { "type": "string", "enum": ["Exemplary","Definitional","Anecdote","Metaphor"] },
+              "quote": { "type": "string" },
+              "page": { "type": "string" },
+              "chapter_section": { "type": "string" },
+              "parallel_anchor": { "type": "string" },
+              "analytic_note": { "type": "string" },
+              "weight": { "type": "string", "enum": ["Trivial","Moderate","Central"] },
+              "confidence": { "type": "string", "enum": ["Low","Med","High"] }
+            },
+            "required": ["name","quote","page","classification","confidence"]
+          }
+        },
+        "meta_theory": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "clusters_families": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "cluster": { "type": "string" },
+              "members": { "type": "array", "items": { "type": "string" } },
+              "notes": { "type": "string" }
+            },
+            "required": ["cluster","members"]
+          }
+        },
+        "strategy_interface": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "tactic": { "type": "string" },
+              "strategy": { "type": "string" },
+              "crack_exploited": { "type": "string" },
+              "incorporation": { "type": "string" }
+            },
+            "required": ["tactic","strategy","crack_exploited"]
+          }
+        },
+        "paradox_table": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "paradox": { "type": "string" },
+              "class": { "type": "string", "enum": ["Productive","Destructive"] },
+              "rehabilitation": { "type": "string" }
+            },
+            "required": ["paradox","class","rehabilitation"]
+          }
+        },
+        "critical_counters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "issue": { "type": "string" },
+              "anchor_or_rationale": { "type": "string" },
+              "confidence": { "type": "string", "enum": ["Low","Med","High"] }
+            },
+            "required": ["issue","anchor_or_rationale"]
+          }
+        },
+        "executive_index": {
+          "type": "object",
+          "properties": {
+            "top_tactics": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "page": { "type": "string" },
+                  "gloss": { "type": "string" }
+                },
+                "required": ["name","page","gloss"]
+              }
+            },
+            "top_paradoxes": { "type": "array", "items": { "type": "string" } },
+            "top_strategy_interfaces": { "type": "array", "items": { "type": "string" } },
+            "live_question": { "type": "string" }
+          }
+        },
+        "references_anchors": {
+          "type": "object",
+          "properties": {
+            "edition_metadata_used": {
+              "type": "object",
+              "properties": {
+                "title": { "type": "string" },
+                "author": { "type": "string" },
+                "translator": { "type": "string" },
+                "publisher": { "type": "string" },
+                "year": { "type": "string" },
+                "edition_note": { "type": "string" }
+              }
+            },
+            "extracted_citations": { "type": "array", "items": { "type": "string" } },
+            "suggested_anchors": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "citation": { "type": "string" },
+                  "rationale": { "type": "string" }
+                },
+                "required": ["citation","rationale"]
+              }
+            }
+          }
+        }
+      }
+    }
+  </output-schema>
+
+  <p>
+TEXT UNDER REVIEW:
+[Insert passages or full text from *The Practice of Everyday Life*. If supplying excerpts, include edition page headers/footers so page anchoring is reliable.]
+  </p>
+
+  <runtime
+    provider="openai"
+    model="gpt-5"
+    temperature="0.3"
+    top-p="0.95"
+    max-output-tokens="4800"
+    seed="42" />
+</poml>

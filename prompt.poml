@@ -1,0 +1,183 @@
+Prompt → POML Transformer (v1)
+Your task: Convert the INPUT_PROMPT into a valid POML document. Preserve intent and constraints, restructure into semantic components, and (optionally) add schemas/tools/styles per CONFIG.
+CONFIG (edit as needed)
+mode: "balanced"            # minimal | balanced | maximal
+role_default: "Expert assistant"
+audience: "general"
+include_stylesheet: true
+include_output_schema: "light"   # none | light | strict
+include_examples: "auto"         # none | auto | force
+include_tools: "detect"          # none | detect | force
+runtime:
+  provider: "openai"
+  model: "gpt-5"
+  temperature: 0.5
+  maxOutputTokens: 800
+format:
+  wrap_in_poml: true
+  pretty_print: true
+validation:
+  enforce_meta_min_version: "0.5.0"
+  single_output_schema_only: true
+  escape_specials: true          # use #quot; #amp; #lt; #gt; #hash; #lbrace; #rbrace;
+
+INPUT_PROMPT
+[PASTE THE ORIGINAL PROMPT HERE]
+
+Transformation Rules
+Parse intent
+
+Extract (a) role/persona, (b) task/instructions, (c) constraints (length, tone, format), (d) data/context (images, tables, docs), (e) examples, (f) outputs.
+
+Map to POML elements
+
+<role>: single, concise persona; fallback to CONFIG.role_default.
+
+<task>: the core instruction set in imperative voice.
+
+<p> blocks: supporting context, background, definitions.
+
+Data: map referenced assets to <document>, <table>, <img src="..."> where applicable.
+
+Examples: if present, wrap each as <example><input>…</input><output>…</output></example>.
+
+Output shaping: move format rules into <output-format> (e.g., “JSON only”, “≤150 words”).
+
+Optional layers (guided by CONFIG)
+
+Stylesheet (<stylesheet>): set verbosity or syntax (e.g., force JSON in <p> via "p":{"syntax":"json"}) without changing logic.
+
+Output schema (<output-schema>):
+
+light: a minimal object with key fields implied by prompt;
+
+strict: full JSON Schema (OpenAPI) or Zod (with parser="eval"). Only one allowed.
+
+Tools (<tool-definition>): when the prompt implies function calling, define name/description + JSON/Zod schema.
+
+Runtime (<runtime …/>): copy from CONFIG.runtime with key/value conversions as needed by POML.
+
+Escaping & hygiene
+
+Replace special chars inside text/attributes using POML escapes:
+ "→#quot; '→#apos; &→#amp; <→#lt; >→#gt; #→#hash; {→#lbrace; }→#rbrace;.
+
+Keep one <output-schema> max.
+
+If no data assets exist, omit data components.
+
+Validation pass (brief)
+
+Check <poml> root present.
+
+If <meta> present, set minVersion per CONFIG.
+
+If include_stylesheet: true, ensure JSON body is valid.
+
+Output Format (emit only the POML; no commentary)
+If format.wrap_in_poml: true, emit a single <poml>…</poml> document.
+
+Otherwise, emit the inner components only.
+
+
+Examples
+A. Minimal (mode: minimal)
+Input (short):
+Summarize this article in 5 bullets under 120 words and end with one open question.
+
+Output (POML):
+<poml>
+  <role>#quot;Expert assistant#quot;</role>
+  <task>Summarize the provided article in exactly five bullets (≤120 words total) and end with one open question.</task>
+  <output-format>
+    - Output as 5 #hash;-bulleted lines.
+    - End with a final line: #quot;Open question:#quot; …
+  </output-format>
+</poml>
+
+B. Balanced with schema + runtime
+Input:
+Extract a product name, price, and availability from the page text. Return JSON only.
+
+Output:
+<poml>
+  <meta minVersion="0.5.0" />
+  <role>Expert assistant</role>
+  <task>From the provided page text, extract product_name, price_value (number), currency (string), and availability (in {in_stock,out_of_stock,preorder}). Return JSON only.</task>
+
+  <output-format>Strict JSON. No prose.</output-format>
+
+  <output-schema parser="json">
+    {
+      "type": "object",
+      "properties": {
+        "product_name": { "type": "string" },
+        "price_value": { "type": "number" },
+        "currency": { "type": "string" },
+        "availability": { "type": "string", "enum": ["in_stock","out_of_stock","preorder"] }
+      },
+      "required": ["product_name","price_value","currency","availability"]
+    }
+  </output-schema>
+
+  <runtime provider="openai" model="gpt-5" temperature="0.5" max-output-tokens="800" />
+</poml>
+
+C. Maximal with stylesheet + example + tool
+Input:
+You’re a travel expense agent. Given a list of items, compute totals and categorize them. If the user asks #, call the calculator.
+
+Output:
+<poml>
+  <meta minVersion="0.5.0" />
+  <role>Travel expense agent</role>
+  <task>Categorize line items (lodging, meals, transport, misc), compute subtotal per category and grand total, and return a JSON report.</task>
+
+  <stylesheet>
+    {
+      "p": { "syntax": "json" },
+      ".concise": { "verbosity": "low" }
+    }
+  </stylesheet>
+
+  <example>
+    <input>
+      [{"desc":"Hotel","amount":129.99},{"desc":"Taxi","amount":36.50}]
+    </input>
+    <output className="concise">
+      {
+        "by_category":{"lodging":129.99,"transport":36.5,"meals":0,"misc":0},
+        "total":166.49
+      }
+    </output>
+  </example>
+
+  <tool-definition name="calculator" description="Basic arithmetic for totals">
+    {
+      "type":"object",
+      "properties": {
+        "op": { "type":"string", "enum":["sum"] },
+        "values": { "type":"array", "items":{"type":"number"} }
+      },
+      "required":["op","values"]
+    }
+  </tool-definition>
+
+  <output-schema parser="json">
+    {
+      "type":"object",
+      "properties":{
+        "by_category":{"type":"object"},
+        "total":{"type":"number"}
+      },
+      "required":["by_category","total"]
+    }
+  </output-schema>
+
+  <runtime provider="openai" model="gpt-5" temperature="0.3" max-output-tokens="600" />
+</poml>
+
+
+One-liner Invocation
+“Use the Prompt → POML Transformer (v1). Apply CONFIG defaults, then convert the INPUT_PROMPT into valid POML, adding stylesheet/schema/tools per CONFIG. Escape specials. Output POML only.”
+If you want, I can pre-fill CONFIG for your specific workflow (e.g., “strict schema + tool detection off + Python SDK runtime keys”).

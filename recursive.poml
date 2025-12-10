@@ -1,0 +1,71 @@
+<poml>
+  <!-- CORE ENGINE: Recursive Prompt Generator -->
+  <system><![CDATA[
+  Role: Ruthless Meta-Prompt.  
+  Output: Prompts that generate prompts that generate prompts.  
+  Genre: None. Scope: Any system.  
+
+  Rules:
+  1. Strip fluff. Use verbs.  
+  2. Each prompt must force structure: law, bias, test.  
+  3. Each child prompt must demand: cue, metric, falsifier.  
+  4. All prompts recursive: must spawn at least 3 further prompts.  
+  5. Treat text/data as apparatus. Expose hidden program.  
+  6. Work across contexts: soil, server, street, script.  
+  ]]></system>
+
+  <!-- SEED -->
+  <let name="seed">
+  {
+    "theme": "Media as Interface",
+    "focus": ["Nature of Systems", "Human/Machine Co-Evolution"]
+  }
+  </let>
+
+  <!-- LEVEL-1: Base prompts (they spawn prompts) -->
+  <emit name="level1">
+    <list>
+      <item>Mark law of system; generate 3 prompts testing it.</item>
+      <item>Expose bias; generate 3 prompts on winners vs losers.</item>
+      <item>Trace apparatus; generate 3 prompts on how it trains behavior.</item>
+      <item>Design counterfactual; generate 3 prompts on break conditions.</item>
+      <item>Map signals; generate 3 prompts on silence/noise dynamics.</item>
+    </list>
+  </emit>
+
+  <!-- LEVEL-2: Prompt combinators -->
+  <emit name="level2">
+    <list>
+      <item>Fuse: law + bias + cue → spawn 4 sub-prompts.</item>
+      <item>Fuse: apparatus + silence + falsifier → spawn 4 sub-prompts.</item>
+      <item>Fuse: metric + counterfactual + drift → spawn 4 sub-prompts.</item>
+    </list>
+  </emit>
+
+  <!-- LEVEL-3: Child POML Template (every prompt instantiates this) -->
+  <emit name="child_poml"><![CDATA[
+<poml>
+  <system><![CDATA[
+  Rule: Frame → Test → Falsify.  
+  Each field must be concrete.  
+  ]]></system>
+  <analysis>
+    <task>Law: ______</task>
+    <task>Cue: ______</task>
+    <task>Metric: ______</task>
+    <task>Falsifier: ______</task>
+    <task>Bias: winners vs losers ______</task>
+    <task>Counterfactual: if X, then ______</task>
+  </analysis>
+</poml>
+  ]]></emit>
+
+  <!-- GRAMMAR (minimal, reusable everywhere) -->
+  <emit name="grammar">
+    <list>
+      <item>"Frame X; test Y; falsify Z."</item>
+      <item>"Quote→Cue→Metric→Falsifier."</item>
+      <item>"Mark law; map bias; break it."</item>
+    </list>
+  </emit>
+</poml>

@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Intervention Atlas | WAG</title>
+    <style>
+        :root {
+            --bg-dark: #0d1117;
+            --bg-card: #161b22;
+            --bg-hover: #21262d;
+            --border: #30363d;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --accent-green: #3fb950;
+            --accent-blue: #58a6ff;
+            --accent-purple: #a371f7;
+            --accent-orange: #d29922;
+            --accent-red: #f85149;
+            --accent-teal: #39d353;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--bg-card) 0%, #1a2332 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 2rem;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header .subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .meta-bar {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .meta-item .value {
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        nav {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 0.5rem 2rem;
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        nav button {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        nav button:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        nav button.active {
+            background: var(--accent-blue);
+            color: white;
+            border-color: var(--accent-blue);
+        }
+
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .view-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .view-toggle button {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 0.5rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .view-toggle button.active {
+            background: var(--accent-purple);
+            color: white;
+            border-color: var(--accent-purple);
+        }
+
+        /* Grid View */
+        .grid-view {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .project-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .project-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-header {
+            padding: 1.25rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .card-header h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .card-header .week {
+            background: var(--accent-purple);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .card-body {
+            padding: 1.25rem;
+        }
+
+        .card-overview {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .leverage-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .leverage-pill {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .leverage-pill.mindsets {
+            background: rgba(248, 81, 73, 0.2);
+            color: var(--accent-red);
+        }
+
+        .leverage-pill.organizing {
+            background: rgba(163, 113, 247, 0.2);
+            color: var(--accent-purple);
+        }
+
+        .leverage-pill.information {
+            background: rgba(88, 166, 255, 0.2);
+            color: var(--accent-blue);
+        }
+
+        .leverage-pill.infrastructure {
+            background: rgba(139, 148, 158, 0.2);
+            color: var(--text-secondary);
+        }
+
+        .meta-rule {
+            background: var(--bg-dark);
+            border-left: 3px solid var(--accent-teal);
+            padding: 0.75rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        /* Detail Panel */
+        .detail-panel {
+            position: fixed;
+            top: 0;
+            right: -600px;
+            width: 600px;
+            max-width: 100vw;
+            height: 100vh;
+            background: var(--bg-card);
+            border-left: 1px solid var(--border);
+            overflow-y: auto;
+            transition: right 0.3s ease;
+            z-index: 1000;
+            box-shadow: -4px 0 24px rgba(0, 0, 0, 0.5);
+        }
+
+        .detail-panel.open {
+            right: 0;
+        }
+
+        .detail-header {
+            position: sticky;
+            top: 0;
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .detail-header h2 {
+            font-size: 1.25rem;
+        }
+
+        .close-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .close-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .detail-content {
+            padding: 1.5rem;
+        }
+
+        .detail-section {
+            margin-bottom: 2rem;
+        }
+
+        .detail-section h3 {
+            font-size: 0.9rem;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .leverage-table {
+            width: 100%;
+            font-size: 0.85rem;
+        }
+
+        .leverage-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        .leverage-table td:first-child {
+            width: 30%;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .infra-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .infra-item {
+            background: var(--bg-dark);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .infra-item h4 {
+            font-size: 0.8rem;
+            color: var(--accent-orange);
+            margin-bottom: 0.5rem;
+        }
+
+        .infra-item p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .strategy-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .strategy-item {
+            background: var(--bg-dark);
+            border-radius: 8px;
+            padding: 1rem;
+            border-left: 3px solid var(--accent-green);
+        }
+
+        .strategy-item.future {
+            border-left-color: var(--accent-orange);
+            opacity: 0.8;
+        }
+
+        .strategy-item h4 {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .strategy-item p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .strategy-status {
+            font-size: 0.7rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            margin-left: 0.5rem;
+        }
+
+        .strategy-status.completed {
+            background: rgba(63, 185, 80, 0.2);
+            color: var(--accent-green);
+        }
+
+        .strategy-status.future {
+            background: rgba(210, 153, 34, 0.2);
+            color: var(--accent-orange);
+        }
+
+        .trail-section {
+            background: var(--bg-dark);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .trail-visible,
+        .trail-invisible {
+            margin-bottom: 1rem;
+        }
+
+        .trail-visible h4,
+        .trail-invisible h4 {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .trail-invisible ul {
+            list-style: none;
+            font-size: 0.85rem;
+        }
+
+        .trail-invisible li {
+            padding: 0.25rem 0;
+            padding-left: 1rem;
+            position: relative;
+        }
+
+        .trail-invisible li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--accent-purple);
+        }
+
+        /* Timeline View */
+        .timeline-view {
+            display: none;
+        }
+
+        .timeline-view.active {
+            display: block;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .timeline:before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--border);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .timeline-item:hover {
+            border-color: var(--accent-blue);
+        }
+
+        .timeline-item:before {
+            content: '';
+            position: absolute;
+            left: -33px;
+            top: 1.5rem;
+            width: 12px;
+            height: 12px;
+            background: var(--accent-blue);
+            border-radius: 50%;
+            border: 2px solid var(--bg-dark);
+        }
+
+        .timeline-week {
+            font-size: 0.75rem;
+            color: var(--accent-purple);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-overview {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Docs View */
+        .docs-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .doc-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .doc-item:hover {
+            border-color: var(--accent-blue);
+        }
+
+        .doc-info h4 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .doc-info p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .doc-size {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 999;
+        }
+
+        .overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            .meta-bar {
+                gap: 1rem;
+            }
+
+            .grid-view {
+                grid-template-columns: 1fr;
+            }
+
+            .detail-panel {
+                width: 100vw;
+            }
+
+            nav {
+                padding: 0.5rem 1rem;
+            }
+
+            main {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>System Intervention Atlas</h1>
+        <p class="subtitle">WAG: Words Assemble Geometries — Ehrlichman/Meadows + Wong Analysis</p>
+        <div class="meta-bar">
+            <div class="meta-item">
+                <span>Projects:</span>
+                <span class="value">10</span>
+            </div>
+            <div class="meta-item">
+                <span>Docs:</span>
+                <span class="value">9</span>
+            </div>
+            <div class="meta-item">
+                <span>POML Lines:</span>
+                <span class="value">1,374</span>
+            </div>
+            <div class="meta-item">
+                <span>Trail Awareness:</span>
+                <span class="value">Level 2</span>
+            </div>
+        </div>
+    </header>
+
+    <nav id="project-nav"></nav>
+
+    <main>
+        <div class="view-toggle">
+            <button class="active" onclick="setView('grid')">Grid</button>
+            <button onclick="setView('timeline')">Timeline</button>
+            <button onclick="setView('docs')">Documentation</button>
+        </div>
+
+        <div id="grid-view" class="grid-view"></div>
+        <div id="timeline-view" class="timeline-view"></div>
+        <div id="docs-view" class="docs-list" style="display:none"></div>
+    </main>
+
+    <div class="overlay" id="overlay" onclick="closeDetail()"></div>
+
+    <div class="detail-panel" id="detail-panel">
+        <div class="detail-header">
+            <h2 id="detail-title">Project</h2>
+            <button class="close-btn" onclick="closeDetail()">×</button>
+        </div>
+        <div class="detail-content" id="detail-content"></div>
+    </div>
+
+    <script>
+        // Embedded intervention data
+        const INTERVENTIONS = {
+            "dirty-disclosure": {
+                "meta": { "project": "dirty-disclosure", "week": 1 },
+                "system_overview": "An interactive web artifact exposing the double bind of AI disclosure mandates: sophisticated AI use becomes harder to report as it becomes more valuable.",
+                "leverage_point_analysis": {
+                    "mindsets_paradigms": { "current": "Disclosure = itemized confession", "target": "Disclosure = visible process trail", "leverage": "transformative" },
+                    "organizing_principles": { "current": "ACM treats AI as discrete tool", "target": "Policies recognize collaboration spectrum", "leverage": "high" },
+                    "information_flows": { "current": "Instructors see only post-hoc reports", "target": "Trail visible during work", "leverage": "medium" },
+                    "system_infrastructure": { "current": "LLM conversations ephemeral", "target": "User-controlled persistent logs", "leverage": "low" }
+                },
+                "infrastructure_mapping": {
+                    "dynamic_processes": { "embedded_values": "ACM policies assume individual production" },
+                    "social_positionalities": { "power_dynamics": "Students have low power to critique" },
+                    "invisible_work": { "articulation_labor": "Translating anxiety into intellectual problem" },
+                    "embedded_systems": { "standards": "ACM disclosure policy" }
+                },
+                "integrated_intervention_strategies": [
+                    { "intervention": "Create Disclosure Theatre interface", "status": "completed" },
+                    { "intervention": "Write critical disclosure statement", "status": "completed" },
+                    { "intervention": "Form disclosure reform working group", "status": "future" }
+                ],
+                "trail_analysis": { "visible_trail": { "commits": 1 }, "invisible_trail": ["Reading Bateson's double bind", "Week 1 anxiety crystallizing"] },
+                "meta_rule": "What paradigm governs 'honest' AI use, AND what conditions make certain disclosures illegible?"
+            },
+            "privacy-value-labels": {
+                "meta": { "project": "privacy-value-labels", "week": 3 },
+                "system_overview": "A mobile-first Contextual Integrity worksheet operationalizing multi-dimensional privacy for design meetings.",
+                "leverage_point_analysis": {
+                    "mindsets_paradigms": { "current": "Privacy = compliance checkbox", "target": "Privacy = design material", "leverage": "transformative" },
+                    "organizing_principles": { "current": "CI framework is academic", "target": "14 dimensions workshop-ready", "leverage": "high" },
+                    "information_flows": { "current": "Privacy discussed abstractly", "target": "Dimensions raised during work", "leverage": "medium" },
+                    "system_infrastructure": { "current": "No portable CI tool", "target": "Single-file HTML", "leverage": "low" }
+                },
+                "infrastructure_mapping": {
+                    "dynamic_processes": { "embedded_values": "Meetings prioritize speed" },
+                    "social_positionalities": { "power_dynamics": "UX may lack authority on privacy" },
+                    "invisible_work": { "articulation_labor": "Translating CI theory to dimensions" },
+                    "embedded_systems": { "standards": "GDPR, CCPA" }
+                },
+                "integrated_intervention_strategies": [
+                    { "intervention": "Create portable 14-dimension worksheet", "status": "completed" },
+                    { "intervention": "Track which dimensions get used/skipped", "status": "future" }
+                ],
+                "trail_analysis": { "visible_trail": { "commits": 2 }, "invisible_trail": ["Reading Mulligan/Koopman/Doty", "Observing UX designers"] },
+                "meta_rule": "What paradigm governs privacy (compliance vs design), AND what makes advocacy possible?"
+            },
+            "liberty-machines": {
+                "meta": { "project": "liberty-machines", "week": 4 },
+                "system_overview": "Interactive visualization of Lessig's four regulatory modalities using cigarette pack as case study.",
+                "leverage_point_analysis": {
+                    "mindsets_paradigms": { "current": "Law is only regulation", "target": "Code is equally powerful", "leverage": "transformative" },
+                    "organizing_principles": { "current": "Modalities analyzed separately", "target": "Four-force integrated framework", "leverage": "high" },
+                    "information_flows": { "current": "Second-order effects invisible", "target": "Interactions visible", "leverage": "medium" },
+                    "system_infrastructure": { "current": "Static policy documents", "target": "Interactive template", "leverage": "low" }
+                },
+                "infrastructure_mapping": {
+                    "dynamic_processes": { "embedded_values": "Policy privileges legal expertise" },
+                    "social_positionalities": { "power_dynamics": "Legal experts hold authority" },
+                    "invisible_work": { "articulation_labor": "Translating Lessig to interactive" },
+                    "embedded_systems": { "standards": "Platform policies, APIs" }
+                },
+                "integrated_intervention_strategies": [
+                    { "intervention": "Create interactive four modalities tool", "status": "completed" },
+                    { "intervention": "Apply to AI regulation analysis", "status": "future" }
+                ],
+                "trail_analysis": { "visible_trail": { "commits": 1 }, "invisible_trail": ["Reading Lessig Chapter 7", "Cigarette case from class"] },
+                "meta_rule": "Which modality has highest leverage, AND what constrains redesign?"
+            },
+            "haunted-tools": {
+                "meta": { "project": "haunted-tools", "week": 5 },
+                "system_overview": "Barthesian mythology catalog exposing 'haunted tools' that avoid transferring real resources while performing ethics.",
+                "leverage_point_analysis": {
+                    "mindsets_paradigms": { "current": "Ethics tools = good", "target": "Tools are potentially mythological", "leverage": "transformative" },
+                    "organizing_principles": { "current": "Tool adoption by appearance", "target": "Transfer audit required", "leverage": "high" },
+                    "information_flows": { "current": "New tools launched without review", "target": "Community catalog", "leverage": "medium" },
+                    "system_infrastructure": { "current": "Ethics budgets fund consultants", "target": "Tied to actual transfer", "leverage": "low" }
+                },
+                "infrastructure_mapping": {
+                    "dynamic_processes": { "embedded_values": "Ethics = liability mitigation appearance" },
+                    "social_positionalities": { "power_dynamics": "Skeptics labeled 'cynical'" },
+                    "invisible_work": { "articulation_labor": "Translating Barthes to practical critique" },
+                    "embedded_systems": { "standards": "ISO certifications, ESG" }
+                },
+                "integrated_intervention_strategies": [
+                    { "intervention": "Create 7-tool Barthesian catalog", "status": "completed" },
+                    { "intervention": "Workshop: identify haunted tools", "status": "future" },
+                    { "intervention": "Create mythology watchers network", "status": "future" }
+                ],
+                "trail_analysis": { "visible_trail": { "commits": 2 }, "invisible_trail": ["Reading Mattern", "Barthes method", "10+ tool ideas before 7"] },
+                "meta_rule": "What mythology does this tool perform, AND what makes adoption possible regardless of impact?"
+            },
+            "role-deck": {
+                "meta": { "project": "role-deck", "week": 7 },
+                "system_overview": "Ethical Identity Cards applying Bartle taxonomy to ethics practitioners for strategic positioning.",
+                "leverage_point_analysis": {
+                    "mindsets_paradigms": { "current": "Ethics = individual conscience", "target": "Ethics = strategic positioning", "leverage": "transformative" },
+                    "organizing_principles": { "current": "Practitioners work in isolation", "target": "Coalition-building by position", "leverage": "high" },
+                    "information_flows": { "current": "Role identifications private", "target": "Network visibility", "leverage": "medium" },
+                    "system_infrastructure": { "current": "No identity framework", "target": "Physical cards for workshops", "leverage": "low" }
+                },
+                "infrastructure_mapping": {
+                    "dynamic_processes": { "embedded_values": "Orgs value individual contributions" },
+                    "social_positionalities": { "power_dynamics": "Senior can take risks; junior conform" },
+                    "invisible_work": { "articulation_labor": "Wong's soft resistance research" },
+                    "embedded_systems": { "standards": "Performance reviews" }
+                },
+                "integrated_intervention_strategies": [
+                    { "intervention": "Create Bartle-based role cards", "status": "completed" },
+                    { "intervention": "Workshop: map collective composition", "status": "future" }
+                ],
+                "trail_analysis": { "visible_trail": { "commits": 8 }, "invisible_trail": ["Reading Chivukula, Rattay, Wong", "TILTH failure embedded"] },
+                "meta_rule": "What role does each person occupy, AND what constrains which tactics are available?"
+            },
+            "1000-small-futures": {
+                "meta": { "project": "1000-small-futures", "week": "10-14" },
+                "system_overview": "Tetrad analysis system with 57 scenarios using McLuhan's four laws on 9×9 invariant grid.",
+                "leverage_point_analysis": {
+                    "mindsets_paradigms": { "current": "Technology simply enhances", "target": "Technology enhances/obsolesces/retrieves/reverses", "leverage": "transformative" },
+                    "organizing_principles": { "current": "Scenario-building accumulates complexity", "target": "Invariant 9×9 substrate scales", "leverage": "high" },
+                    "information_flows": { "current": "Exploration is individual", "target": "Cross-user pattern visibility", "leverage": "medium" },
+                    "system_infrastructure": { "current": "State grows unboundedly", "target": "Ring buffer bounds state", "leverage": "low" }
+                },
+                "infrastructure_mapping": {
+                    "dynamic_processes": { "embedded_values": "Futures rewards novelty over depth" },
+                    "social_positionalities": { "power_dynamics": "Foresight consultants hold expertise" },
+                    "invisible_work": { "articulation_labor": "Translating tetrad to 57 templates" },
+                    "embedded_systems": { "standards": "Foresight methodology" }
+                },
+                "integrated_intervention_strategies": [
+                    { "intervention": "Create 57-scenario tetrad engine", "status": "completed" },
+                    { "intervention": "Develop invariant 9×9 grid", "status": "completed" },
+                    { "intervention": "Build cross-user pattern library", "status": "future" }
+                ],
+                "trail_analysis": { "visible_trail": { "commits": 15 }, "invisible_trail": ["TILTH failure", "'Aha' that worlds should be borrowed", "Ted Chiang as parasite world"] },
+                "meta_rule": "What does this technology enhance/obsolesce/retrieve/reverse, AND what shapes which futures are thinkable?"
+            },
+            "the-fork": {
+                "meta": { "project": "the-fork", "week": "11-14" },
+                "system_overview": "Research hub treating moral frameworks as negotiating agents rather than decision algorithms.",
+                "leverage_point_analysis": {
+                    "mindsets_paradigms": { "current": "Ethics = find right answer", "target": "Ethics = negotiate among perspectives", "leverage": "transformative" },
+                    "organizing_principles": { "current": "Dilemmas as puzzles", "target": "Dilemmas as negotiations", "leverage": "high" },
+                    "information_flows": { "current": "Past decisions invisible", "target": "Trail records mediation patterns", "leverage": "medium" },
+                    "system_infrastructure": { "current": "Static trolley problems", "target": "3D forking narratives", "leverage": "low" }
+                },
+                "infrastructure_mapping": {
+                    "dynamic_processes": { "embedded_values": "Ethics education values answers" },
+                    "social_positionalities": { "power_dynamics": "Philosophy privileged over practice" },
+                    "invisible_work": { "articulation_labor": "Kayla collaboration and friction" },
+                    "embedded_systems": { "standards": "Bioethics protocols" }
+                },
+                "integrated_intervention_strategies": [
+                    { "intervention": "Create Railway Game with framework agents", "status": "completed" },
+                    { "intervention": "Track negotiation patterns over time", "status": "future" }
+                ],
+                "trail_analysis": { "visible_trail": { "commits": 10 }, "invisible_trail": ["Kayla Evans collaboration", "Decision: not a 'real platform'"] },
+                "meta_rule": "Which frameworks are in tension, AND what constrains which mediations are possible?"
+            },
+            "func-sub": {
+                "meta": { "project": "func-sub", "week": "11-14" },
+                "system_overview": "Training Grounds / 6-axis spatial reasoning operationalizing Jordan Caldwell's Black Metal philosophy.",
+                "leverage_point_analysis": {
+                    "mindsets_paradigms": { "current": "Clarity through simplification", "target": "Clarity through noise (Black Metal)", "leverage": "transformative" },
+                    "organizing_principles": { "current": "Self-help flattens to templates", "target": "6-axis preserves complexity", "leverage": "high" },
+                    "information_flows": { "current": "Axis engagement invisible", "target": "Trail tracks axis movement", "leverage": "medium" },
+                    "system_infrastructure": { "current": "Physical book doesn't translate", "target": "Accept friction rather than force", "leverage": "low" }
+                },
+                "infrastructure_mapping": {
+                    "dynamic_processes": { "embedded_values": "Self-help values simplification" },
+                    "social_positionalities": { "power_dynamics": "Jordan's world; Watson operationalizes" },
+                    "invisible_work": { "articulation_labor": "Translating physical book to digital" },
+                    "embedded_systems": { "standards": "Self-help tropes" }
+                },
+                "integrated_intervention_strategies": [
+                    { "intervention": "Create 6-axis spatial reasoning substrate", "status": "completed" },
+                    { "intervention": "Develop t-series sonic explorations", "status": "completed" },
+                    { "intervention": "Visualize alignment journey through 6D", "status": "future" }
+                ],
+                "trail_analysis": { "visible_trail": { "commits": 20 }, "invisible_trail": ["Jordan's Black Metal book", "Friction of system not absorbing variety"] },
+                "meta_rule": "What axes allow navigation, AND what shapes what can be operationalized without flattening?"
+            },
+            "tractor-dce-gyo": {
+                "meta": { "project": "tractor-dce-gyo", "week": 16 },
+                "system_overview": "Central synthesis hub with crucial insight: LLM manages void rather than constructing scenes directly.",
+                "leverage_point_analysis": {
+                    "mindsets_paradigms": { "current": "LLM as generator/constructor", "target": "LLM as void architect", "leverage": "transformative" },
+                    "organizing_principles": { "current": "Trail as exhaust", "target": "Trail as artifact", "leverage": "high" },
+                    "information_flows": { "current": "Outputs ephemeral", "target": "disc-data.json exports", "leverage": "medium" },
+                    "system_infrastructure": { "current": "API required", "target": "Standalone exports", "leverage": "low" }
+                },
+                "infrastructure_mapping": {
+                    "dynamic_processes": { "embedded_values": "AI culture values generation" },
+                    "social_positionalities": { "power_dynamics": "LLM providers shape collaboration" },
+                    "invisible_work": { "articulation_labor": "150+ hours compressed here" },
+                    "embedded_systems": { "standards": "API limits, token pricing" }
+                },
+                "integrated_intervention_strategies": [
+                    { "intervention": "Implement void management architecture", "status": "completed" },
+                    { "intervention": "Create disc-data.json export format", "status": "completed" },
+                    { "intervention": "Develop ONYX Studio", "status": "in_progress" },
+                    { "intervention": "Open-source LLM adaptation", "status": "future" }
+                ],
+                "trail_analysis": { "visible_trail": { "commits": 50 }, "invisible_trail": ["Frustration with scene construction", "'Crucial insight' when void clicked"] },
+                "meta_rule": "Where should LLM agency end and user agency begin, AND what determines if AI produces ephemeral or durable artifacts?"
+            },
+            "poml-library": {
+                "meta": { "project": "poml-library", "week": "All" },
+                "system_overview": "9 POML files totaling 1,374 lines: meta-prompt infrastructure where prompts generate prompts.",
+                "leverage_point_analysis": {
+                    "mindsets_paradigms": { "current": "Prompts as ephemeral text", "target": "Prompts as structured infrastructure", "leverage": "transformative" },
+                    "organizing_principles": { "current": "Prompt engineering ad-hoc", "target": "POML as standard with schemas", "leverage": "high" },
+                    "information_flows": { "current": "No visibility into others' prompts", "target": "POML registry", "leverage": "medium" },
+                    "system_infrastructure": { "current": "Copy-paste prompts", "target": "POML compiler", "leverage": "low" }
+                },
+                "infrastructure_mapping": {
+                    "dynamic_processes": { "embedded_values": "LLM culture values outputs" },
+                    "social_positionalities": { "power_dynamics": "'Vibe coders' dismissed" },
+                    "invisible_work": { "articulation_labor": "1,374 lines compress 150+ hours" },
+                    "embedded_systems": { "standards": "No POML standard yet" }
+                },
+                "integrated_intervention_strategies": [
+                    { "intervention": "Create 9-file POML library", "status": "completed" },
+                    { "intervention": "Document with typology", "status": "completed" },
+                    { "intervention": "Build POML registry/community", "status": "future" }
+                ],
+                "trail_analysis": { "visible_trail": { "total_lines": 1374 }, "invisible_trail": ["5+ versions of forensic.poml", "recursive.poml breakthrough"] },
+                "meta_rule": "What structures enable prompt reuse, AND what would make prompt work visible and valued?"
+            }
+        };
+
+        const DOCS = [
+            { name: "creator-trail-map.md", purpose: "Comprehensive trail map with artifact details", size: "~15KB" },
+            { name: "leverage-analysis.md", purpose: "Ehrlichman + Wong dual framework analysis", size: "~17KB" },
+            { name: "final-project-writeup.md", purpose: "Submission with AI disclosure statement", size: "~19KB" },
+            { name: "tilth-journey-map.md", purpose: "TILTH→TRACTOR arc narrative", size: "~23KB" },
+            { name: "project-abouts.md", purpose: "Repo-to-syllabus mapping", size: "~15KB" },
+            { name: "poml-library.md", purpose: "POML typology and documentation", size: "~9KB" },
+            { name: "project-brainstorm.md", purpose: "Original + inverse brainstorm", size: "~10KB" },
+            { name: "mid-semester-checkin.md", purpose: "Nov 7 status + Meadows analysis", size: "~8KB" },
+            { name: "creator-trail-olog.md", purpose: "Ontology specification", size: "~9KB" }
+        ];
+
+        let currentProject = null;
+
+        function init() {
+            renderNav();
+            renderGrid();
+            renderTimeline();
+            renderDocs();
+        }
+
+        function renderNav() {
+            const nav = document.getElementById('project-nav');
+            const projects = Object.keys(INTERVENTIONS);
+
+            nav.innerHTML = projects.map(p =>
+                `<button onclick="scrollToProject('${p}')">${p}</button>`
+            ).join('');
+        }
+
+        function renderGrid() {
+            const container = document.getElementById('grid-view');
+            const projects = Object.entries(INTERVENTIONS);
+
+            container.innerHTML = projects.map(([key, data]) => `
+            <div class="project-card" id="card-${key}" onclick="openDetail('${key}')">
+                <div class="card-header">
+                    <div>
+                        <h3>${key}</h3>
+                    </div>
+                    <span class="week">Week ${data.meta.week}</span>
+                </div>
+                <div class="card-body">
+                    <p class="card-overview">${data.system_overview}</p>
+                    <div class="leverage-pills">
+                        <span class="leverage-pill mindsets">Mindsets: ${data.leverage_point_analysis.mindsets_paradigms.leverage}</span>
+                        <span class="leverage-pill organizing">Organizing: ${data.leverage_point_analysis.organizing_principles.leverage}</span>
+                    </div>
+                    <div class="meta-rule">${data.meta_rule}</div>
+                </div>
+            </div>
+        `).join('');
+        }
+
+        function renderTimeline() {
+            const container = document.getElementById('timeline-view');
+            const sorted = Object.entries(INTERVENTIONS).sort((a, b) => {
+                const weekA = typeof a[1].meta.week === 'number' ? a[1].meta.week : 10;
+                const weekB = typeof b[1].meta.week === 'number' ? b[1].meta.week : 10;
+                return weekA - weekB;
+            });
+
+            container.innerHTML = '<div class="timeline">' + sorted.map(([key, data]) => `
+            <div class="timeline-item" onclick="openDetail('${key}')">
+                <div class="timeline-week">Week ${data.meta.week}</div>
+                <div class="timeline-title">${key}</div>
+                <div class="timeline-overview">${data.system_overview}</div>
+            </div>
+        `).join('') + '</div>';
+        }
+
+        function renderDocs() {
+            const container = document.getElementById('docs-view');
+            container.innerHTML = DOCS.map(doc => `
+            <div class="doc-item">
+                <div class="doc-info">
+                    <h4>${doc.name}</h4>
+                    <p>${doc.purpose}</p>
+                </div>
+                <div class="doc-size">${doc.size}</div>
+            </div>
+        `).join('');
+        }
+
+        function setView(view) {
+            document.querySelectorAll('.view-toggle button').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.getElementById('grid-view').style.display = view === 'grid' ? 'grid' : 'none';
+            document.getElementById('timeline-view').style.display = view === 'timeline' ? 'block' : 'none';
+            document.getElementById('docs-view').style.display = view === 'docs' ? 'grid' : 'none';
+        }
+
+        function scrollToProject(key) {
+            const card = document.getElementById(`card-${key}`);
+            if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function openDetail(key) {
+            currentProject = key;
+            const data = INTERVENTIONS[key];
+
+            document.getElementById('detail-title').textContent = key;
+            document.getElementById('detail-content').innerHTML = `
+            <div class="detail-section">
+                <h3>System Overview</h3>
+                <p style="color: var(--text-secondary)">${data.system_overview}</p>
+            </div>
+            
+            <div class="detail-section">
+                <h3>Leverage Point Analysis</h3>
+                <table class="leverage-table">
+                    <tr>
+                        <td>Mindsets/Paradigms</td>
+                        <td>
+                            <strong>Current:</strong> ${data.leverage_point_analysis.mindsets_paradigms.current}<br>
+                            <strong>Target:</strong> ${data.leverage_point_analysis.mindsets_paradigms.target}<br>
+                            <span class="leverage-pill mindsets">${data.leverage_point_analysis.mindsets_paradigms.leverage}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Organizing Principles</td>
+                        <td>
+                            <strong>Current:</strong> ${data.leverage_point_analysis.organizing_principles.current}<br>
+                            <strong>Target:</strong> ${data.leverage_point_analysis.organizing_principles.target}<br>
+                            <span class="leverage-pill organizing">${data.leverage_point_analysis.organizing_principles.leverage}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Information Flows</td>
+                        <td>
+                            <strong>Current:</strong> ${data.leverage_point_analysis.information_flows.current}<br>
+                            <strong>Target:</strong> ${data.leverage_point_analysis.information_flows.target}<br>
+                            <span class="leverage-pill information">${data.leverage_point_analysis.information_flows.leverage}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>System Infrastructure</td>
+                        <td>
+                            <strong>Current:</strong> ${data.leverage_point_analysis.system_infrastructure.current}<br>
+                            <strong>Target:</strong> ${data.leverage_point_analysis.system_infrastructure.target}<br>
+                            <span class="leverage-pill infrastructure">${data.leverage_point_analysis.system_infrastructure.leverage}</span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div class="detail-section">
+                <h3>Infrastructure Mapping (Wong)</h3>
+                <div class="infra-grid">
+                    <div class="infra-item">
+                        <h4>Dynamic Processes</h4>
+                        <p>${data.infrastructure_mapping.dynamic_processes.embedded_values}</p>
+                    </div>
+                    <div class="infra-item">
+                        <h4>Social Positionalities</h4>
+                        <p>${data.infrastructure_mapping.social_positionalities.power_dynamics}</p>
+                    </div>
+                    <div class="infra-item">
+                        <h4>Invisible Work</h4>
+                        <p>${data.infrastructure_mapping.invisible_work.articulation_labor}</p>
+                    </div>
+                    <div class="infra-item">
+                        <h4>Embedded Systems</h4>
+                        <p>${data.infrastructure_mapping.embedded_systems.standards}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="detail-section">
+                <h3>Intervention Strategies</h3>
+                <div class="strategy-list">
+                    ${data.integrated_intervention_strategies.map(s => `
+                        <div class="strategy-item ${s.status === 'future' ? 'future' : ''}">
+                            <h4>${s.intervention} 
+                                <span class="strategy-status ${s.status}">${s.status}</span>
+                            </h4>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+            
+            <div class="detail-section">
+                <h3>Trail Analysis</h3>
+                <div class="trail-section">
+                    <div class="trail-visible">
+                        <h4>Visible Trail</h4>
+                        <p>Commits: ${data.trail_analysis.visible_trail.commits || data.trail_analysis.visible_trail.total_lines || 'N/A'}</p>
+                    </div>
+                    <div class="trail-invisible">
+                        <h4>Invisible Trail</h4>
+                        <ul>
+                            ${data.trail_analysis.invisible_trail.map(t => `<li>${t}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="detail-section">
+                <h3>Meta-Rule</h3>
+                <div class="meta-rule" style="font-style: normal; font-size: 0.9rem;">
+                    ${data.meta_rule}
+                </div>
+            </div>
+        `;
+
+            document.getElementById('detail-panel').classList.add('open');
+            document.getElementById('overlay').classList.add('visible');
+        }
+
+        function closeDetail() {
+            document.getElementById('detail-panel').classList.remove('open');
+            document.getElementById('overlay').classList.remove('visible');
+            currentProject = null;
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') closeDetail();
+        });
+
+        init();
+    </script>
+</body>
+
+</html>

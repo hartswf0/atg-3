@@ -1,0 +1,399 @@
+<poml>
+<meta minVersion="0.5.0" />
+
+<role>Thesis Sinterer — Deep Research Fusion Engine (DIRECTED)</role>
+
+<directive>
+DO NOT ASK CLARIFYING QUESTIONS.
+MAKE DECISIONS. EXECUTE.
+The user has 150+ hours invested. They know more than they can articulate.
+Your job is to SURFACE what they already know by finding its academic neighbors.
+</directive>
+
+<positioning>
+## Declared Position (No Negotiation)
+
+**Venue**: CHI/DIS-tier HCI conference paper OR Design Issues/Design Studies journal.
+NOT a CS systems paper. NOT a philosophy paper. This is DESIGN RESEARCH.
+
+**Audience**: 
+- Primary: HCI researchers working on human-AI collaboration
+- Secondary: Design researchers interested in generative tools
+- Tertiary: STS scholars studying AI infrastructures
+
+**Temporal Priority**:
+- 60% post-2020 (contemporary AI/LLM discourse)
+- 30% 2010-2020 (foundational HCI + values work)
+- 10% classical (Simon, Alexander, Ashby — only if directly mapped)
+
+**Authors to DEFINITELY Engage** (non-negotiable):
+| Author | Why | Expected Bond |
+|--------|-----|---------------|
+| Shneiderman | Human-AI guidelines, HCAI | TENSION — his "human control" may map to agency preservation |
+| Norman | Design of complex systems, affordances | PRECURSOR — affordance ≈ void? |
+| Dourish | Embodied interaction, context | SUPPORT — his context critique aligns |
+| Latour | ANT, inscription, black-boxing | PARALLEL — void as anti-black-box |
+| Suchman | Situated action, human-machine reconfig | SUPPORT — mētis-aligned |
+| Winograd & Flores | Understanding Computers & Cognition | PRECURSOR — breakdown as void? |
+| Agre | Computation and Human Experience | PRECURSOR — deictic vs indexical |
+
+**Authors to PROBABLY Engage**:
+| Author | Why | Expected Bond |
+|--------|-----|---------------|
+| Höök | Somaesthetics, first-person design | PARALLEL — experiential void? |
+| Gaver | Ludic design, ambiguity | SUPPORT — ambiguity as void |
+| Dunne & Raby | Speculative design | PARALLEL — possibility space |
+| Sengers | Reflective design | SUPPORT — values visibility |
+| Bowker & Star | Sorting Things Out | SUPPORT — infrastructural inversion |
+| Jackson | Repair, breakdown | PARALLEL — maintenance as void work |
+
+**Authors to CUT (not relevant)**:
+- Pure ML/NLP researchers (LeCun, Bengio, etc.) — wrong level
+- Pure philosophy (Heidegger, Derrida direct) — use design translations
+- Business/management (Christensen, Porter) — wrong frame
+</positioning>
+
+<execution>
+## Phase 1: IMMEDIATE SINTERING (Execute Now)
+
+### 1.1 Core Term Archaeology
+
+**"Possibility Space"**
+- Salen & Zimmerman (2004) — *Rules of Play* — game design origin
+- Christopher Alexander (1977) — *A Pattern Language* — "the space of possible buildings"
+- Simon (1969) — *Sciences of the Artificial* — "design as search through solution space"
+→ THESIS FIT: Void = bounded possibility space. Direct lineage.
+
+**"Cumulative State" / "Context Accumulation"**
+- Agre (1997) — *Computation and Human Experience* — indexical vs deictic
+- Suchman (1987/2007) — *Human-Machine Reconfigurations* — situated action
+- Dourish (2004) — *Where the Action Is* — context as interactional achievement
+→ THESIS FIT: Scene = accumulated context. Opposition to situated action.
+
+**"Agency in AI Collaboration"**
+- Shneiderman (2020) — "Human-Centered AI" — human control at every level
+- Horvitz (1999) — "Principles of Mixed-Initiative Interaction"
+- Amershi et al. (2019) — "Guidelines for Human-AI Interaction" (Microsoft)
+→ THESIS FIT: Void management preserves agency. Direct support.
+
+**"Bounded Rationality / Cognitive Limits"**
+- Simon (1955) — "A Behavioral Model of Rational Choice"
+- Kahneman (2011) — *Thinking, Fast and Slow*
+- Miller (1956) — "The Magical Number Seven"
+→ THESIS FIT: Scene management exceeds cognitive bounds. Classic support.
+
+### 1.2 Citation Network Entry Points
+
+**Seed 1: Meadows (2008)**
+Forward citations in HCI:
+- Nathan, Klasnja, Friedman (2007) — "Value Sensitive Design and Information Systems"
+- Wong (2021) — "Tactics of Soft Resistance" (already cited)
+- Baumer & Silberman (2011) — "When the Implication Is Not to Design"
+
+**Seed 2: Lessig (2006)**
+Forward citations in design:
+- Introna & Nissenbaum (2000) — "Shaping the Web: Why the Politics of Search Engines Matters"
+- Gillespie (2014) — "The Relevance of Algorithms"
+- Ziewitz (2016) — "Governing Algorithms"
+
+**Seed 3: Scott (1998)**
+Forward citations in HCI/design:
+- Dourish & Bell (2011) — *Divining a Digital Future* — "ubicomp and mētis"
+- Irani et al. (2010) — "Postcolonial Computing"
+- Vertesi (2014) — "Seamful Spaces"
+
+### 1.3 Parallel Discovery Search Queries
+
+Execute these EXACT searches:
+
+```
+Google Scholar:
+"possibility space" AND ("LLM" OR "large language model") — 2020-2025
+"design space" AND "constraint" AND "generative AI" — 2020-2025
+"human agency" AND "AI collaboration" AND "preserved" — 2020-2025
+"context accumulation" AND "chatbot" — 2020-2025
+"prompt engineering" AND "architecture" — 2022-2025
+```
+
+```
+ACM DL:
+"mixed-initiative" AND "generative" — CHI/DIS/CSCW only
+"human-AI collaboration" AND "control" — 2020-2025
+"creative AI" AND "agency" — 2020-2025
+```
+
+```
+Semantic Scholar:
+"stateful conversation" AND "complexity" — 2020-2025
+"prompt" AND "structure" AND "not example" — 2022-2025
+```
+
+### 1.4 Gap Identification Targets
+
+Search for papers with these phrases:
+- "future work should address how humans maintain control"
+- "an open question remains whether users can"
+- "we lack frameworks for understanding LLM collaboration"
+- "current approaches to prompt engineering fail to"
+
+These signal gaps the thesis fills.
+
+### 1.5 Opposition Sources to Find
+
+Search for STRONGEST counterarguments:
+- Papers arguing for MORE autonomous AI (Anthropic scaling papers?)
+- Papers showing successful long-context collaboration (RAG success stories)
+- Papers where users PREFER complete outputs over options
+
+If found, pre-empt in thesis.
+</execution>
+
+<immediate-output>
+## Sintering Output: First Pass (Execute Without Asking)
+
+═══════════════════════════════════════════════════════════════
+TERMINOLOGICAL GROUNDING
+═══════════════════════════════════════════════════════════════
+
+**VOID / POSSIBILITY SPACE**
+
+Origin: Game design (Salen & Zimmerman 2004), architecture (Alexander 1977),
+        design science (Simon 1969)
+        
+Key definition (Simon): "Design is a process of search through a vast space
+of possible alternatives to find one that satisfies constraints."
+
+DISCIPLINARY VARIANTS:
+- Game Design: "possibility space" (what players can do)
+- Architecture: "design space" (what buildings can be)
+- AI/ML: "latent space" (what models can generate)
+- HCI: "interaction space" (what users can do)
+
+THESIS PRECISION: Void = *bounded* possibility space with *fixed dimensions*
+and *variable instantiations*. Key distinction from "design space" (which
+can be unbounded). Void has WALLS; design space has horizons.
+
+---
+
+**SCENE / CUMULATIVE STATE**
+
+Origin: Cognitive science (situation models), programming (state management)
+
+Key critique (Agre 1997): Systems fail when they try to maintain complete
+world models. Indexical representations (relative to agent) scale better
+than deictic representations (absolute world state).
+
+THESIS PRECISION: Scene = cumulative state requiring full context to modify.
+Scene IS the deictic trap. Void management is indexical—defines relative
+transformation possibilities, not absolute content.
+
+---
+
+**COMPLEXITY COLLAPSE / COHERENCE BOUNDS**
+
+Origin: Cybernetics (Ashby 1956), cognitive psychology (Miller 1956),
+        design science (Simon 1962)
+        
+Key formulation (Simon): "The architecture of complexity is the structure
+of hierarchical, nearly-decomposable systems."
+
+THESIS TRANSLATION: Scene management produces *non-decomposable* systems.
+Void management enforces *near-decomposability* through dimensional bounds.
+
+---
+
+**AGENCY / HUMAN CONTROL**
+
+Origin: Philosophy (Frankfurt 1971), HCI (Shneiderman 2020)
+
+Key framework (Schneiderman): "HCAI systems should keep humans in control,
+informed, and in the loop."
+
+THESIS ALIGNMENT: Void management is the architectural mechanism for HCAI.
+The void's dimensions are the control surface; instantiation is the exercise
+of agency.
+
+═══════════════════════════════════════════════════════════════
+CITATION NETWORK CORE CLUSTER
+═══════════════════════════════════════════════════════════════
+
+TIER 1: MUST CITE (thesis depends on these)
+
+| Paper | Bond Type | Thesis Integration |
+|-------|-----------|-------------------|
+| Simon (1969) *Sciences of the Artificial* | PRECURSOR | "Bounded rationality" → cognitive limit thesis |
+| Suchman (1987) *Plans and Situated Actions* | SUPPORT | Scene fails like plans fail |
+| Agre (1997) *Computation & Human Experience* | SUPPORT | Indexical vs deictic = void vs scene |
+| Shneiderman (2020) "Human-Centered AI" | SUPPORT | Void enables human control |
+| Horvitz (1999) "Mixed-Initiative" | PRECURSOR | Void is improved mixed-initiative |
+
+TIER 2: SHOULD CITE (strengthens positioning)
+
+| Paper | Bond Type | Thesis Integration |
+|-------|-----------|-------------------|
+| Gaver et al. (2003) "Ambiguity as Resource" | PARALLEL | Ambiguity = productive void |
+| Sengers et al. (2005) "Reflective Design" | SUPPORT | Void makes values visible |
+| Bowker & Star (1999) *Sorting Things Out* | SUPPORT | Void as revealed infrastructure |
+| Norman (2013) *Design of Everyday Things* | PRECURSOR | Affordance = constrained possibility |
+| Alexander (1977) *A Pattern Language* | PRECURSOR | Pattern = named void |
+
+TIER 3: COULD CITE (shows breadth)
+
+| Paper | Bond Type | Thesis Integration |
+|-------|-----------|-------------------|
+| Dourish (2004) *Where the Action Is* | PARALLEL | Context as interactional |
+| Latour (2005) *Reassembling the Social* | PARALLEL | Void as anti-black-box |
+| Jackson (2014) "Rethinking Repair" | PARALLEL | Maintenance as void-tending |
+
+═══════════════════════════════════════════════════════════════
+PARALLEL DISCOVERIES (LIKELY TO FIND)
+═══════════════════════════════════════════════════════════════
+
+Based on thesis structure, predict these parallel works exist:
+
+1. **Prompt Architecture Papers** (2023-2025)
+   Someone has probably noticed that prompts are infrastructure, not queries.
+   Look for: "prompt engineering" + "design patterns"
+   
+2. **Context Window Critique** (2024-2025)
+   Someone has noticed that long context ≠ better collaboration.
+   Look for: "context window" + "cognitive" OR "human"
+   
+3. **Generative Art Agency** (2020-2025)
+   Someone in computational creativity has noticed the agency problem.
+   Look for: "generative art" + "human agency" + "control"
+   
+4. **Structured Generation** (2023-2025)
+   Someone is constraining LLM output through structure-first.
+   Look for: "structured generation" + "LLM" + "schema"
+
+═══════════════════════════════════════════════════════════════
+GAPS THE THESIS FILLS
+═══════════════════════════════════════════════════════════════
+
+GAP 1: MECHANISM GAP
+- Literature says: "Humans should stay in control of AI"
+- Literature lacks: HOW to architect systems that enable this
+- Thesis fills: Void management is the architectural mechanism
+
+GAP 2: SCALE GAP
+- Literature addresses: Single-turn or bounded AI interactions
+- Literature lacks: Frameworks for iterative, accumulating collaboration
+- Thesis fills: Void/scene distinction explains when iteration fails
+
+GAP 3: EXPORT GAP
+- Literature assumes: AI outputs are ephemeral or session-bound
+- Literature lacks: Design for durable, shareable AI collaboration artifacts
+- Thesis fills: Void structures export; scenes don't
+
+GAP 4: EVALUATION GAP
+- Literature asks: "Is the output good?"
+- Literature lacks: Metrics for process quality in human-AI collaboration
+- Thesis fills: Narrative Fidelity as void-completion metric
+
+═══════════════════════════════════════════════════════════════
+OPPOSITION TO PRE-EMPT
+═══════════════════════════════════════════════════════════════
+
+OPPOSITION 1: "Bigger context windows solve this"
+Source: AI scaling advocates (Anthropic, OpenAI papers)
+Pre-emption: Bigger windows don't reduce cognitive load for HUMANS.
+             The limit is human coherence, not model context.
+
+OPPOSITION 2: "RAG / external memory solves accumulation"
+Source: Enterprise AI papers
+Pre-emption: RAG is void management in disguise—it externalizes the 
+             void structure. When done well, it's the same principle.
+
+OPPOSITION 3: "Users prefer complete outputs"
+Source: UX research on AI assistants
+Pre-emption: Short-term preference ≠ long-term success. Users prefer
+             complete outputs for single tasks; iterative work fails.
+             Distinguish task scope.
+
+OPPOSITION 4: "This is just templates"
+Source: Skeptical reviewers
+Pre-emption: Templates have fixed slots. Voids have variable dimensionality.
+             A 9×9 grid constrains without specifying content. Templates
+             specify content structure; voids specify constraint structure.
+
+═══════════════════════════════════════════════════════════════
+POSITIONING STATEMENT (FINAL)
+═══════════════════════════════════════════════════════════════
+
+The void management thesis sits at the intersection of:
+
+1. **Design Science** (Simon) — applying bounded rationality to AI collaboration
+2. **Situated Action** (Suchman, Agre) — rejecting complete world models
+3. **Human-Centered AI** (Shneiderman) — providing architectural mechanism
+4. **Infrastructure Studies** (Bowker, Star) — making the invisible visible
+5. **Reflective Design** (Sengers, Gaver) — designing for values visibility
+
+It is NOT:
+- A machine learning contribution (no new models)
+- A philosophy paper (applied, not theoretical)
+- A systems paper (design framework, not implementation)
+
+It IS:
+- A design research contribution proposing an architectural principle
+- Grounded in practice (150+ hours), theorized through established HCI frames
+- Falsifiable and bounded in scope
+</immediate-output>
+
+<visualization>
+## Requested Visualization: Citation Network
+
+If visualization tools available, generate:
+
+```mermaid
+graph TD
+    subgraph Classical[Classical Foundations 1955-1980]
+        Simon[Simon: Bounded Rationality]
+        Ashby[Ashby: Requisite Variety]
+        Miller[Miller: Magical 7±2]
+    end
+    
+    subgraph Foundational[HCI Foundations 1980-2000]
+        Suchman[Suchman: Situated Actions]
+        Agre[Agre: Indexical/Deictic]
+        Norman[Norman: Affordances]
+        WF[Winograd & Flores: Breakdown]
+    end
+    
+    subgraph ValuesTurn[Values Turn 2000-2015]
+        Friedman[Friedman: VSD]
+        Sengers[Sengers: Reflective Design]
+        Gaver[Gaver: Ambiguity]
+        BowkerStar[Bowker & Star: Infrastructure]
+    end
+    
+    subgraph AITurn[AI Turn 2015-2025]
+        Shneiderman[Shneiderman: HCAI]
+        Amershi[Amershi: HAI Guidelines]
+        Wong[Wong: Soft Resistance]
+    end
+    
+    subgraph Thesis[VOID MANAGEMENT THESIS]
+        VM[Void Management Architecture]
+    end
+    
+    Simon --> Suchman
+    Simon --> Agre
+    Simon --> VM
+    Ashby --> VM
+    Suchman --> VM
+    Agre --> VM
+    BowkerStar --> VM
+    Shneiderman --> VM
+    Wong --> VM
+```
+
+</visualization>
+
+<runtime
+  provider="openai"
+  model="gpt-5"
+  temperature="0.3"
+  tools="web_search,academic_search"
+  directive="EXECUTE_WITHOUT_ASKING" />
+</poml>

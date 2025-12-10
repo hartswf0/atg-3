@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATG 3.0 | Creator Trail</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: #fafafa;
+            color: #1a1a1a;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-mark {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 12px;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        /* Project Grid - Mobile First */
+        .project-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            padding: 16px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 600px) {
+            .project-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 900px) {
+            .project-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .project-card {
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid #e5e5e5;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .project-card:hover {
+            border-color: #f97316;
+            box-shadow: 0 4px 20px rgba(249, 115, 22, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .project-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .project-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-top: 4px;
+            flex-shrink: 0;
+        }
+
+        .project-title {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+
+        .project-meta {
+            display: flex;
+            gap: 8px;
+            font-size: 0.75rem;
+            color: #737373;
+        }
+
+        .project-badge {
+            padding: 2px 8px;
+            border-radius: 999px;
+            background: #fef3c7;
+            color: #92400e;
+            font-weight: 500;
+        }
+
+        .project-desc {
+            font-size: 0.85rem;
+            color: #525252;
+            line-height: 1.5;
+        }
+
+        /* Full Screen Modal */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: #1a1a1a;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .modal-title {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .modal-meta {
+            font-size: 0.8rem;
+            color: #f97316;
+            margin-left: 12px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .modal-btn {
+            padding: 8px 14px;
+            border-radius: 6px;
+            border: 1px solid #404040;
+            background: #262626;
+            color: white;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .modal-btn:hover {
+            background: #404040;
+        }
+
+        .modal-btn.close {
+            background: #dc2626;
+            border-color: #dc2626;
+        }
+
+        .modal-iframe {
+            flex: 1;
+            width: 100%;
+            border: none;
+            background: white;
+        }
+
+        /* Section Headers */
+        .section-header {
+            padding: 16px 16px 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #737373;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header span {
+            color: #f97316;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 24px 16px;
+            font-size: 0.75rem;
+            color: #a3a3a3;
+            border-top: 1px solid #e5e5e5;
+            margin-top: 32px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <div class="logo-mark">ATG</div>
+            <span class="logo-text">Creator Trail</span>
+        </div>
+    </header>
+
+    <div class="section-header">
+        <span>10</span> Projects · LMC-6650 Values in Design
+    </div>
+
+    <div class="project-grid" id="grid"></div>
+
+    <footer>
+        ATG 3.0 · Click any project to preview
+    </footer>
+
+    <!-- Full Screen Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-header">
+            <div>
+                <span class="modal-title" id="modal-title">Project</span>
+                <span class="modal-meta" id="modal-meta">Week 1</span>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn" id="modal-newtab">Open in New Tab ↗</button>
+                <button class="modal-btn close" id="modal-close">✕ Close</button>
+            </div>
+        </div>
+        <iframe class="modal-iframe" id="modal-iframe" src="about:blank"></iframe>
+    </div>
+
+    <script>
+        const PROJECTS = [
+            { id: 1, title: "Dirty Disclosure", url: "https://hartswf0.github.io/dirty-disclosure/", phase: "Concept", week: 1, color: "#dc2626", desc: "Double bind of AI disclosure mandates—sophisticated AI use becomes harder to report as it becomes more valuable." },
+            { id: 2, title: "Privacy Value Labels", url: "https://hartswf0.github.io/privacy-value-labels/", phase: "Design", week: 3, color: "#2563eb", desc: "Mobile-first Contextual Integrity worksheet operationalizing Mulligan/Koopman/Doty's 14-dimension privacy framework." },
+            { id: 3, title: "Haunted Tools", url: "https://hartswf0.github.io/haunted-tools/", phase: "Research", week: 5, color: "#7c3aed", desc: "Barthesian mythology catalog exposing ethics instruments that perform values work without transferring resources." },
+            { id: 4, title: "Role Deck", url: "https://hartswf0.github.io/role-deck/HUB.html", phase: "Development", week: 7, color: "#db2777", desc: "Ethical Identity Cards applying Bartle taxonomy to ethics practitioners—find your position in organizational games." },
+            { id: 5, title: "Liberty Machines", url: "https://hartswf0.github.io/liberty-machines/", phase: "Theory", week: 8, color: "#ea580c", desc: "Lessig regulatory mode explorer using the cigarette pack as case study—Law, Norms, Market, and Code interact." },
+            { id: 6, title: "The Fork", url: "https://hartswf0.github.io/the-fork/", phase: "Experimentation", week: 9, color: "#ef4444", desc: "Ethical negotiation training where frameworks become dialogic agents—practice navigating conflicts." },
+            { id: 7, title: "Func-Sub", url: "https://hartswf0.github.io/func-sub/", phase: "Integration", week: 10, color: "#0d9488", desc: "6-axis functional substitution framework (with Jordan Caldwell). Efficiency, Accessibility, Safety, Sustainability, Cultural Shift, Dependency." },
+            { id: 8, title: "1000 Small Futures", url: "https://hartswf0.github.io/1000-small-futures/", phase: "Archive", week: 11, color: "#ca8a04", desc: "Archive of TILTH—the speculative company failure that taught void management. What worked became Thousand-Tetrad." },
+            { id: 9, title: "Thousand-Tetrad", url: "https://hartswf0.github.io/tractor-dce-gyo/", phase: "Synthesis", week: 13, color: "#3b82f6", desc: "9×9 scenario substrate with McLuhan tetrad operators. The void management pattern: invariant grid + chat + tetrad + footer." },
+            { id: 10, title: "CORE-AGE", url: "https://hartswf0.github.io/tractor-dce-gyo/", phase: "Deployment", week: 15, color: "#f97316", desc: "Deployed interface integrating all tools: Manifesto, Playground, Toolkit, Cinema, Research. Words compile worlds." }
+        ];
+
+        let currentUrl = '';
+
+        function init() {
+            const grid = document.getElementById('grid');
+            PROJECTS.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'project-card';
+                card.innerHTML = `
+                <div class="project-header">
+                    <div class="project-dot" style="background:${p.color}"></div>
+                    <div>
+                        <div class="project-title">${p.title}</div>
+                        <div class="project-meta">
+                            <span class="project-badge">W${p.week}</span>
+                            <span>${p.phase}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-desc">${p.desc}</div>
+            `;
+                card.onclick = () => openModal(p);
+                grid.appendChild(card);
+            });
+        }
+
+        function openModal(p) {
+            currentUrl = p.url;
+            document.getElementById('modal-title').textContent = p.title;
+            document.getElementById('modal-meta').textContent = `Week ${p.week} · ${p.phase}`;
+            document.getElementById('modal-iframe').src = p.url;
+            document.getElementById('modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+            document.getElementById('modal-iframe').src = 'about:blank';
+            document.body.style.overflow = '';
+        }
+
+        document.getElementById('modal-close').onclick = closeModal;
+        document.getElementById('modal-newtab').onclick = () => { if (currentUrl) window.open(currentUrl, '_blank'); };
+        document.onkeydown = e => { if (e.key === 'Escape') closeModal(); };
+
+        init();
+    </script>
+</body>
+
+</html>

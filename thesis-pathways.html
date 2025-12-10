@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thesis Pathways — Interactive Argument Navigator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #f8f6f2;
+            --surface: #fff;
+            --border: #e0dcd4;
+            --text: #2d2a26;
+            --text-dim: #8a857d;
+            --accent: #ff6b35;
+            --accent-dim: #ffeee8;
+            --pyramid: #3b82f6;
+            --essay: #10b981;
+            --intervention: #8b5cf6;
+            --poml: #f59e0b;
+            --source: #ec4899;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            font-size: 12px;
+            color: var(--text-dim);
+            font-style: italic;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            font-family: inherit;
+            font-size: 13px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .btn.primary {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        /* Main Layout */
+        .main {
+            display: grid;
+            grid-template-columns: 280px 1fr 320px;
+            height: calc(100vh - 60px);
+        }
+
+        /* Sidebar - Palette */
+        .palette {
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            padding: 16px;
+        }
+
+        .palette-section {
+            margin-bottom: 24px;
+        }
+
+        .palette-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-dim);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .palette-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* Path Cards */
+        .path-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .path-card {
+            aspect-ratio: 1;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            cursor: grab;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            background: var(--surface);
+            transition: all 0.2s;
+        }
+
+        .path-card:hover {
+            border-color: var(--accent);
+            transform: scale(1.05);
+        }
+
+        .path-card.dragging {
+            opacity: 0.5;
+        }
+
+        /* Character Pawns */
+        .pawns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .pawn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: grab;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            transition: transform 0.2s;
+        }
+
+        .pawn:hover {
+            transform: scale(1.1);
+        }
+
+        .pawn.pyramid {
+            background: var(--pyramid);
+        }
+
+        .pawn.essay {
+            background: var(--essay);
+        }
+
+        .pawn.intervention {
+            background: var(--intervention);
+        }
+
+        .pawn.poml {
+            background: var(--poml);
+        }
+
+        .pawn.source {
+            background: var(--source);
+        }
+
+        /* Source Items */
+        .source-items {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .source-item {
+            padding: 8px 12px;
+            background: var(--bg);
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: grab;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .source-item:hover {
+            background: var(--accent-dim);
+        }
+
+        .source-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .source-dot.pyramid {
+            background: var(--pyramid);
+        }
+
+        .source-dot.essay {
+            background: var(--essay);
+        }
+
+        .source-dot.intervention {
+            background: var(--intervention);
+        }
+
+        .source-dot.poml {
+            background: var(--poml);
+        }
+
+        .source-dot.source {
+            background: var(--source);
+        }
+
+        /* Canvas */
+        .canvas-container {
+            padding: 24px;
+            overflow: auto;
+            background:
+                radial-gradient(circle at center, rgba(0, 0, 0, 0.02) 0%, transparent 70%),
+                linear-gradient(90deg, var(--border) 1px, transparent 1px),
+                linear-gradient(var(--border) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+        }
+
+        .canvas {
+            min-width: 1200px;
+            min-height: 800px;
+            position: relative;
+        }
+
+        /* Placed Items */
+        .placed-card {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            cursor: move;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.2s;
+        }
+
+        .placed-card:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .placed-card.selected {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-dim);
+        }
+
+        .placed-card.speculative {
+            background: #1a1a1a;
+            color: white;
+        }
+
+        .placed-pawn {
+            position: absolute;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: move;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .placed-pawn.selected {
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.8), 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .placed-note {
+            position: absolute;
+            width: 120px;
+            min-height: 60px;
+            background: #fffde7;
+            border: 1px solid #fdd835;
+            padding: 8px;
+            font-size: 11px;
+            cursor: move;
+            box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .placed-note textarea {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: transparent;
+            font-family: inherit;
+            font-size: 11px;
+            resize: none;
+            outline: none;
+        }
+
+        /* Connection Lines */
+        .connections {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .connection-line {
+            stroke: var(--border);
+            stroke-width: 2;
+            stroke-dasharray: 4 4;
+            fill: none;
+        }
+
+        /* Detail Panel */
+        .detail-panel {
+            background: var(--surface);
+            border-left: 1px solid var(--border);
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        .panel-section {
+            margin-bottom: 24px;
+        }
+
+        .panel-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .panel-title .step {
+            width: 24px;
+            height: 24px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .panel-desc {
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-bottom: 16px;
+        }
+
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-dim);
+            margin-bottom: 6px;
+        }
+
+        .input-group textarea,
+        .input-group input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 13px;
+            resize: vertical;
+        }
+
+        .input-group textarea:focus,
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        /* Reflection Questions */
+        .questions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .question-item {
+            padding: 12px;
+            background: var(--bg);
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .question-item:hover {
+            background: var(--accent-dim);
+        }
+
+        .question-item.answered {
+            border-left: 3px solid var(--accent);
+        }
+
+        /* Legend */
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg);
+            border-radius: 6px;
+            font-size: 11px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Mobile */
+        @media (max-width: 1024px) {
+            .main {
+                grid-template-columns: 1fr;
+            }
+
+            .palette,
+            .detail-panel {
+                display: none;
+            }
+        }
+
+        /* Intro Overlay */
+        .intro-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .intro-overlay.hidden {
+            display: none;
+        }
+
+        .intro-card {
+            background: var(--surface);
+            max-width: 600px;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .intro-card h2 {
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+
+        .intro-card p {
+            font-size: 14px;
+            color: var(--text-dim);
+            margin-bottom: 24px;
+            line-height: 1.8;
+        }
+
+        .intro-steps {
+            text-align: left;
+            margin-bottom: 24px;
+        }
+
+        .intro-step {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+            align-items: flex-start;
+        }
+
+        .intro-step-num {
+            width: 28px;
+            height: 28px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .intro-step-text {
+            font-size: 13px;
+        }
+
+        .intro-step-text strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Intro Overlay -->
+    <div class="intro-overlay" id="introOverlay">
+        <div class="intro-card">
+            <h2>Thesis Pathways</h2>
+            <p>An interactive tool for building and navigating argument paths through the void management thesis
+                architecture.</p>
+
+            <div class="intro-steps">
+                <div class="intro-step">
+                    <div class="intro-step-num">1</div>
+                    <div class="intro-step-text">
+                        <strong>Incident Description</strong>
+                        Identify the question or concept you want to explore
+                    </div>
+                </div>
+                <div class="intro-step">
+                    <div class="intro-step-num">2</div>
+                    <div class="intro-step-text">
+                        <strong>Character Design</strong>
+                        Drag theoretical sources onto the canvas as "characters"
+                    </div>
+                </div>
+                <div class="intro-step">
+                    <div class="intro-step-num">3</div>
+                    <div class="intro-step-text">
+                        <strong>Path Design</strong>
+                        Connect sources using path cards to build your argument flow
+                    </div>
+                </div>
+                <div class="intro-step">
+                    <div class="intro-step-num">4</div>
+                    <div class="intro-step-text">
+                        <strong>Reflection Walkthrough</strong>
+                        Annotate your path and answer reflection prompts
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn primary" onclick="document.getElementById('introOverlay').classList.add('hidden')">
+                Begin Building
+            </button>
+        </div>
+    </div>
+
+    <header>
+        <div>
+            <div class="title">Thesis Pathways</div>
+            <div class="subtitle">Adapted from Ethics Pathways (Cha, Pillai & Wong, DIS '24)</div>
+        </div>
+        <div class="header-actions">
+            <button class="btn" onclick="clearCanvas()">Clear</button>
+            <button class="btn" onclick="exportPath()">Export JSON</button>
+            <button class="btn primary"
+                onclick="document.getElementById('introOverlay').classList.remove('hidden')">Instructions</button>
+        </div>
+    </header>
+
+    <main class="main">
+        <!-- Palette -->
+        <aside class="palette">
+            <div class="palette-section">
+                <div class="palette-title">Path Cards</div>
+                <div class="path-cards">
+                    <div class="path-card" draggable="true" data-type="straight" title="Straight path">↔</div>
+                    <div class="path-card" draggable="true" data-type="turn" title="Turn">↪</div>
+                    <div class="path-card" draggable="true" data-type="fork" title="Fork / Decision">⑂</div>
+                    <div class="path-card" draggable="true" data-type="intersection" title="Intersection">✚</div>
+                    <div class="path-card" draggable="true" data-type="barrier" title="Barrier / Gap">⊘</div>
+                    <div class="path-card" draggable="true" data-type="bridge" title="Bridge">⌒</div>
+                    <div class="path-card" draggable="true" data-type="loop" title="Feedback loop">↺</div>
+                    <div class="path-card" draggable="true" data-type="terminus" title="Terminus">◉</div>
+                    <div class="path-card" draggable="true" data-type="speculative" title="Speculative (dark)">?</div>
+                </div>
+            </div>
+
+            <div class="palette-section">
+                <div class="palette-title">Pyramids</div>
+                <div class="source-items" id="pyramidSources"></div>
+            </div>
+
+            <div class="palette-section">
+                <div class="palette-title">Essays</div>
+                <div class="source-items" id="essaySources"></div>
+            </div>
+
+            <div class="palette-section">
+                <div class="palette-title">Interventions</div>
+                <div class="source-items" id="interventionSources"></div>
+            </div>
+
+            <div class="palette-section">
+                <div class="palette-title">Theoretical Sources</div>
+                <div class="source-items" id="theorySources"></div>
+            </div>
+        </aside>
+
+        <!-- Canvas -->
+        <div class="canvas-container">
+            <svg class="connections" id="connections"></svg>
+            <div class="canvas" id="canvas" ondragover="event.preventDefault()" ondrop="handleDrop(event)">
+            </div>
+        </div>
+
+        <!-- Detail Panel -->
+        <aside class="detail-panel">
+            <div class="panel-section">
+                <div class="panel-title"><span class="step">1</span> Incident Description</div>
+                <div class="panel-desc">What question or concept are you exploring?</div>
+                <div class="input-group">
+                    <label>Core Question</label>
+                    <textarea id="incidentQuestion" rows="3"
+                        placeholder="e.g., How does Negative Space Programming connect to Void Management?"></textarea>
+                </div>
+            </div>
+
+            <div class="panel-section">
+                <div class="panel-title"><span class="step">2</span> Legend</div>
+                <div class="legend">
+                    <div class="legend-item"><span class="source-dot pyramid"></span> Pyramid</div>
+                    <div class="legend-item"><span class="source-dot essay"></span> Essay</div>
+                    <div class="legend-item"><span class="source-dot intervention"></span> Intervention</div>
+                    <div class="legend-item"><span class="source-dot source"></span> Theory</div>
+                </div>
+            </div>
+
+            <div class="panel-section">
+                <div class="panel-title"><span class="step">3</span> Selected Item</div>
+                <div id="selectedInfo" class="panel-desc">Click an item on the canvas to see details</div>
+                <div class="input-group" id="noteGroup" style="display:none;">
+                    <label>Your Annotation</label>
+                    <textarea id="itemNote" rows="3" placeholder="Add your notes about this connection..."></textarea>
+                </div>
+            </div>
+
+            <div class="panel-section">
+                <div class="panel-title"><span class="step">4</span> Reflection Prompts</div>
+                <div class="questions">
+                    <div class="question-item" onclick="toggleQuestion(this)">
+                        What is the strongest link in this path?
+                    </div>
+                    <div class="question-item" onclick="toggleQuestion(this)">
+                        Where are the gaps or barriers?
+                    </div>
+                    <div class="question-item" onclick="toggleQuestion(this)">
+                        What speculative connections could be explored?
+                    </div>
+                    <div class="question-item" onclick="toggleQuestion(this)">
+                        Which sources need strengthening?
+                    </div>
+                    <div class="question-item" onclick="toggleQuestion(this)">
+                        What would falsify this pathway?
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <script>
+        // Data
+        const sources = {
+            pyramids: [
+                { id: 'void-management', name: 'Void Management', desc: '20-modification threshold' },
+                { id: 'negative-space', name: 'Negative Space', desc: 'Dijkstra → Rust' },
+                { id: 'sinter-report', name: 'Sinter Report', desc: '4 gaps filled' },
+                { id: 'context-engineering', name: 'Context Engineering', desc: 'Suchman → Karpathy' },
+                { id: 'life-after-bob', name: 'Life After BOB', desc: 'Cheng worlding' },
+                { id: 'digital-lego', name: 'Digital LEGO', desc: 'LDraw + Modulex' }
+            ],
+            essays: [
+                { id: 'ghost-brick', name: 'Ghost in the Brick', desc: 'LDraw survives' },
+                { id: 'immaterial-hand', name: 'Immaterial Hand', desc: 'Gesture repeats' },
+                { id: 'stitched-mind', name: 'Stitched Mind', desc: 'Frankenstein architecture' },
+                { id: 'atlas-interventions', name: 'Atlas of Interventions', desc: '10 acts' }
+            ],
+            interventions: [
+                { id: '1000-futures', name: '1000 Small Futures', desc: 'Tetrad engine' },
+                { id: 'poml-library', name: 'POML Library', desc: '9 files, 1374 lines' },
+                { id: 'role-deck', name: 'Role Deck', desc: '8 shadow roles' },
+                { id: 'the-fork', name: 'The Fork', desc: 'Split to survive' }
+            ],
+            theories: [
+                { id: 'meadows', name: 'Meadows', desc: 'Leverage points' },
+                { id: 'scott', name: 'Scott', desc: 'Mētis vs Techne' },
+                { id: 'suchman', name: 'Suchman', desc: 'Situated action' },
+                { id: 'cheng', name: 'Ian Cheng', desc: 'Worlding' },
+                { id: 'dijkstra', name: 'Dijkstra', desc: 'GOTO elimination' },
+                { id: 'hoare', name: 'Hoare', desc: 'Null reference' },
+                { id: 'mcluhan', name: 'McLuhan', desc: 'Tetrad' },
+                { id: 'geertz', name: 'Geertz', desc: 'Thick description' }
+            ]
+        };
+
+        // State
+        let placedItems = [];
+        let selectedItem = null;
+        let itemIdCounter = 0;
+
+        // Initialize
+        function init() {
+            renderSources('pyramidSources', sources.pyramids, 'pyramid');
+            renderSources('essaySources', sources.essays, 'essay');
+            renderSources('interventionSources', sources.interventions, 'intervention');
+            renderSources('theorySources', sources.theories, 'source');
+
+            setupDragEvents();
+        }
+
+        function renderSources(containerId, items, type) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = items.map(item => `
+                <div class="source-item" draggable="true" data-type="${type}" data-id="${item.id}" data-name="${item.name}" data-desc="${item.desc}">
+                    <span class="source-dot ${type}"></span>
+                    <span>${item.name}</span>
+                </div>
+            `).join('');
+        }
+
+        function setupDragEvents() {
+            document.querySelectorAll('[draggable="true"]').forEach(el => {
+                el.addEventListener('dragstart', handleDragStart);
+                el.addEventListener('dragend', handleDragEnd);
+            });
+        }
+
+        function handleDragStart(e) {
+            e.target.classList.add('dragging');
+            e.dataTransfer.setData('text/plain', JSON.stringify({
+                type: e.target.dataset.type,
+                id: e.target.dataset.id,
+                name: e.target.dataset.name,
+                desc: e.target.dataset.desc,
+                symbol: e.target.textContent.trim()
+            }));
+        }
+
+        function handleDragEnd(e) {
+            e.target.classList.remove('dragging');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            const canvas = document.getElementById('canvas');
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left - 40;
+            const y = e.clientY - rect.top - 40;
+
+            const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+
+            if (['straight', 'turn', 'fork', 'intersection', 'barrier', 'bridge', 'loop', 'terminus', 'speculative'].includes(data.type)) {
+                placeCard(x, y, data);
+            } else {
+                placePawn(x, y, data);
+            }
+        }
+
+        function placeCard(x, y, data) {
+            const id = `card-${itemIdCounter++}`;
+            const symbols = {
+                straight: '↔', turn: '↪', fork: '⑂', intersection: '✚',
+                barrier: '⊘', bridge: '⌒', loop: '↺', terminus: '◉', speculative: '?'
+            };
+
+            const card = document.createElement('div');
+            card.className = `placed-card ${data.type === 'speculative' ? 'speculative' : ''}`;
+            card.id = id;
+            card.style.left = x + 'px';
+            card.style.top = y + 'px';
+            card.textContent = symbols[data.type];
+            card.onclick = () => selectItem(id);
+
+            makeDraggable(card);
+            document.getElementById('canvas').appendChild(card);
+
+            placedItems.push({ id, type: 'card', cardType: data.type, x, y, note: '' });
+        }
+
+        function placePawn(x, y, data) {
+            const id = `pawn-${itemIdCounter++}`;
+
+            const pawn = document.createElement('div');
+            pawn.className = `placed-pawn ${data.type}`;
+            pawn.id = id;
+            pawn.style.left = x + 'px';
+            pawn.style.top = y + 'px';
+            pawn.textContent = data.name.charAt(0);
+            pawn.title = `${data.name}: ${data.desc}`;
+            pawn.onclick = () => selectItem(id);
+
+            makeDraggable(pawn);
+            document.getElementById('canvas').appendChild(pawn);
+
+            placedItems.push({ id, type: 'pawn', sourceType: data.type, name: data.name, desc: data.desc, x, y, note: '' });
+        }
+
+        function makeDraggable(el) {
+            let startX, startY, initialX, initialY;
+
+            el.onmousedown = (e) => {
+                if (e.target.tagName === 'TEXTAREA') return;
+                startX = e.clientX;
+                startY = e.clientY;
+                initialX = parseInt(el.style.left) || 0;
+                initialY = parseInt(el.style.top) || 0;
+
+                document.onmousemove = (e) => {
+                    const dx = e.clientX - startX;
+                    const dy = e.clientY - startY;
+                    el.style.left = (initialX + dx) + 'px';
+                    el.style.top = (initialY + dy) + 'px';
+
+                    // Update state
+                    const item = placedItems.find(i => i.id === el.id);
+                    if (item) {
+                        item.x = initialX + dx;
+                        item.y = initialY + dy;
+                    }
+                };
+
+                document.onmouseup = () => {
+                    document.onmousemove = null;
+                    document.onmouseup = null;
+                };
+            };
+        }
+
+        function selectItem(id) {
+            // Deselect previous
+            document.querySelectorAll('.selected').forEach(el => el.classList.remove('selected'));
+
+            const el = document.getElementById(id);
+            el.classList.add('selected');
+            selectedItem = placedItems.find(i => i.id === id);
+
+            // Update panel
+            const info = document.getElementById('selectedInfo');
+            const noteGroup = document.getElementById('noteGroup');
+            const noteInput = document.getElementById('itemNote');
+
+            if (selectedItem.type === 'pawn') {
+                info.innerHTML = `<strong>${selectedItem.name}</strong><br>${selectedItem.desc}`;
+            } else {
+                info.innerHTML = `<strong>Path Card:</strong> ${selectedItem.cardType}`;
+            }
+
+            noteGroup.style.display = 'block';
+            noteInput.value = selectedItem.note || '';
+            noteInput.onchange = () => {
+                selectedItem.note = noteInput.value;
+            };
+        }
+
+        function toggleQuestion(el) {
+            el.classList.toggle('answered');
+        }
+
+        function clearCanvas() {
+            if (confirm('Clear all items from canvas?')) {
+                document.getElementById('canvas').innerHTML = '';
+                placedItems = [];
+                selectedItem = null;
+                drawConnections();
+            }
+        }
+
+        function exportPath() {
+            const data = {
+                timestamp: new Date().toISOString(),
+                question: document.getElementById('incidentQuestion').value,
+                items: placedItems
+            };
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `thesis-pathway-${Date.now()}.json`;
+            a.click();
+        }
+
+        // Auto-populate with thesis architecture
+        function loadDefaultPath() {
+            // Set the core question
+            document.getElementById('incidentQuestion').value =
+                "How does the Void Management thesis connect Negative Space Programming, Worlding, and Context Engineering into a unified architecture for institutional AI?";
+
+            // Pre-defined items layout - THE THESIS ARCHITECTURE
+            const defaultItems = [
+                // Row 1: Theoretical Foundations
+                { type: 'pawn', sourceType: 'source', name: 'Meadows', desc: 'Leverage points (highest: paradigms)', x: 100, y: 60 },
+                { type: 'card', cardType: 'straight', x: 180, y: 50 },
+                { type: 'pawn', sourceType: 'source', name: 'Scott', desc: 'Mētis vs Techne', x: 280, y: 60 },
+                { type: 'card', cardType: 'straight', x: 360, y: 50 },
+                { type: 'pawn', sourceType: 'source', name: 'Dijkstra', desc: 'GOTO elimination (1968)', x: 460, y: 60 },
+                { type: 'card', cardType: 'straight', x: 540, y: 50 },
+                { type: 'pawn', sourceType: 'source', name: 'Hoare', desc: 'Null reference ($1B mistake)', x: 640, y: 60 },
+
+                // Row 2: Core Pyramids
+                { type: 'card', cardType: 'turn', x: 100, y: 150 },
+                { type: 'pawn', sourceType: 'pyramid', name: 'Void Management', desc: '20-modification threshold', x: 200, y: 180 },
+                { type: 'card', cardType: 'fork', x: 300, y: 170 },
+                { type: 'pawn', sourceType: 'pyramid', name: 'Negative Space', desc: 'Unrepresentable states', x: 420, y: 180 },
+                { type: 'card', cardType: 'straight', x: 540, y: 170 },
+                { type: 'pawn', sourceType: 'pyramid', name: 'Digital LEGO', desc: 'LDraw + Modulex', x: 640, y: 180 },
+
+                // Row 2b: Branch to Cheng
+                { type: 'card', cardType: 'turn', x: 300, y: 260 },
+                { type: 'pawn', sourceType: 'source', name: 'Ian Cheng', desc: 'Worlding, metabolism, stress', x: 200, y: 300 },
+                { type: 'card', cardType: 'straight', x: 300, y: 290 },
+                { type: 'pawn', sourceType: 'pyramid', name: 'Life After BOB', desc: 'Agent homeostasis', x: 420, y: 300 },
+
+                // Row 3: Context Layer
+                { type: 'pawn', sourceType: 'source', name: 'Suchman', desc: 'Situated action', x: 100, y: 400 },
+                { type: 'card', cardType: 'straight', x: 180, y: 390 },
+                { type: 'pawn', sourceType: 'source', name: 'Geertz', desc: 'Thick description', x: 280, y: 400 },
+                { type: 'card', cardType: 'straight', x: 360, y: 390 },
+                { type: 'pawn', sourceType: 'pyramid', name: 'Context Engineering', desc: 'Suchman → Karpathy', x: 480, y: 400 },
+                { type: 'card', cardType: 'bridge', x: 600, y: 390 },
+                { type: 'pawn', sourceType: 'pyramid', name: 'Sinter Report', desc: '4 gaps filled', x: 700, y: 400 },
+
+                // Row 4: Essays (synthesis layer)
+                { type: 'card', cardType: 'intersection', x: 200, y: 500 },
+                { type: 'pawn', sourceType: 'essay', name: 'Ghost in Brick', desc: 'LDraw survives because text', x: 320, y: 520 },
+                { type: 'card', cardType: 'straight', x: 420, y: 510 },
+                { type: 'pawn', sourceType: 'essay', name: 'Immaterial Hand', desc: 'The gesture repeats', x: 520, y: 520 },
+                { type: 'card', cardType: 'straight', x: 620, y: 510 },
+                { type: 'pawn', sourceType: 'essay', name: 'Stitched Mind', desc: 'Frankenstein architecture', x: 720, y: 520 },
+
+                // Row 5: Interventions (output layer)
+                { type: 'card', cardType: 'terminus', x: 100, y: 620 },
+                { type: 'pawn', sourceType: 'intervention', name: '1000 Futures', desc: 'Tetrad training engine', x: 200, y: 640 },
+                { type: 'card', cardType: 'loop', x: 300, y: 630 },
+                { type: 'pawn', sourceType: 'intervention', name: 'POML Library', desc: '9 files, 1374 lines', x: 420, y: 640 },
+                { type: 'card', cardType: 'loop', x: 520, y: 630 },
+                { type: 'pawn', sourceType: 'intervention', name: 'Role Deck', desc: '8 shadow roles', x: 620, y: 640 },
+
+                // Speculative extension
+                { type: 'card', cardType: 'speculative', x: 800, y: 300 },
+                { type: 'card', cardType: 'speculative', x: 880, y: 300 },
+            ];
+
+            // Place each item
+            defaultItems.forEach(item => {
+                if (item.type === 'card') {
+                    placeCard(item.x, item.y, { type: item.cardType });
+                } else {
+                    placePawn(item.x, item.y, {
+                        type: item.sourceType,
+                        name: item.name,
+                        desc: item.desc
+                    });
+                }
+            });
+
+            // Draw connection lines
+            drawConnections();
+
+            // Hide intro overlay
+            document.getElementById('introOverlay').classList.add('hidden');
+        }
+
+        // Draw SVG connection lines between adjacent items
+        function drawConnections() {
+            const svg = document.getElementById('connections');
+            svg.innerHTML = '';
+
+            // Define connection pairs (indices in placedItems)
+            const connectionPairs = [
+                // Row 1
+                [0, 2], [2, 4], [4, 6],
+                // Row 2
+                [8, 10], [10, 12],
+                // Row 2b
+                [14, 16],
+                // Row 3
+                [17, 19], [19, 21], [21, 23],
+                // Row 4
+                [25, 27], [27, 29],
+                // Row 5
+                [31, 33], [33, 35],
+            ];
+
+            connectionPairs.forEach(([i, j]) => {
+                const a = placedItems[i];
+                const b = placedItems[j];
+                if (a && b) {
+                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    line.setAttribute('x1', a.x + 40);
+                    line.setAttribute('y1', a.y + 40);
+                    line.setAttribute('x2', b.x + 40);
+                    line.setAttribute('y2', b.y + 40);
+                    line.setAttribute('class', 'connection-line');
+                    svg.appendChild(line);
+                }
+            });
+        }
+
+        init();
+
+        // Auto-load the default thesis pathway
+        loadDefaultPath();
+    </script>
+</body>
+
+</html>

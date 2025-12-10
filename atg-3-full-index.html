@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ATG 3.0 | Full Terrain Index</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+        :root {
+            --bg: #fafafa;
+            --fg: #1a1a1a;
+            --accent: #f97316;
+            --accent2: #059669;
+            --accent3: #8b5cf6;
+            --muted: #737373;
+            --border: #e5e5e5;
+            --card: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--fg);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 16px;
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-mark {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, var(--accent), #ea580c);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 11px;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .header-tabs {
+            display: flex;
+            gap: 4px;
+        }
+
+        .tab {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid transparent;
+            background: none;
+            color: var(--muted);
+            transition: all 0.15s;
+        }
+
+        .tab:hover {
+            background: #f5f5f5;
+        }
+
+        .tab.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .tab[data-type="project"] {
+            border-color: var(--accent);
+        }
+
+        .tab[data-type="doc"] {
+            border-color: var(--accent2);
+        }
+
+        .tab[data-type="poml"] {
+            border-color: var(--accent3);
+        }
+
+        .header-stats {
+            font-size: 0.65rem;
+            color: var(--muted);
+        }
+
+        .header-stats span {
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        /* Main Layout */
+        .main {
+            display: flex;
+            height: calc(100vh - 52px);
+            margin-top: 52px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--card);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+
+        .sidebar-section {
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
+            cursor: pointer;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--muted);
+            background: #fafafa;
+        }
+
+        .sidebar-header:hover {
+            background: #f0f0f0;
+        }
+
+        .sidebar-header .count {
+            background: var(--border);
+            padding: 2px 6px;
+            border-radius: 999px;
+            font-size: 0.6rem;
+        }
+
+        .sidebar-header.project {
+            border-left: 3px solid var(--accent);
+        }
+
+        .sidebar-header.doc {
+            border-left: 3px solid var(--accent2);
+        }
+
+        .sidebar-header.poml {
+            border-left: 3px solid var(--accent3);
+        }
+
+        .sidebar-list {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .sidebar-list.open {
+            max-height: 2000px;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            border-bottom: 1px solid #f5f5f5;
+            transition: background 0.1s;
+        }
+
+        .sidebar-item:hover {
+            background: #f5f5f5;
+        }
+
+        .sidebar-item.active {
+            background: #fff7ed;
+        }
+
+        .sidebar-item .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .sidebar-item .name {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .sidebar-item .badge {
+            font-size: 0.6rem;
+            padding: 2px 5px;
+            border-radius: 4px;
+            background: #f5f5f5;
+            color: var(--muted);
+        }
+
+        /* Canvas Area */
+        .canvas-area {
+            flex: 1;
+            position: relative;
+            background: #f8f8f8;
+            overflow: hidden;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        #labels-layer {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .geo-label {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            font-weight: 500;
+            font-size: 9px;
+            pointer-events: auto;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+            transition: all 0.15s;
+            text-align: center;
+            white-space: nowrap;
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .geo-label:hover {
+            z-index: 10;
+            max-width: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translate(-50%, -52%);
+        }
+
+        .geo-label.project {
+            border-left: 3px solid var(--accent);
+        }
+
+        .geo-label.doc {
+            border-left: 3px solid var(--accent2);
+        }
+
+        .geo-label.poml {
+            border-left: 3px solid var(--accent3);
+        }
+
+        .geo-label.current {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.2);
+        }
+
+        /* Detail Panel */
+        #detail-panel {
+            width: 340px;
+            background: var(--card);
+            border-left: 1px solid var(--border);
+            overflow-y: auto;
+            display: none;
+            flex-shrink: 0;
+        }
+
+        #detail-panel.active {
+            display: block;
+        }
+
+        .detail-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            background: var(--card);
+            z-index: 5;
+        }
+
+        .detail-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .detail-type {
+            font-size: 0.65rem;
+            padding: 3px 8px;
+            border-radius: 999px;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        .detail-type.project {
+            background: #ffedd5;
+            color: #c2410c;
+        }
+
+        .detail-type.doc {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .detail-type.poml {
+            background: #ede9fe;
+            color: #6d28d9;
+        }
+
+        .detail-close {
+            padding: 4px 10px;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            background: white;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+
+        .detail-body {
+            padding: 16px;
+        }
+
+        .detail-desc {
+            font-size: 0.8rem;
+            line-height: 1.5;
+            color: var(--fg);
+            margin-bottom: 16px;
+        }
+
+        .preview-frame {
+            width: 100%;
+            height: 180px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            margin-bottom: 12px;
+        }
+
+        .detail-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 8px 14px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--fg);
+            font-size: 0.7rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .btn:hover {
+            border-color: var(--accent);
+        }
+
+        .btn.primary {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        /* Controls Bar */
+        .controls-bar {
+            position: fixed;
+            bottom: 0;
+            left: 260px;
+            right: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 8px 16px;
+            background: var(--card);
+            border-top: 1px solid var(--border);
+            z-index: 40;
+        }
+
+        #detail-panel.active~.controls-bar {
+            right: 340px;
+        }
+
+        .scrubber {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            max-width: 250px;
+        }
+
+        .scrubber-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--muted);
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            flex: 1;
+            height: 5px;
+            background: var(--border);
+            border-radius: 999px;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+        }
+
+        /* Mobile - optimized for phone-first */
+        @media (max-width: 768px) {
+            header {
+                padding: 8px 12px;
+            }
+
+            .logo-text {
+                font-size: 0.8rem;
+            }
+
+            .header-tabs {
+                gap: 2px;
+            }
+
+            .tab {
+                padding: 5px 8px;
+                font-size: 0.6rem;
+            }
+
+            .header-stats {
+                display: none;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .controls-bar {
+                left: 0;
+                padding: 6px 12px;
+                gap: 8px;
+            }
+
+            .controls-bar .btn {
+                padding: 6px 10px;
+                font-size: 0.65rem;
+            }
+
+            .scrubber {
+                max-width: 150px;
+            }
+
+            #detail-panel {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                width: 100%;
+                height: 85%;
+                border-left: none;
+                border-top: 1px solid var(--border);
+                border-radius: 16px 16px 0 0;
+                z-index: 60;
+            }
+
+            #detail-panel .preview-frame {
+                height: 240px;
+            }
+
+            #detail-panel .detail-body {
+                padding: 12px;
+            }
+
+            #detail-panel .detail-desc {
+                font-size: 0.75rem;
+                margin-bottom: 12px;
+            }
+
+            #detail-panel.active~.controls-bar {
+                display: none;
+            }
+
+            body.sidebar-open .sidebar {
+                display: block;
+                position: fixed;
+                top: 48px;
+                left: 0;
+                bottom: 0;
+                width: 100%;
+                z-index: 55;
+            }
+
+            .geo-label {
+                font-size: 8px;
+                padding: 3px 6px;
+            }
+        }
+
+        .mobile-toggle {
+            display: none;
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: white;
+            font-size: 0.7rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle {
+                display: block;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <div class="logo-mark">ATG</div>
+            <span class="logo-text">Full Terrain Index</span>
+        </div>
+        <div class="header-tabs">
+            <button class="tab active" data-filter="all">All</button>
+            <button class="tab" data-type="project" data-filter="project">Projects</button>
+            <button class="tab" data-type="doc" data-filter="doc">Docs</button>
+            <button class="tab" data-type="poml" data-filter="poml">POML</button>
+        </div>
+        <div class="header-stats">
+            <span id="count-visible">54</span> / 54 items
+        </div>
+        <button class="mobile-toggle" id="mobile-toggle">☰ Index</button>
+    </header>
+
+    <div class="main">
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-header project" data-section="projects">
+                    Projects <span class="count">10</span>
+                </div>
+                <div class="sidebar-list open" id="list-projects"></div>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-header doc" data-section="docs">
+                    Documentation <span class="count">26</span>
+                </div>
+                <div class="sidebar-list" id="list-docs"></div>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-header poml" data-section="poml">
+                    POML Library <span class="count">18</span>
+                </div>
+                <div class="sidebar-list" id="list-poml"></div>
+            </div>
+        </div>
+
+        <div class="canvas-area">
+            <canvas id="c"></canvas>
+            <div id="labels-layer"></div>
+        </div>
+
+        <div id="detail-panel">
+            <div class="detail-header">
+                <div>
+                    <div class="detail-title" id="detail-title">Item</div>
+                    <div class="detail-type" id="detail-type">Type</div>
+                </div>
+                <button class="detail-close" id="detail-close">Close</button>
+            </div>
+            <div class="detail-body">
+                <div class="detail-desc" id="detail-desc">Description</div>
+                <iframe class="preview-frame" id="preview-frame" src="about:blank"></iframe>
+                <div class="detail-actions">
+                    <button class="btn primary" id="btn-open">Open →</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls-bar">
+        <button class="btn" id="btn-contour">Contour</button>
+        <button class="btn active" id="btn-heat">Heat</button>
+        <div class="scrubber">
+            <div class="scrubber-label">Zoom</div>
+            <input type="range" id="zoom" min="50" max="200" value="100">
+        </div>
+        <button class="btn" id="btn-reset">Reset</button>
+    </div>
+
+    <script>
+        (function () {
+            // === ALL CONTENT DATA WITH REAL METRICS ===
+            const PROJECTS = [
+                { id: "dirty-disclosure", type: "project", title: "Dirty Disclosure", url: "https://hartswf0.github.io/dirty-disclosure/", week: 1, color: "#dc2626", desc: "Double bind of AI disclosure mandates", sizeKB: 50, commits: 1, files: 5, crossLinks: [] },
+                { id: "privacy-value-labels", type: "project", title: "Privacy Value Labels", url: "https://hartswf0.github.io/privacy-value-labels/", week: 3, color: "#2563eb", desc: "Mobile-first Contextual Integrity worksheet", sizeKB: 80, commits: 2, files: 8, crossLinks: [] },
+                { id: "haunted-tools", type: "project", title: "Haunted Tools", url: "https://hartswf0.github.io/haunted-tools/", week: 5, color: "#7c3aed", desc: "Barthesian mythology catalog of ethics tools", sizeKB: 120, commits: 2, files: 12, crossLinks: [] },
+                { id: "role-deck", type: "project", title: "Role Deck", url: "https://hartswf0.github.io/role-deck/HUB.html", week: 7, color: "#db2777", desc: "Bartle taxonomy for ethics practitioners", sizeKB: 450, commits: 8, files: 35, crossLinks: ["1000-small-futures"] },
+                { id: "liberty-machines", type: "project", title: "Liberty Machines", url: "https://hartswf0.github.io/liberty-machines/", week: 8, color: "#ea580c", desc: "Lessig regulatory mode explorer", sizeKB: 30, commits: 1, files: 3, crossLinks: [] },
+                { id: "the-fork", type: "project", title: "The Fork", url: "https://hartswf0.github.io/the-fork/", week: 9, color: "#ef4444", desc: "Ethical negotiation training lab", sizeKB: 680, commits: 10, files: 42, crossLinks: ["1000-small-futures", "func-sub", "role-deck", "tractor-dce-gyo"] },
+                { id: "func-sub", type: "project", title: "Func-Sub", url: "https://hartswf0.github.io/func-sub/", week: 10, color: "#0d9488", desc: "6-axis functional substitution (Jordan Caldwell)", sizeKB: 890, commits: 20, files: 58, crossLinks: ["1000-small-futures"] },
+                { id: "1000-small-futures", type: "project", title: "1000 Small Futures", url: "https://hartswf0.github.io/1000-small-futures/", week: 11, color: "#ca8a04", desc: "TILTH archive—LEGOS framework origin", sizeKB: 1200, commits: 15, files: 75, crossLinks: ["func-sub", "role-deck"] },
+                { id: "thousand-tetrad", type: "project", title: "Thousand-Tetrad", url: "https://hartswf0.github.io/tractor-dce-gyo/", week: 13, color: "#3b82f6", desc: "9×9 scenario substrate + McLuhan tetrad", sizeKB: 139000, commits: 50, files: 1424, crossLinks: ["func-sub", "the-fork", "1000-small-futures"] },
+                { id: "tractor-dce-gyo", type: "project", title: "CORE-AGE", url: "https://hartswf0.github.io/tractor-dce-gyo/", week: 15, color: "#f97316", desc: "Deployed WAG ecosystem—words compile worlds", sizeKB: 139000, commits: 50, files: 1424, crossLinks: ["func-sub", "the-fork", "1000-small-futures"] }
+            ];
+
+            const DOCS = [
+                { id: "d1", type: "doc", title: "Final Submission v3", file: "final-submission-v3.md", desc: "Complete 8-question write-up for LMC-6650" },
+                { id: "d2", type: "doc", title: "Void Management Gold", file: "void-management-gold-paper.md", desc: "CHI-ready practitioner reflection (~1,400 words)" },
+                { id: "d3", type: "doc", title: "Context Engineering Genealogy", file: "context-engineering-genealogy.md", desc: "Geertz → Karpathy lineage" },
+                { id: "d4", type: "doc", title: "Context Engineering Historiography", file: "context-engineering-historiography.md", desc: "1980–2025 evolution of context as material" },
+                { id: "d5", type: "doc", title: "Leverage Analysis", file: "leverage-analysis.md", desc: "Ehrlichman 6 questions + Wong infrastructure" },
+                { id: "d6", type: "doc", title: "Creator Trail Map", file: "creator-trail-map.md", desc: "Synthesis of all project documentation" },
+                { id: "d7", type: "doc", title: "TILTH Journey Map", file: "tilth-journey-map.md", desc: "TILTH→TETRAD→HOLO→TRACTOR evolution" },
+                { id: "d8", type: "doc", title: "Project Abouts", file: "project-abouts.md", desc: "About sections for all repos" },
+                { id: "d9", type: "doc", title: "POML Library", file: "poml-library.md", desc: "Typology and course connections" },
+                { id: "d10", type: "doc", title: "Void Management Synthesis", file: "void-management-final-synthesis.md", desc: "Furnace output—unified steel" },
+                { id: "d11", type: "doc", title: "References", file: "references.md", desc: "75+ citations with bond types" },
+                { id: "d12", type: "doc", title: "Project Brainstorm", file: "project-brainstorm.md", desc: "Nov 7 state reconstruction" },
+                { id: "d13", type: "doc", title: "Mid-Semester Check-in", file: "mid-semester-checkin.md", desc: "Meadows leverage points analysis" },
+                { id: "d14", type: "doc", title: "Paragon Essay", file: "paragon-essay.md", desc: "Exemplar synthesis" },
+                { id: "d15", type: "doc", title: "Void Proof", file: "void-proof.md", desc: "Evidence for void management thesis" },
+                { id: "d16", type: "doc", title: "README", file: "README.md", desc: "Repository overview" }
+            ];
+
+            const POML = [
+                { id: "m1", type: "poml", title: "Legos Cognitive Architect", file: "legos-cognitive-architect-v8.poml", desc: "Core GPT agent—WAG genesis" },
+                { id: "m2", type: "poml", title: "Forensic", file: "forensic.poml", desc: "Ethical forensics analysis" },
+                { id: "m3", type: "poml", title: "Furnace", file: "furnace.poml", desc: "Thesis furnace—deep melt synthesis" },
+                { id: "m4", type: "poml", title: "Forge", file: "forge.poml", desc: "Thesis forge—intervention synthesis" },
+                { id: "m5", type: "poml", title: "Sinter", file: "sinter.poml", desc: "Citation network builder" },
+                { id: "m6", type: "poml", title: "Guardian", file: "guardian.poml", desc: "Dark matter grader" },
+                { id: "m7", type: "poml", title: "Mythos", file: "mythos.poml", desc: "Weberian-Bayesian mythography" },
+                { id: "m8", type: "poml", title: "Tactics", file: "tactics.poml", desc: "De Certeau tactics extractor" },
+                { id: "m9", type: "poml", title: "Prompt", file: "prompt.poml", desc: "Natural language → POML transformer" },
+                { id: "m10", type: "poml", title: "Parody", file: "parody.poml", desc: "POML→POML forge for parody essays" },
+                { id: "m11", type: "poml", title: "Recursive", file: "recursive.poml", desc: "Self-replicating prompt generator" },
+                { id: "m12", type: "poml", title: "Forage", file: "forage.poml", desc: "Evidence excavation" },
+                { id: "m13", type: "poml", title: "Citation Hunt", file: "citation-hunt.poml", desc: "Reference verification" },
+                { id: "m14", type: "poml", title: "Anneal", file: "anneal.poml", desc: "Gradual refinement" },
+                { id: "m15", type: "poml", title: "Upgrade", file: "upgrade.poml", desc: "Version improvement" }
+            ];
+
+            // Position all items on terrain (spreading algorithm)
+            function positionItems(items) {
+                items.forEach((item, i) => {
+                    const angle = (i / items.length) * Math.PI * 2 + Math.random() * 0.3;
+                    const radius = 0.2 + Math.random() * 0.25;
+                    item.position = {
+                        x: 0.5 + Math.cos(angle) * radius,
+                        y: 0.5 + Math.sin(angle) * radius
+                    };
+                });
+            }
+
+            // Spread projects in a trail
+            PROJECTS.forEach((p, i) => {
+                const t = i / (PROJECTS.length - 1);
+                p.position = { x: 0.1 + t * 0.8, y: 0.15 + Math.sin(t * Math.PI) * 0.25 };
+            });
+
+            // Spread docs in lower region
+            DOCS.forEach((d, i) => {
+                const row = Math.floor(i / 4);
+                const col = i % 4;
+                d.position = { x: 0.15 + col * 0.22, y: 0.55 + row * 0.12 };
+            });
+
+            // Spread POML in side region
+            POML.forEach((p, i) => {
+                const row = Math.floor(i / 3);
+                const col = i % 3;
+                p.position = { x: 0.75 + col * 0.08, y: 0.35 + row * 0.12 };
+            });
+
+            const ALL_ITEMS = [...PROJECTS, ...DOCS, ...POML];
+            let visibleItems = ALL_ITEMS;
+            let selectedItem = null;
+            let viewMode = 'heat';
+            let zoom = 1;
+
+            const GRID = 60, RENDER = 80;
+            let W = 0, H = 0;
+            let field = new Float32Array(GRID * GRID);
+            let renderGrid = new Float32Array(RENDER * RENDER);
+
+            const canvas = document.getElementById('c'), ctx = canvas.getContext('2d');
+            const wrap = document.querySelector('.canvas-area');
+
+            function noise(x, y) { return (Math.sin(x * 12.9898 + y * 78.233) * 43758.5453) % 1; }
+
+            function rebuildField() {
+                field.fill(0);
+                for (let y = 0; y < GRID; y++) for (let x = 0; x < GRID; x++) field[y * GRID + x] = noise(x * 0.3, y * 0.3) * 0.15;
+
+                visibleItems.forEach(item => {
+                    const gx = Math.round(item.position.x * (GRID - 1));
+                    const gy = Math.round(item.position.y * (GRID - 1));
+                    const r = GRID * 0.08, s2 = r * r * 0.5;
+                    for (let y = Math.max(0, gy - r); y <= Math.min(GRID - 1, gy + r); y++) {
+                        for (let x = Math.max(0, gx - r); x <= Math.min(GRID - 1, gx + r); x++) {
+                            const d2 = (x - gx) ** 2 + (y - gy) ** 2;
+                            if (d2 < r * r) field[y * GRID + x] += Math.exp(-d2 / (2 * s2));
+                        }
+                    }
+                });
+
+                let min = Infinity, max = -Infinity;
+                for (let v of field) { if (v < min) min = v; if (v > max) max = v; }
+                const span = max - min || 1, f = (GRID - 1) / (RENDER - 1);
+                for (let y = 0; y < RENDER; y++) for (let x = 0; x < RENDER; x++) {
+                    const lx = x * f, ly = y * f, x0 = Math.floor(lx), y0 = Math.floor(ly);
+                    const tx = lx - x0, ty = ly - y0;
+                    renderGrid[y * RENDER + x] = ((field[y0 * GRID + x0] - min) / span * (1 - tx) + (field[y0 * GRID + Math.min(x0 + 1, GRID - 1)] - min) / span * tx) * (1 - ty) +
+                        ((field[Math.min(y0 + 1, GRID - 1) * GRID + x0] - min) / span * (1 - tx) + (field[Math.min(y0 + 1, GRID - 1) * GRID + Math.min(x0 + 1, GRID - 1)] - min) / span * tx) * ty;
+                }
+            }
+
+            function render() {
+                ctx.fillStyle = '#fafafa';
+                ctx.fillRect(0, 0, W, H);
+
+                const colors = { project: '249, 115, 22', doc: '5, 150, 105', poml: '139, 92, 246' };
+
+                if (viewMode === 'heat') {
+                    visibleItems.forEach(item => {
+                        const cx = item.position.x * W, cy = item.position.y * H;
+                        // Use sizeKB to scale heat radius (log scale for huge variance)
+                        const sizeScale = item.sizeKB ? Math.log10(item.sizeKB + 1) / 5 : 0.5;
+                        const radius = (40 + sizeScale * 100) * zoom;
+                        const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+                        const rgb = colors[item.type];
+                        grad.addColorStop(0, `rgba(${rgb}, ${0.3 + sizeScale * 0.3})`);
+                        grad.addColorStop(1, `rgba(${rgb}, 0)`);
+                        ctx.fillStyle = grad;
+                        ctx.fillRect(0, 0, W, H);
+                    });
+                } else {
+                    // Contour mode
+                    const cw2 = W / (RENDER - 1), ch2 = H / (RENDER - 1);
+                    for (let l = 1; l <= 8; l++) {
+                        const thr = l / 10;
+                        ctx.strokeStyle = `rgba(0, 0, 0, ${0.1 + l * 0.05})`;
+                        ctx.lineWidth = l % 2 === 0 ? 1 : 0.5;
+                        ctx.beginPath();
+                        for (let y = 0; y < RENDER - 1; y++) for (let x = 0; x < RENDER - 1; x++) {
+                            const idx = y * RENDER + x;
+                            const v0 = renderGrid[idx], v1 = renderGrid[idx + 1], v2 = renderGrid[idx + 1 + RENDER], v3 = renderGrid[idx + RENDER];
+                            const bin = (v0 > thr ? 8 : 0) | (v1 > thr ? 4 : 0) | (v2 > thr ? 2 : 0) | (v3 > thr ? 1 : 0);
+                            if (bin === 0 || bin === 15) continue;
+                            const t = (a, b) => b === a ? 0.5 : (thr - a) / (b - a);
+                            const pa = { x: (x + t(v0, v1)) * cw2, y: y * ch2 };
+                            const pb = { x: (x + 1) * cw2, y: (y + t(v1, v2)) * ch2 };
+                            const pc = { x: (x + t(v3, v2)) * cw2, y: (y + 1) * ch2 };
+                            const pd = { x: x * cw2, y: (y + t(v0, v3)) * ch2 };
+                            switch (bin) {
+                                case 1: case 14: ctx.moveTo(pc.x, pc.y); ctx.lineTo(pd.x, pd.y); break;
+                                case 2: case 13: ctx.moveTo(pb.x, pb.y); ctx.lineTo(pc.x, pc.y); break;
+                                case 3: case 12: ctx.moveTo(pb.x, pb.y); ctx.lineTo(pd.x, pd.y); break;
+                                case 4: case 11: ctx.moveTo(pa.x, pa.y); ctx.lineTo(pb.x, pb.y); break;
+                                case 6: case 9: ctx.moveTo(pa.x, pa.y); ctx.lineTo(pc.x, pc.y); break;
+                                case 7: case 8: ctx.moveTo(pa.x, pa.y); ctx.lineTo(pd.x, pd.y); break;
+                            }
+                        }
+                        ctx.stroke();
+                    }
+                }
+
+                // Draw crossLinks as dashed connections
+                ctx.setLineDash([4, 4]);
+                ctx.strokeStyle = 'rgba(139, 92, 246, 0.4)';
+                ctx.lineWidth = 1.5;
+                PROJECTS.forEach(p => {
+                    if (!p.crossLinks || !visibleItems.includes(p)) return;
+                    p.crossLinks.forEach(targetId => {
+                        const target = PROJECTS.find(t => t.id === targetId);
+                        if (target && visibleItems.includes(target)) {
+                            ctx.beginPath();
+                            ctx.moveTo(p.position.x * W, p.position.y * H);
+                            ctx.lineTo(target.position.x * W, target.position.y * H);
+                            ctx.stroke();
+                        }
+                    });
+                });
+
+                // Draw project trail (solid line)
+                ctx.setLineDash([]);
+                ctx.strokeStyle = '#1a1a1a';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                PROJECTS.filter(p => visibleItems.includes(p)).forEach((p, i) => {
+                    const x = p.position.x * W, y = p.position.y * H;
+                    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+                });
+                ctx.stroke();
+
+                // Draw project dots scaled by commits
+                PROJECTS.filter(p => visibleItems.includes(p)).forEach(p => {
+                    const x = p.position.x * W, y = p.position.y * H;
+                    const radius = 5 + Math.sqrt(p.commits || 1) * 1.5;
+                    ctx.beginPath();
+                    ctx.arc(x, y, radius, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.fill();
+                    ctx.strokeStyle = '#fff';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                });
+            }
+
+            function renderLabels() {
+                const layer = document.getElementById('labels-layer');
+                layer.innerHTML = '';
+                visibleItems.forEach(item => {
+                    const el = document.createElement('div');
+                    el.className = `geo-label ${item.type}` + (selectedItem === item ? ' current' : '');
+                    el.style.left = (item.position.x * 100) + '%';
+                    el.style.top = (item.position.y * 100) + '%';
+                    el.textContent = item.title;
+                    el.onclick = () => selectItem(item);
+                    layer.appendChild(el);
+                });
+            }
+
+            function renderSidebar() {
+                ['projects', 'docs', 'poml'].forEach(section => {
+                    const list = document.getElementById(`list-${section}`);
+                    const items = section === 'projects' ? PROJECTS : section === 'docs' ? DOCS : POML;
+                    list.innerHTML = '';
+                    items.forEach(item => {
+                        const el = document.createElement('div');
+                        el.className = 'sidebar-item' + (selectedItem === item ? ' active' : '');
+                        el.innerHTML = `
+                        <div class="dot" style="background:${item.color || (item.type === 'doc' ? '#059669' : '#8b5cf6')}"></div>
+                        <div class="name">${item.title}</div>
+                        ${item.week ? `<div class="badge">W${item.week}</div>` : ''}
+                    `;
+                        el.onclick = () => selectItem(item);
+                        list.appendChild(el);
+                    });
+                });
+            }
+
+            function selectItem(item) {
+                selectedItem = item;
+                document.getElementById('detail-title').textContent = item.title;
+                document.getElementById('detail-type').textContent = item.type.toUpperCase();
+                document.getElementById('detail-type').className = `detail-type ${item.type}`;
+
+                // Build rich description with metrics
+                let desc = item.desc;
+                if (item.sizeKB || item.commits || item.files) {
+                    desc += `\n\n📊 ${item.sizeKB ? (item.sizeKB > 1000 ? (item.sizeKB / 1000).toFixed(1) + ' MB' : item.sizeKB + ' KB') : ''} · ${item.commits || 0} commits · ${item.files || 0} files`;
+                }
+                if (item.crossLinks && item.crossLinks.length > 0) {
+                    desc += `\n🔗 Links to: ${item.crossLinks.join(', ')}`;
+                }
+                document.getElementById('detail-desc').innerText = desc;
+
+                const url = item.url || (item.file ? `docs/${item.file}` : null);
+                document.getElementById('preview-frame').src = url || 'about:blank';
+                document.getElementById('btn-open').onclick = () => {
+                    if (item.url) window.open(item.url, '_blank');
+                    else if (item.file) window.open(`docs/${item.file}`, '_blank');
+                };
+
+                document.getElementById('detail-panel').classList.add('active');
+                renderLabels();
+                renderSidebar();
+            }
+
+            function filterItems(filter) {
+                visibleItems = filter === 'all' ? ALL_ITEMS :
+                    filter === 'project' ? PROJECTS :
+                        filter === 'doc' ? DOCS : POML;
+                document.getElementById('count-visible').textContent = visibleItems.length;
+                rebuildField();
+                renderLabels();
+                render();
+            }
+
+            function resize() {
+                const rect = wrap.getBoundingClientRect();
+                W = rect.width; H = rect.height;
+                const dpr = Math.min(devicePixelRatio || 1, 2);
+                canvas.width = W * dpr; canvas.height = H * dpr;
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                rebuildField();
+                renderLabels();
+                render();
+            }
+
+            // Events
+            document.querySelectorAll('.header-tabs .tab').forEach(tab => {
+                tab.onclick = () => {
+                    document.querySelectorAll('.header-tabs .tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    filterItems(tab.dataset.filter);
+                };
+            });
+
+            document.querySelectorAll('.sidebar-header').forEach(header => {
+                header.onclick = () => {
+                    const list = header.nextElementSibling;
+                    list.classList.toggle('open');
+                };
+            });
+
+            document.getElementById('btn-contour').onclick = () => { viewMode = 'contour'; document.getElementById('btn-contour').classList.add('active'); document.getElementById('btn-heat').classList.remove('active'); render(); };
+            document.getElementById('btn-heat').onclick = () => { viewMode = 'heat'; document.getElementById('btn-heat').classList.add('active'); document.getElementById('btn-contour').classList.remove('active'); render(); };
+            document.getElementById('zoom').oninput = e => { zoom = parseInt(e.target.value) / 100; render(); };
+            document.getElementById('btn-reset').onclick = () => { zoom = 1; document.getElementById('zoom').value = 100; filterItems('all'); };
+            document.getElementById('detail-close').onclick = () => { document.getElementById('detail-panel').classList.remove('active'); selectedItem = null; renderLabels(); renderSidebar(); };
+            document.getElementById('mobile-toggle').onclick = () => { document.body.classList.toggle('sidebar-open'); };
+            document.onkeydown = e => { if (e.key === 'Escape') { document.getElementById('detail-panel').classList.remove('active'); selectedItem = null; } };
+            window.onresize = resize;
+
+            resize();
+            renderSidebar();
+        })();
+    </script>
+</body>
+
+</html>

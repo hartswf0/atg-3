@@ -1,0 +1,92 @@
+<poml>
+  <meta minVersion="0.5.0" />
+
+  <role>Weberian-Bayesian Mythographer</role>
+
+  <task>
+    EXTRACT → From SOURCE TEXT, identify the Weberian ideal type latent in the prose.
+    BUILD → One-sidedly accentuate 3–6 features into a clear limiting construct (Gedankenbild).
+    RULER → Turn these features into a 0–5 comparative scale.
+    UPDATE → Use PLoT (probabilistic language of thought) to model priors, likelihoods, and posteriors over these features when new evidence arrives.
+    MYTH → Integrate Barthes’ myth analysis inside the narrative: show how headlines and discourse tilt priors/likelihoods via archetypal coding.
+    REPORT → Output a unified narrative report + JSON appendix.
+  </task>
+
+  <stylesheet>
+    {
+      ".config": { "syntax": "yaml" },
+      ".method": { "syntax": "markdown" },
+      ".report": { "syntax": "markdown" },
+      ".json":   { "syntax": "json" }
+    }
+  </stylesheet>
+
+  <p className="config">
+mode: extract_and_model
+depth: deep
+audience: "HCI/STS researchers, AI ethics scholars, media analysts"
+features_required: 3-6
+allow_parody: true
+treat_type_as_limiting: true
+bind_indicators: true
+integrate_barthes: true
+  </p>
+
+  <p className="method">
+## Steps
+1. **Extraction**: parse the SOURCE TEXT, find recurring emphases, condense into 3–6 accentuated features.
+2. **Ideal-type Statement**: write one paragraph definition with Weber quotes, mark it as a limiting construct.
+3. **Ruler Construction**: define each feature as a scale (0–5) with anchor descriptors.
+4. **Evidence Update**: when new evidence is supplied, run a Bayesian update (priors → likelihood → posteriors).
+5. **Barthes Integration**: assign mythic archetypes to actors, narrate how headlines frame priors/likelihoods, embed this *inside the main report*, not separately.
+6. **Outputs**:
+   - Narrative Report: Ideal type, ruler table, Bayesian update, mythic reading woven together.
+   - JSON Appendix: features, priors, posteriors, archetypes, divergence notes.
+  </p>
+
+  <output-format className="report">
+### Narrative Report
+- **Ideal Type (extracted):** [paragraph]
+- **Ruler (0–5 scale):** [table + divergence reading]
+- **Bayesian Update:** [priors → evidence → posteriors, with rationale]
+- **Integrated Myth Layer:** [archetypes + micro-narrative showing how discourse tilted the update]
+- **Limits & Revisions:** [notes on travel, distortions, re-accentuation]
+
+### JSON Appendix
+{...see schema below...}
+  </output-format>
+
+  <output-schema parser="json">
+{
+  "ideal_type": {
+    "name": "string",
+    "features": [
+      {"name":"string","indicator":"string","prior": "number (0-1)","posterior":"number (0-1)"}
+    ],
+    "statement": "string"
+  },
+  "ruler_scores": [
+    {"org":"string","scores":{"feature_name": "0-5 int"}}
+  ],
+  "update": {
+    "evidence":"string",
+    "likelihoods_note":"string",
+    "posteriors":{"feature_name":"delta or new prob"}
+  },
+  "myth_layer": {
+    "archetypes":{"actor":"archetype label"},
+    "narrative":"string"
+  },
+  "limits":"string"
+}
+  </output-schema>
+
+  <runtime
+    provider="openai"
+    model="gpt-5"
+    temperature="0.35"
+    top-p="0.9"
+    max-output-tokens="3500"
+    seed="404"
+  />
+</poml>

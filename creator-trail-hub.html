@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creator Trail Hub | WAG: Words Assemble Geometries</title>
+    <style>
+        :root {
+            --bg-dark: #0a0e14;
+            --bg-card: #12171f;
+            --bg-hover: #1a2030;
+            --border: #2d3748;
+            --text-primary: #e2e8f0;
+            --text-secondary: #718096;
+            --accent-blue: #4299e1;
+            --accent-purple: #9f7aea;
+            --accent-green: #48bb78;
+            --accent-orange: #ed8936;
+            --accent-red: #fc8181;
+            --accent-teal: #38b2ac;
+            --accent-pink: #ed64a6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #1a1f2e 0%, #0d1117 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(147, 51, 234, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 50%, var(--accent-pink) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+
+        header .subtitle {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            position: relative;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-teal);
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Navigation */
+        nav {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 0.75rem 2rem;
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav button {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 0.5rem 1.25rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+
+        nav button:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+            border-color: var(--accent-blue);
+        }
+
+        nav button.active {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: white;
+            border-color: transparent;
+        }
+
+        /* Main Layout */
+        .container {
+            display: grid;
+            grid-template-columns: 280px 1fr 350px;
+            min-height: calc(100vh - 200px);
+        }
+
+        @media (max-width: 1200px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar-left,
+            .sidebar-right {
+                display: none;
+            }
+        }
+
+        /* Sidebar */
+        .sidebar-left,
+        .sidebar-right {
+            background: var(--bg-card);
+            border-right: 1px solid var(--border);
+            padding: 1rem;
+            overflow-y: auto;
+            max-height: calc(100vh - 200px);
+        }
+
+        .sidebar-right {
+            border-right: none;
+            border-left: 1px solid var(--border);
+        }
+
+        .sidebar-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .sidebar-section h3 {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .repo-list {
+            list-style: none;
+        }
+
+        .repo-item {
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .repo-item:hover {
+            background: var(--bg-hover);
+        }
+
+        .repo-item.active {
+            background: rgba(66, 153, 225, 0.2);
+            color: var(--accent-blue);
+        }
+
+        .repo-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        /* Timeline in sidebar */
+        .timeline-mini {
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .timeline-mini::before {
+            content: '';
+            position: absolute;
+            left: 4px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--border);
+        }
+
+        .timeline-event {
+            position: relative;
+            padding: 0.5rem 0;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+
+        .timeline-event::before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            top: 0.85rem;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent-purple);
+            border: 2px solid var(--bg-card);
+        }
+
+        .timeline-event:hover {
+            color: var(--accent-blue);
+        }
+
+        .timeline-date {
+            color: var(--text-secondary);
+        }
+
+        /* Main Content */
+        main {
+            padding: 2rem;
+            overflow-y: auto;
+            max-height: calc(100vh - 200px);
+        }
+
+        /* View Sections */
+        .view-section {
+            display: none;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+
+        /* Terrain Grid */
+        .terrain-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .terrain-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .terrain-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .terrain-card.mountain {
+            border-top: 3px solid var(--accent-purple);
+        }
+
+        .terrain-card.hill {
+            border-top: 3px solid var(--accent-blue);
+        }
+
+        .terrain-card.ridge {
+            border-top: 3px solid var(--accent-green);
+        }
+
+        .terrain-card.plateau {
+            border-top: 3px solid var(--accent-orange);
+        }
+
+        .card-header {
+            padding: 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .card-label {
+            font-size: 0.65rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            background: rgba(159, 122, 234, 0.2);
+            color: var(--accent-purple);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card-body {
+            padding: 0 1.25rem 1.25rem;
+        }
+
+        .card-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .card-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .card-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .leverage-bar {
+            margin-top: 1rem;
+            display: flex;
+            gap: 4px;
+        }
+
+        .leverage-segment {
+            height: 4px;
+            border-radius: 2px;
+            flex: 1;
+        }
+
+        .leverage-segment.mindsets {
+            background: var(--accent-red);
+        }
+
+        .leverage-segment.organizing {
+            background: var(--accent-purple);
+        }
+
+        .leverage-segment.information {
+            background: var(--accent-blue);
+        }
+
+        .leverage-segment.infrastructure {
+            background: var(--text-secondary);
+            opacity: 0.5;
+        }
+
+        /* Network View */
+        .network-container {
+            height: 600px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .network-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .network-node {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .network-node:hover circle {
+            r: 30;
+        }
+
+        /* Olog View */
+        .olog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .olog-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .olog-card h4 {
+            font-size: 0.8rem;
+            color: var(--accent-teal);
+            margin-bottom: 0.5rem;
+        }
+
+        .olog-card p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Full Timeline */
+        .timeline-full {
+            position: relative;
+            padding-left: 60px;
+        }
+
+        .timeline-full::before {
+            content: '';
+            position: absolute;
+            left: 25px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--accent-purple), var(--accent-blue), var(--accent-green));
+        }
+
+        .timeline-item-full {
+            position: relative;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .timeline-item-full:hover {
+            border-color: var(--accent-blue);
+        }
+
+        .timeline-item-full::before {
+            content: '';
+            position: absolute;
+            left: -43px;
+            top: 1.5rem;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--accent-blue);
+            border: 3px solid var(--bg-dark);
+        }
+
+        .timeline-item-date {
+            position: absolute;
+            left: -120px;
+            top: 1.5rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            width: 60px;
+            text-align: right;
+        }
+
+        .timeline-item-repo {
+            font-size: 0.7rem;
+            color: var(--accent-purple);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-item-message {
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-item-sig {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Docs View */
+        .docs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .doc-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .doc-card:hover {
+            border-color: var(--accent-green);
+        }
+
+        .doc-card h4 {
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .doc-icon {
+            width: 20px;
+            height: 20px;
+            background: var(--accent-green);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+
+        .doc-card p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Detail Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.95);
+            width: 90%;
+            max-width: 800px;
+            max-height: 85vh;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s;
+            z-index: 1001;
+        }
+
+        .modal.open {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 1.25rem;
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+            max-height: calc(85vh - 80px);
+        }
+
+        .modal-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-section h3 {
+            font-size: 0.75rem;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.75rem;
+        }
+
+        .leverage-table {
+            width: 100%;
+            font-size: 0.85rem;
+            border-collapse: collapse;
+        }
+
+        .leverage-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        .leverage-table td:first-child {
+            width: 25%;
+            color: var(--text-secondary);
+        }
+
+        .infra-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        .infra-item {
+            background: var(--bg-dark);
+            border-radius: 6px;
+            padding: 0.75rem;
+        }
+
+        .infra-item h4 {
+            font-size: 0.7rem;
+            color: var(--accent-orange);
+            margin-bottom: 0.25rem;
+        }
+
+        .infra-item p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .strategies-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .strategy-item {
+            padding: 0.75rem;
+            background: var(--bg-dark);
+            border-radius: 6px;
+            border-left: 3px solid var(--accent-green);
+            font-size: 0.85rem;
+        }
+
+        .strategy-item.future {
+            border-left-color: var(--accent-orange);
+            opacity: 0.7;
+        }
+
+        .status-badge {
+            font-size: 0.65rem;
+            padding: 0.1rem 0.4rem;
+            border-radius: 3px;
+            margin-left: 0.5rem;
+        }
+
+        .status-badge.completed {
+            background: rgba(72, 187, 120, 0.2);
+            color: var(--accent-green);
+        }
+
+        .status-badge.future {
+            background: rgba(237, 137, 54, 0.2);
+            color: var(--accent-orange);
+        }
+
+        .trail-invisible {
+            list-style: none;
+            font-size: 0.85rem;
+        }
+
+        .trail-invisible li {
+            padding: 0.25rem 0 0.25rem 1rem;
+            position: relative;
+        }
+
+        .trail-invisible li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--accent-purple);
+        }
+
+        .meta-rule-box {
+            background: var(--bg-dark);
+            border-left: 3px solid var(--accent-teal);
+            padding: 1rem;
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        /* Connections in sidebar */
+        .connection-list {
+            font-size: 0.8rem;
+        }
+
+        .connection-item {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .connection-arrow {
+            color: var(--accent-blue);
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Creator Trail Hub</h1>
+        <p class="subtitle">WAG: Words Assemble Geometries — Unified Project Ecosystem</p>
+        <div class="stats-bar">
+            <div class="stat">
+                <div class="stat-value" id="stat-repos">10</div>
+                <div class="stat-label">Repos</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="stat-commits">113</div>
+                <div class="stat-label">Commits</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="stat-poml">1,374</div>
+                <div class="stat-label">POML Lines</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="stat-docs">9</div>
+                <div class="stat-label">Docs</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">2</div>
+                <div class="stat-label">Trail Level</div>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <button class="active" onclick="showView('terrain')">Terrain</button>
+        <button onclick="showView('network')">Network</button>
+        <button onclick="showView('timeline')">Timeline</button>
+        <button onclick="showView('olog')">Ontology</button>
+        <button onclick="showView('interventions')">Interventions</button>
+        <button onclick="showView('docs')">Documentation</button>
+    </nav>
+
+    <div class="container">
+        <aside class="sidebar-left">
+            <div class="sidebar-section">
+                <h3>Projects</h3>
+                <ul class="repo-list" id="repo-list"></ul>
+            </div>
+            <div class="sidebar-section">
+                <h3>Recent Activity</h3>
+                <div class="timeline-mini" id="timeline-mini"></div>
+            </div>
+        </aside>
+
+        <main>
+            <section id="view-terrain" class="view-section active">
+                <div class="terrain-grid" id="terrain-grid"></div>
+            </section>
+
+            <section id="view-network" class="view-section">
+                <div class="network-container">
+                    <svg class="network-svg" id="network-svg"></svg>
+                </div>
+            </section>
+
+            <section id="view-timeline" class="view-section">
+                <div class="timeline-full" id="timeline-full"></div>
+            </section>
+
+            <section id="view-olog" class="view-section">
+                <div class="olog-grid" id="olog-grid"></div>
+            </section>
+
+            <section id="view-interventions" class="view-section">
+                <div class="terrain-grid" id="interventions-grid"></div>
+            </section>
+
+            <section id="view-docs" class="view-section">
+                <div class="docs-grid" id="docs-grid"></div>
+            </section>
+        </main>
+
+        <aside class="sidebar-right">
+            <div class="sidebar-section">
+                <h3>Connections</h3>
+                <div class="connection-list" id="connection-list"></div>
+            </div>
+            <div class="sidebar-section">
+                <h3>Collaborators</h3>
+                <div id="collaborators-list"></div>
+            </div>
+            <div class="sidebar-section">
+                <h3>Key Insights</h3>
+                <div id="insights-list" style="font-size: 0.8rem; color: var(--text-secondary);">
+                    <p style="margin-bottom: 0.5rem;">• LLM manages void, not scene</p>
+                    <p style="margin-bottom: 0.5rem;">• Trail as artifact, not exhaust</p>
+                    <p style="margin-bottom: 0.5rem;">• Disclosure = visible process</p>
+                    <p style="margin-bottom: 0.5rem;">• 9×9 invariant substrate</p>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <div class="modal-overlay" id="modal-overlay" onclick="closeModal()"></div>
+    <div class="modal" id="modal">
+        <div class="modal-header">
+            <h2 id="modal-title">Project</h2>
+            <button class="modal-close" onclick="closeModal()">×</button>
+        </div>
+        <div class="modal-body" id="modal-body"></div>
+    </div>
+
+    <script>
+        // ========== EMBEDDED DATA ==========
+
+        const TRAIL_MAP = {
+            "tractor-dce-gyo": { type: "mountain", label: "TRACTOR CORE", desc: "Central hub for WAG: Words Assemble Geometries", commits: 50, files: 1424, week: 16, color: "#9f7aea" },
+            "the-fork": { type: "hill", label: "Research Hub", desc: "Central research hub linking Railway Game, 1000 Small Futures", commits: 10, files: 50, week: "11-14", color: "#4299e1" },
+            "func-sub": { type: "ridge", label: "Training Grounds", desc: "Functional Substrate - sonic experiments and 6-axis framework", commits: 20, files: 80, week: "11-14", color: "#48bb78" },
+            "1000-small-futures": { type: "hill", label: "Tetrad Engine", desc: "Future simulations with 57 scenario tetrad system", commits: 15, files: 60, week: "10-14", color: "#4299e1" },
+            "role-deck": { type: "plateau", label: "Identity Cards", desc: "Bartle taxonomy for ethics practitioners", commits: 8, files: 40, week: 7, color: "#ed8936" },
+            "haunted-tools": { type: "ridge", label: "Barthesian Catalog", desc: "7 mythological tools exposed via semiotic scalpel", commits: 2, files: 10, week: 5, color: "#48bb78" },
+            "liberty-machines": { type: "plateau", label: "Four Modalities", desc: "Lessig's regulatory forces interactive", commits: 1, files: 5, week: 4, color: "#ed8936" },
+            "privacy-value-labels": { type: "plateau", label: "CI Worksheet", desc: "14-dimension Contextual Integrity mobile tool", commits: 2, files: 8, week: 3, color: "#ed8936" },
+            "dirty-disclosure": { type: "ridge", label: "Disclosure Theatre", desc: "Exposing the double bind of AI transparency", commits: 1, files: 5, week: 1, color: "#48bb78" },
+            "poml-library": { type: "mountain", label: "Meta-Prompts", desc: "9 POML files, 1,374 lines of prompt infrastructure", commits: 0, files: 9, week: "All", color: "#9f7aea" }
+        };
+
+        const TIMELINE = [
+            { date: "2025-09-02", repo: "dirty-disclosure", message: "first commit", sig: "Project creation" },
+            { date: "2025-09-02", repo: "privacy-value-labels", message: "first commit + new ideas", sig: "Project creation" },
+            { date: "2025-09-09", repo: "liberty-machines", message: "freedom theatre's curtain opens", sig: "Project creation" },
+            { date: "2025-09-16", repo: "haunted-tools", message: "Haunted Tools Monthly launched", sig: "Mythologies method" },
+            { date: "2025-09-30", repo: "role-deck", message: "Initial commit", sig: "Project creation" },
+            { date: "2025-10-13", repo: "role-deck", message: "FarmOS Ecosystem + Full Movie", sig: "Major feature" },
+            { date: "2025-10-21", repo: "1000-small-futures", message: "Initial development", sig: "Project start" },
+            { date: "2025-11-03", repo: "the-fork", message: "Research hub creation", sig: "Integration begins" },
+            { date: "2025-11-04", repo: "func-sub", message: "t-series sonic explorations", sig: "Sonic experiments" },
+            { date: "2025-11-10", repo: "func-sub", message: "Black Metal as method", sig: "Philosophy update" },
+            { date: "2025-11-10", repo: "1000-small-futures", message: "Tetrad system (57 scenarios)", sig: "Major system" },
+            { date: "2025-11-14", repo: "tractor-dce-gyo", message: "WAG/Onyx/Homer begins", sig: "Core development" },
+            { date: "2025-11-19", repo: "the-fork", message: "Unified research statement", sig: "Project unification" },
+            { date: "2025-12-07", repo: "tractor-dce-gyo", message: "Latest updates", sig: "Active development" }
+        ];
+
+        const CONNECTIONS = [
+            { from: "the-fork", to: "1000-small-futures", type: "links" },
+            { from: "the-fork", to: "func-sub", type: "links" },
+            { from: "the-fork", to: "tractor-dce-gyo", type: "links" },
+            { from: "tractor-dce-gyo", to: "func-sub", type: "shared_themes" },
+            { from: "tractor-dce-gyo", to: "1000-small-futures", type: "shared_themes" }
+        ];
+
+        const COLLABORATORS = [
+            { name: "Jordan Caldwell", project: "func-sub", domain: "Speculative Worldbuilding" },
+            { name: "Kayla Uleah Evans", project: "the-fork", domain: "Ethical Negotiation" },
+            { name: "Shuruq Tramontini", project: "1000-small-futures", domain: "Scenario Design" },
+            { name: "Tehri Marttila", project: "tractor-dce-gyo", domain: "Computational Humanities" }
+        ];
+
+        const OLOG = {
+            "C - Creator": "Watson Hartsoe + collaborators (Jordan, Kayla, Tehri, Shuruq)",
+            "T - Trail": "TILTH → Thousand-Tetrad → HOLO → TRACTOR arc",
+            "A - Artifacts": "9 repos, 14 HTML files, 9 POML files, 9 docs",
+            "M - Metadata": "113 commits, 150+ hours, 4 LLM tools",
+            "D - Decisions": "3 major pivots, invariant substrate, void management",
+            "S - Tools": "Thousand-Tetrad, Privacy Value Labels, Role Deck",
+            "P - Patterns": "9×9 grid, failure→pattern, reading→prototype",
+            "I - Intent": "Enable collaborative speculation at scale"
+        };
+
+        const INTERVENTIONS = {
+            "dirty-disclosure": {
+                overview: "Exposing the double bind of AI disclosure mandates",
+                leverage: { mindsets: "transformative", organizing: "high", information: "medium", infrastructure: "low" },
+                meta_rule: "What paradigm governs 'honest' AI use?",
+                strategies: [{ text: "Disclosure Theatre interface", status: "completed" }, { text: "Critical disclosure statement", status: "completed" }, { text: "Reform working group", status: "future" }],
+                invisible_trail: ["Reading Bateson's double bind", "Week 1 anxiety crystallizing"]
+            },
+            "privacy-value-labels": {
+                overview: "Mobile-first Contextual Integrity worksheet",
+                leverage: { mindsets: "transformative", organizing: "high", information: "medium", infrastructure: "low" },
+                meta_rule: "What paradigm governs privacy?",
+                strategies: [{ text: "14-dimension portable worksheet", status: "completed" }, { text: "Track dimension usage", status: "future" }],
+                invisible_trail: ["Reading Mulligan/Koopman/Doty", "Observing UX designers"]
+            },
+            "liberty-machines": {
+                overview: "Lessig's four regulatory modalities interactive",
+                leverage: { mindsets: "transformative", organizing: "high", information: "medium", infrastructure: "low" },
+                meta_rule: "Which modality has highest leverage?",
+                strategies: [{ text: "Four modalities tool", status: "completed" }, { text: "Apply to AI regulation", status: "future" }],
+                invisible_trail: ["Reading Lessig Chapter 7", "Cigarette case from class"]
+            },
+            "haunted-tools": {
+                overview: "Barthesian mythology catalog exposing ethics theatre",
+                leverage: { mindsets: "transformative", organizing: "high", information: "medium", infrastructure: "low" },
+                meta_rule: "What mythology does this tool perform?",
+                strategies: [{ text: "7-tool Barthesian catalog", status: "completed" }, { text: "Workshop activity", status: "future" }, { text: "Mythology watchers network", status: "future" }],
+                invisible_trail: ["Reading Mattern", "Barthes method", "10+ tool ideas before 7"]
+            },
+            "role-deck": {
+                overview: "Bartle taxonomy for ethics practitioners",
+                leverage: { mindsets: "transformative", organizing: "high", information: "medium", infrastructure: "low" },
+                meta_rule: "What role does each person occupy?",
+                strategies: [{ text: "Bartle-based role cards", status: "completed" }, { text: "Coalition mapping workshop", status: "future" }],
+                invisible_trail: ["Reading Chivukula, Rattay, Wong", "TILTH failure embedded"]
+            },
+            "1000-small-futures": {
+                overview: "Tetrad analysis with 57 scenarios on 9×9 grid",
+                leverage: { mindsets: "transformative", organizing: "high", information: "medium", infrastructure: "low" },
+                meta_rule: "What does this technology enhance/obsolesce/retrieve/reverse?",
+                strategies: [{ text: "57-scenario tetrad engine", status: "completed" }, { text: "Invariant 9×9 grid", status: "completed" }, { text: "Cross-user pattern library", status: "future" }],
+                invisible_trail: ["TILTH failure", "'Aha' about borrowed worlds", "Ted Chiang as parasite world"]
+            },
+            "the-fork": {
+                overview: "Moral frameworks as negotiating agents",
+                leverage: { mindsets: "transformative", organizing: "high", information: "medium", infrastructure: "low" },
+                meta_rule: "Which frameworks are in tension?",
+                strategies: [{ text: "Railway Game with framework agents", status: "completed" }, { text: "Track negotiation patterns", status: "future" }],
+                invisible_trail: ["Kayla Evans collaboration", "Decision: not a 'real platform'"]
+            },
+            "func-sub": {
+                overview: "6-axis spatial reasoning / Black Metal philosophy",
+                leverage: { mindsets: "transformative", organizing: "high", information: "medium", infrastructure: "low" },
+                meta_rule: "What axes allow navigation?",
+                strategies: [{ text: "6-axis spatial substrate", status: "completed" }, { text: "t-series sonic explorations", status: "completed" }, { text: "6D alignment visualization", status: "future" }],
+                invisible_trail: ["Jordan's Black Metal book", "Friction of system not absorbing variety"]
+            },
+            "tractor-dce-gyo": {
+                overview: "LLM manages void, not scene — crucial insight",
+                leverage: { mindsets: "transformative", organizing: "high", information: "medium", infrastructure: "low" },
+                meta_rule: "Where should LLM agency end and user agency begin?",
+                strategies: [{ text: "Void management architecture", status: "completed" }, { text: "disc-data.json export", status: "completed" }, { text: "ONYX Studio", status: "completed" }, { text: "Open-source LLM adaptation", status: "future" }],
+                invisible_trail: ["Frustration with scene construction", "'Crucial insight' when void clicked", "150+ hours accumulated"]
+            },
+            "poml-library": {
+                overview: "9 POML files: prompts that generate prompts",
+                leverage: { mindsets: "transformative", organizing: "high", information: "medium", infrastructure: "low" },
+                meta_rule: "What structures enable prompt reuse?",
+                strategies: [{ text: "9-file POML library", status: "completed" }, { text: "Typology documentation", status: "completed" }, { text: "POML registry/community", status: "future" }],
+                invisible_trail: ["5+ versions of forensic.poml", "recursive.poml breakthrough: 'prompts all the way down'"]
+            }
+        };
+
+        const DOCS = [
+            { name: "creator-trail-map.md", desc: "Comprehensive trail map with artifact details" },
+            { name: "leverage-analysis.md", desc: "Ehrlichman + Wong dual framework analysis" },
+            { name: "final-project-writeup.md", desc: "Submission with AI disclosure statement" },
+            { name: "tilth-journey-map.md", desc: "TILTH→TRACTOR arc narrative" },
+            { name: "project-abouts.md", desc: "Repo-to-syllabus mapping" },
+            { name: "poml-library.md", desc: "POML typology and documentation" },
+            { name: "project-brainstorm.md", desc: "Original + inverse brainstorm" },
+            { name: "mid-semester-checkin.md", desc: "Nov 7 status + Meadows analysis" },
+            { name: "creator-trail-olog.md", desc: "Ontology specification" }
+        ];
+
+        // ========== RENDER FUNCTIONS ==========
+
+        function init() {
+            renderRepoList();
+            renderTimelineMini();
+            renderConnections();
+            renderCollaborators();
+            renderTerrainGrid();
+            renderNetwork();
+            renderTimelineFull();
+            renderOlog();
+            renderInterventions();
+            renderDocs();
+        }
+
+        function renderRepoList() {
+            const container = document.getElementById('repo-list');
+            container.innerHTML = Object.entries(TRAIL_MAP).map(([key, data]) => `
+            <li class="repo-item" onclick="openModal('${key}')">
+                <span class="repo-dot" style="background: ${data.color}"></span>
+                ${key}
+            </li>
+        `).join('');
+        }
+
+        function renderTimelineMini() {
+            const container = document.getElementById('timeline-mini');
+            const recent = TIMELINE.slice(-6).reverse();
+            container.innerHTML = recent.map(e => `
+            <div class="timeline-event" onclick="openModal('${e.repo}')">
+                <span class="timeline-date">${e.date.split('-').slice(1).join('/')}</span>
+                ${e.repo}
+            </div>
+        `).join('');
+        }
+
+        function renderConnections() {
+            const container = document.getElementById('connection-list');
+            container.innerHTML = CONNECTIONS.map(c => `
+            <div class="connection-item">
+                ${c.from} <span class="connection-arrow">→</span> ${c.to}
+            </div>
+        `).join('');
+        }
+
+        function renderCollaborators() {
+            const container = document.getElementById('collaborators-list');
+            container.innerHTML = COLLABORATORS.map(c => `
+            <div style="padding: 0.5rem 0; border-bottom: 1px solid var(--border); font-size: 0.8rem;">
+                <div style="color: var(--accent-teal)">${c.name}</div>
+                <div style="color: var(--text-secondary); font-size: 0.7rem;">${c.domain} → ${c.project}</div>
+            </div>
+        `).join('');
+        }
+
+        function renderTerrainGrid() {
+            const container = document.getElementById('terrain-grid');
+            container.innerHTML = Object.entries(TRAIL_MAP).map(([key, data]) => `
+            <div class="terrain-card ${data.type}" onclick="openModal('${key}')">
+                <div class="card-header">
+                    <div class="card-title">${key}</div>
+                    <span class="card-label">${data.label}</span>
+                </div>
+                <div class="card-body">
+                    <p class="card-desc">${data.desc}</p>
+                    <div class="card-meta">
+                        <span class="card-meta-item">Week ${data.week}</span>
+                        <span class="card-meta-item">${data.commits} commits</span>
+                        <span class="card-meta-item">${data.files} files</span>
+                    </div>
+                    <div class="leverage-bar">
+                        <div class="leverage-segment mindsets"></div>
+                        <div class="leverage-segment organizing"></div>
+                        <div class="leverage-segment information"></div>
+                        <div class="leverage-segment infrastructure"></div>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+        }
+
+        function renderNetwork() {
+            const svg = document.getElementById('network-svg');
+            const width = 800, height = 600;
+
+            const positions = {
+                "tractor-dce-gyo": { x: 400, y: 300 },
+                "the-fork": { x: 250, y: 200 },
+                "func-sub": { x: 550, y: 200 },
+                "1000-small-futures": { x: 200, y: 350 },
+                "role-deck": { x: 150, y: 450 },
+                "haunted-tools": { x: 300, y: 480 },
+                "liberty-machines": { x: 450, y: 480 },
+                "privacy-value-labels": { x: 600, y: 450 },
+                "dirty-disclosure": { x: 650, y: 350 },
+                "poml-library": { x: 400, y: 150 }
+            };
+
+            let html = '';
+
+            // Draw connections
+            CONNECTIONS.forEach(c => {
+                const from = positions[c.from], to = positions[c.to];
+                if (from && to) {
+                    html += `<line x1="${from.x}" y1="${from.y}" x2="${to.x}" y2="${to.y}" stroke="var(--border)" stroke-width="2"/>`;
+                }
+            });
+
+            // Draw nodes
+            Object.entries(positions).forEach(([key, pos]) => {
+                const data = TRAIL_MAP[key];
+                html += `
+                <g class="network-node" onclick="openModal('${key}')">
+                    <circle cx="${pos.x}" cy="${pos.y}" r="25" fill="${data.color}" opacity="0.8"/>
+                    <text x="${pos.x}" y="${pos.y + 45}" text-anchor="middle" fill="var(--text-secondary)" font-size="10">${key}</text>
+                </g>
+            `;
+            });
+
+            svg.innerHTML = html;
+        }
+
+        function renderTimelineFull() {
+            const container = document.getElementById('timeline-full');
+            container.innerHTML = TIMELINE.map(e => `
+            <div class="timeline-item-full" onclick="openModal('${e.repo}')">
+                <div class="timeline-item-date">${e.date.split('-').slice(1).join('/')}</div>
+                <div class="timeline-item-repo">${e.repo}</div>
+                <div class="timeline-item-message">${e.message}</div>
+                <div class="timeline-item-sig">${e.sig}</div>
+            </div>
+        `).join('');
+        }
+
+        function renderOlog() {
+            const container = document.getElementById('olog-grid');
+            container.innerHTML = Object.entries(OLOG).map(([key, value]) => `
+            <div class="olog-card">
+                <h4>${key}</h4>
+                <p>${value}</p>
+            </div>
+        `).join('');
+        }
+
+        function renderInterventions() {
+            const container = document.getElementById('interventions-grid');
+            container.innerHTML = Object.entries(INTERVENTIONS).map(([key, data]) => `
+            <div class="terrain-card" style="border-top: 3px solid var(--accent-red)" onclick="openModal('${key}')">
+                <div class="card-header">
+                    <div class="card-title">${key}</div>
+                    <span class="card-label">Intervention</span>
+                </div>
+                <div class="card-body">
+                    <p class="card-desc">${data.overview}</p>
+                    <div class="leverage-bar">
+                        <div class="leverage-segment mindsets" title="Mindsets: ${data.leverage.mindsets}"></div>
+                        <div class="leverage-segment organizing" title="Organizing: ${data.leverage.organizing}"></div>
+                        <div class="leverage-segment information" title="Information: ${data.leverage.information}"></div>
+                        <div class="leverage-segment infrastructure" title="Infrastructure: ${data.leverage.infrastructure}"></div>
+                    </div>
+                    <p style="margin-top: 0.75rem; font-size: 0.8rem; color: var(--text-secondary); font-style: italic;">${data.meta_rule}</p>
+                </div>
+            </div>
+        `).join('');
+        }
+
+        function renderDocs() {
+            const container = document.getElementById('docs-grid');
+            container.innerHTML = DOCS.map(d => `
+            <div class="doc-card">
+                <h4><span class="doc-icon">M</span>${d.name}</h4>
+                <p>${d.desc}</p>
+            </div>
+        `).join('');
+        }
+
+        // ========== INTERACTION ==========
+
+        function showView(view) {
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(`view-${view}`).classList.add('active');
+        }
+
+        function openModal(key) {
+            const intervention = INTERVENTIONS[key];
+            const trail = TRAIL_MAP[key];
+
+            document.getElementById('modal-title').textContent = key;
+
+            let html = `
+            <div class="modal-section">
+                <h3>Overview</h3>
+                <p style="color: var(--text-secondary)">${intervention?.overview || trail?.desc || ''}</p>
+            </div>
+        `;
+
+            if (intervention) {
+                html += `
+                <div class="modal-section">
+                    <h3>Leverage Points</h3>
+                    <table class="leverage-table">
+                        <tr><td>Mindsets</td><td style="color: var(--accent-red)">${intervention.leverage.mindsets}</td></tr>
+                        <tr><td>Organizing</td><td style="color: var(--accent-purple)">${intervention.leverage.organizing}</td></tr>
+                        <tr><td>Information</td><td style="color: var(--accent-blue)">${intervention.leverage.information}</td></tr>
+                        <tr><td>Infrastructure</td><td style="color: var(--text-secondary)">${intervention.leverage.infrastructure}</td></tr>
+                    </table>
+                </div>
+                
+                <div class="modal-section">
+                    <h3>Intervention Strategies</h3>
+                    <div class="strategies-list">
+                        ${intervention.strategies.map(s => `
+                            <div class="strategy-item ${s.status}">
+                                ${s.text}
+                                <span class="status-badge ${s.status}">${s.status}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <h3>Invisible Trail</h3>
+                    <ul class="trail-invisible">
+                        ${intervention.invisible_trail.map(t => `<li>${t}</li>`).join('')}
+                    </ul>
+                </div>
+                
+                <div class="modal-section">
+                    <h3>Meta-Rule</h3>
+                    <div class="meta-rule-box">${intervention.meta_rule}</div>
+                </div>
+            `;
+            }
+
+            if (trail) {
+                html += `
+                <div class="modal-section">
+                    <h3>Project Stats</h3>
+                    <div class="infra-grid">
+                        <div class="infra-item"><h4>Week</h4><p>${trail.week}</p></div>
+                        <div class="infra-item"><h4>Commits</h4><p>${trail.commits}</p></div>
+                        <div class="infra-item"><h4>Files</h4><p>${trail.files}</p></div>
+                        <div class="infra-item"><h4>Type</h4><p>${trail.type}</p></div>
+                    </div>
+                </div>
+            `;
+            }
+
+            document.getElementById('modal-body').innerHTML = html;
+            document.getElementById('modal-overlay').classList.add('open');
+            document.getElementById('modal').classList.add('open');
+        }
+
+        function closeModal() {
+            document.getElementById('modal-overlay').classList.remove('open');
+            document.getElementById('modal').classList.remove('open');
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        init();
+    </script>
+</body>
+
+</html>

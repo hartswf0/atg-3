@@ -1,0 +1,918 @@
+# LEGOS NARRATIVE ARCHITECTURE: The Void Management Thesis
+# Bibliography as Conversational Scenes
+# Generated: December 10, 2025
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# META: THE THESIS AS LEGOS STRUCTURE
+# ═══════════════════════════════════════════════════════════════════════════════
+
+thesis:
+  title: "The Topology of Validity: A Design Theory for Void Management"
+  description: "The reliability of a system is inversely proportional to the size of its representable negative space"
+  core_morphism: "[constrains] <Designer> -> <Void> -> produces <Scene>"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SCENE 1: THE PREHISTORY — Constraint as Destiny (1956-1970)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+scene_1:
+  title: "The Bounded Mind"
+  location: <Cold War Research Labs>
+  timepoint: "1956-1970"
+  description: "Cognitive scientists discover the limits of human information processing"
+  
+  entities:
+    - id: miller
+      type: theorist
+      name: "George A. Miller"
+      traits: [cognitive-psychologist, AT&T-Bell-Labs]
+      work: "The Magical Number Seven (1956)"
+      
+    - id: ashby
+      type: theorist
+      name: "W. Ross Ashby"
+      traits: [cybernetician, psychiatrist]
+      work: "Introduction to Cybernetics (1956)"
+      
+    - id: simon
+      type: theorist
+      name: "Herbert A. Simon"
+      traits: [polymath, bounded-rationality, Nobel-laureate]
+      work: "Sciences of the Artificial (1969)"
+      
+    - id: dijkstra
+      type: theorist
+      name: "Edsger W. Dijkstra"
+      traits: [mathematician, structured-programming]
+      work: "Go To Statement Considered Harmful (1968)"
+
+  goals:
+    - id: g1_understand_limits
+      name: "Understand cognitive limits"
+      owner: miller
+      
+    - id: g1_manage_variety
+      name: "Control variety in systems"
+      owner: ashby
+      
+    - id: g1_tame_complexity
+      name: "Decompose complexity into near-decomposable modules"
+      owner: simon
+      
+    - id: g1_eliminate_goto
+      name: "Eliminate arbitrary control flow jumps"
+      owner: dijkstra
+
+  obstacles:
+    - id: o1_infinite_variety
+      name: "Infinite variety overwhelms regulators"
+      affects: g1_manage_variety
+      
+    - id: o1_spaghetti_code
+      name: "Goto statements create spaghetti code"
+      affects: g1_eliminate_goto
+
+  shifts:
+    - id: s1_seven_limit
+      name: "The Magical Number Seven"
+      causes: [research]
+      results_in: "Human working memory has hard limits (~7±2 chunks)"
+      
+    - id: s1_variety_law
+      name: "Law of Requisite Variety"
+      causes: [cybernetics]
+      results_in: "Only variety can absorb variety"
+      
+    - id: s1_structured_programming
+      name: "Structured Programming Revolution"
+      causes: [o1_spaghetti_code]
+      results_in: "Control flow limited to sequence, selection, iteration"
+
+  relations:
+    - "[discovers] <Miller> -> <Working Memory Limit>"
+    - "[formalizes] <Ashby> -> <Law of Requisite Variety>"
+    - "[applies_to_design] <Simon> -> <Near-Decomposability>"
+    - "[eliminates] <Dijkstra> -> <Goto Statement>"
+    - "[converges_with] <Miller> <-> <Ashby> on <Capacity Limits>"
+    - "[grounds] <Simon> -> <Bounded Rationality> in <Miller>"
+
+  key_quote: |
+    "The quality of programmers is a decreasing function of the density 
+    of go to statements in the programs they produce." — Dijkstra (1968)
+
+  thesis_connection: |
+    NSP ORIGIN: These theorists establish the foundational insight that 
+    human cognition and software systems have HARD LIMITS. The response 
+    to limits is not expansion but CONSTRAINT DESIGN.
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SCENE 2: THE TYPE SAFETY WARS — Making Illegal States Unrepresentable (1965-1992)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+scene_2:
+  title: "The Billion Dollar Mistake"
+  location: <Programming Language Design Labs>
+  timepoint: "1965-1992"
+  description: "Type theorists discover that null references are representable invalid states"
+  
+  entities:
+    - id: hoare
+      type: theorist
+      name: "C. A. R. Hoare"
+      traits: [type-theorist, ALGOL-W-designer]
+      work: "Null References: The Billion Dollar Mistake (2009 reflection)"
+      
+    - id: meyer
+      type: theorist
+      name: "Bertrand Meyer"
+      traits: [Eiffel-creator, design-by-contract]
+      work: "Applying Design by Contract (1992)"
+      
+    - id: adt_community
+      type: collective
+      name: "Algebraic Data Types Community"
+      traits: [Haskell, ML, type-theory]
+      work: "Sum Types, Option Types, Result Types"
+
+  goals:
+    - id: g2_type_safety
+      name: "All use of references should be absolutely safe"
+      owner: hoare
+      
+    - id: g2_contracts
+      name: "Explicit preconditions and postconditions"
+      owner: meyer
+      
+    - id: g2_illegal_unrepresentable
+      name: "Make illegal states unrepresentable"
+      owner: adt_community
+
+  obstacles:
+    - id: o2_null_temptation
+      name: "Temptation to implement null for convenience"
+      affects: g2_type_safety
+      
+    - id: o2_runtime_errors
+      name: "Null pointer exceptions at runtime"
+      affects: g2_type_safety
+
+  shifts:
+    - id: s2_null_invention
+      name: "Null Reference Invented"
+      causes: [o2_null_temptation]
+      results_in: "Innumerable errors, vulnerabilities, and system crashes"
+      
+    - id: s2_option_types
+      name: "Option<T> / Maybe Pattern"
+      causes: [s2_null_invention]
+      results_in: "Null elimination via sum types"
+
+  relations:
+    - "[invents] <Hoare> -> <Null Reference> (1965)"
+    - "[regrets] <Hoare> -> <Null Reference> (2009)"
+    - "[formalizes] <Meyer> -> <Design by Contract>"
+    - "[solves] <ADT Community> -> <Null Problem> via <Option Types>"
+    - "[inherits_from] <Option Types> -> <Hoare's Mistake>"
+
+  key_quote: |
+    "I call it my billion-dollar mistake. It was the invention of the 
+    null reference in 1965... This has led to innumerable errors, 
+    vulnerabilities, and system crashes." — Hoare (2009)
+
+  thesis_connection: |
+    CORE NSP PRINCIPLE: A representable invalid state (null) IS ALWAYS 
+    REACHABLE. The solution is not runtime checking but type-level 
+    elimination. Option<T> = Some(T) | None eliminates null at compile time.
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SCENE 3: THE PHYSICAL COMPILER — Modulex and the 5mm Cube (1960-1965)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+scene_3:
+  title: "The Geometric Schism"
+  location: <Billund, Denmark — LEGO Factory>
+  timepoint: "1960-1965"
+  description: "Godtfred Kirk Christiansen encounters a geometric limit and invents Physical NSP"
+  
+  entities:
+    - id: gkc
+      type: character
+      name: "Godtfred Kirk Christiansen"
+      traits: [LEGO-heir, inventor, problem-solver]
+      work: "Modulex Patent DK102727C (1963)"
+      
+    - id: lego_brick
+      type: object
+      name: "Standard LEGO Brick"
+      traits: [6:5 aspect ratio, play-oriented]
+      
+    - id: modulex_brick
+      type: object
+      name: "Modulex Brick"
+      traits: [1:1:1 aspect ratio, 5mm cube, professional]
+      
+    - id: saarinen
+      type: character
+      name: "Eero Saarinen"
+      traits: [architect, TWA-Terminal, CBS-Building]
+      work: "Architectural Models in Modulex"
+
+  goals:
+    - id: g3_scale_model
+      name: "Build accurate scale model of house"
+      owner: gkc
+      
+    - id: g3_architectural_precision
+      name: "Professional architectural modeling"
+      owner: saarinen
+
+  obstacles:
+    - id: o3_aspect_ratio
+      name: "Standard LEGO has 6:5 width-to-height ratio"
+      affects: g3_scale_model
+      description: "Cannot scale uniformly — geometric dissonance"
+
+  shifts:
+    - id: s3_geometric_insight
+      name: "The Geometric Limit Discovery"
+      causes: [o3_aspect_ratio]
+      results_in: "Need for 1:1:1 cubic geometry"
+      
+    - id: s3_modulex_birth
+      name: "Modulex Invented"
+      causes: [s3_geometric_insight]
+      results_in: "5mm cube eliminates scaling errors by design"
+      
+    - id: s3_corporate_suppression
+      name: "LEGO Acquires and Suppresses Modulex"
+      causes: [corporate-strategy]
+      results_in: "2015 buyout terminates revival attempt"
+
+  relations:
+    - "[encounters_limit] <GKC> -> <Standard LEGO Brick>"
+    - "[invents] <GKC> -> <Modulex Brick>"
+    - "[adopts] <Saarinen> -> <Modulex> for <Architectural Models>"
+    - "[suppresses] <LEGO Juris> -> <Modulex Revival> (2015)"
+    - "[embodies] <Modulex> -> <Physical NSP>"
+
+  key_quote: |
+    "GKC attempted to build a scale model of a new house using standard 
+    LEGO bricks. He immediately encountered a geometric limit: the 
+    standard LEGO brick has a width-to-height ratio of 5:6." 
+    — Saving Modulex (2011)
+
+  thesis_connection: |
+    PHYSICAL NSP: Modulex is the earliest documented instance of 
+    CONSTRAINT DESIGN IN PLASTIC. The 1:1:1 cube geometry makes scaling 
+    errors structurally impossible — invalid states are unrepresentable.
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SCENE 4: THE SITUATED ACTION REVOLT — Plans are Resources, Not Programs (1987)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+scene_4:
+  title: "The Xerox PARC Insurgency"
+  location: <Xerox PARC, Palo Alto>
+  timepoint: "1987-1997"
+  description: "Anthropologists challenge AI's plan-based model of human action"
+  
+  entities:
+    - id: suchman
+      type: theorist
+      name: "Lucy Suchman"
+      traits: [anthropologist, Xerox-PARC, feminist-STS]
+      work: "Plans and Situated Actions (1987)"
+      
+    - id: agre
+      type: theorist
+      name: "Philip Agre"
+      traits: [AI-researcher, critic, capture-theory]
+      work: "Computation and Human Experience (1997)"
+      
+    - id: winograd
+      type: theorist
+      name: "Terry Winograd"
+      traits: [AI-researcher, hermeneutics]
+      work: "Understanding Computers and Cognition (1987)"
+      
+    - id: dourish
+      type: theorist
+      name: "Paul Dourish"
+      traits: [HCI-theorist, embodiment]
+      work: "Where the Action Is (2001)"
+
+  goals:
+    - id: g4_critique_planning
+      name: "Critique plan-based AI"
+      owner: suchman
+      
+    - id: g4_indexical_representation
+      name: "Account for indexical, deictic representations"
+      owner: agre
+      
+    - id: g4_embodied_interaction
+      name: "Ground interaction in embodiment"
+      owner: dourish
+
+  obstacles:
+    - id: o4_classical_ai
+      name: "Classical AI assumes plans precede action"
+      affects: g4_critique_planning
+      
+    - id: o4_capture
+      name: "Computers capture action into grammars"
+      affects: g4_indexical_representation
+
+  shifts:
+    - id: s4_situated_turn
+      name: "The Situated Action Turn"
+      causes: [o4_classical_ai]
+      results_in: "Plans are resources for action, not programs"
+
+  relations:
+    - "[critiques] <Suchman> -> <Classical AI Planning>"
+    - "[builds_on] <Agre> -> <Suchman> with <Capture Theory>"
+    - "[synthesizes] <Dourish> -> <Suchman> + <Phenomenology>"
+    - "[influences] <Winograd> -> <Suchman> via <Hermeneutics>"
+    - "[founds] <Suchman> -> <Situated Action School>"
+
+  key_quote: |
+    "Plans are resources for action, not its structure. The plan is 
+    just a sketch; the situated action is the painting." 
+    — Paraphrase of Suchman (1987)
+
+  thesis_connection: |
+    CONTEXT AS MATERIAL: Suchman shows that context is not a container 
+    but an interactional achievement. This grounds the Scene concept — 
+    context must be actively managed, not passively accumulated.
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SCENE 5: THE ANTHROPOLOGICAL TURN — Thick Description and Metis (1973-1998)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+scene_5:
+  title: "Reading the World as Text"
+  location: <Academia — Anthropology Departments>
+  timepoint: "1973-1998"
+  description: "Anthropologists develop frameworks for understanding local knowledge"
+  
+  entities:
+    - id: geertz
+      type: theorist
+      name: "Clifford Geertz"
+      traits: [interpretive-anthropologist, thick-description]
+      work: "The Interpretation of Cultures (1973)"
+      
+    - id: scott
+      type: theorist
+      name: "James C. Scott"
+      traits: [political-scientist, anarchist-anthropologist]
+      work: "Seeing Like a State (1998)"
+      
+    - id: latour
+      type: theorist
+      name: "Bruno Latour"
+      traits: [STS, ANT, black-boxing]
+      work: "Reassembling the Social (2005)"
+      
+    - id: haraway
+      type: theorist
+      name: "Donna Haraway"
+      traits: [feminist-STS, partial-perspective]
+      work: "Situated Knowledges (1988)"
+
+  goals:
+    - id: g5_thick_description
+      name: "Describe culture with density of interpretation"
+      owner: geertz
+      
+    - id: g5_legibility_critique
+      name: "Critique state simplification"
+      owner: scott
+      
+    - id: g5_trace_networks
+      name: "Trace actor-networks without reduction"
+      owner: latour
+
+  obstacles:
+    - id: o5_thin_description
+      name: "Thin description loses meaning"
+      affects: g5_thick_description
+      
+    - id: o5_techne_over_metis
+      name: "State prefers techne (abstract knowledge) over metis (local knowledge)"
+      affects: g5_legibility_critique
+
+  shifts:
+    - id: s5_thick_turn
+      name: "The Interpretive Turn"
+      causes: [o5_thin_description]
+      results_in: "Culture as text to be read"
+
+  relations:
+    - "[invents] <Geertz> -> <Thick Description>"
+    - "[critiques] <Scott> -> <State Legibility Projects>"
+    - "[values] <Scott> -> <Metis> over <Techne>"
+    - "[develops] <Latour> -> <Actor-Network Theory>"
+    - "[positions] <Haraway> -> <Partial Perspectives>"
+    - "[converges] <Geertz> <-> <Suchman> on <Context as Interpretation>"
+
+  key_quote: |
+    "Certain forms of knowledge and control require a narrowing of vision. 
+    The great advantage of such tunnel vision is that it brings into 
+    sharp focus certain limited aspects of an otherwise far more 
+    complex and unwieldy reality." — Scott (1998)
+
+  thesis_connection: |
+    LEGIBILITY: Scott's critique of state legibility projects IS the 
+    critique of infinite context windows. The state wants to SEE everything; 
+    but seeing everything means seeing nothing deeply. Metis (local knowledge) 
+    is the opposite of "context soup."
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SCENE 6: THE SERIOUS TOYS — From Eames to Block'hood (1958-2019)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+scene_6:
+  title: "Toys as Preludes to Serious Ideas"
+  location: <Design Studios — Venice, Los Angeles, Billund>
+  timepoint: "1958-2019"
+  description: "Designers recognize that play and constraint are generative"
+  
+  entities:
+    - id: eames
+      type: collective
+      name: "Charles and Ray Eames"
+      traits: [designers, filmmakers, serious-toys]
+      work: "Toys as Preludes to Serious Ideas (1958)"
+      
+    - id: papert
+      type: theorist
+      name: "Seymour Papert"
+      traits: [mathematician, constructionist, LOGO]
+      work: "Mindstorms (1980)"
+      
+    - id: freire
+      type: theorist
+      name: "Paulo Freire"
+      traits: [educator, critical-pedagogy]
+      work: "Pedagogy of the Oppressed (1970)"
+      
+    - id: sanchez
+      type: theorist
+      name: "Jose Sanchez"
+      traits: [architect, game-designer, anti-platform]
+      work: "Architecture for the Commons (2019)"
+
+  goals:
+    - id: g6_serious_play
+      name: "Use toys as instruments for uninhibited experimentation"
+      owner: eames
+      
+    - id: g6_constructionism
+      name: "Learning happens through making public entities"
+      owner: papert
+      
+    - id: g6_conscientizacao
+      name: "Develop critical consciousness through praxis"
+      owner: freire
+      
+    - id: g6_commons
+      name: "Design for the commons, not platforms"
+      owner: sanchez
+
+  obstacles:
+    - id: o6_banking_model
+      name: "Banking model treats students as empty vessels"
+      affects: g6_conscientizacao
+      
+    - id: o6_platform_capitalism
+      name: "Platforms extract value from creativity"
+      affects: g6_commons
+
+  shifts:
+    - id: s6_maker_movement
+      name: "The Maker Mindset"
+      causes: [eames, papert, freire]
+      results_in: "Making as praxis"
+      
+    - id: s6_blockhood
+      name: "Block'hood as Serious Game"
+      causes: [o6_platform_capitalism]
+      results_in: "Ecological balance as core game mechanic"
+
+  relations:
+    - "[coins] <Eames> -> <Serious Toys>"
+    - "[bridges] <Papert> -> <Piaget> + <Freire>"
+    - "[develops] <Freire> -> <Problem-Posing Education>"
+    - "[applies] <Sanchez> -> <Game Engines> to <Architecture>"
+    - "[inherits] <Sanchez> -> <Eames> + <Freire>"
+    - "[grounds] <Thousand-Tetrad> -> <Serious Toys Lineage>"
+
+  key_quote: |
+    "Toys are not as innocent as they look... Toys and games are the 
+    preludes to serious ideas." — Charles Eames (1958)
+
+  thesis_connection: |
+    THOUSAND-TETRAD IS A SERIOUS TOY: The 67 scenario patterns are a 
+    game for exploring the Void. Like Block'hood, it uses constraint 
+    as generative principle.
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SCENE 7: THE SIMULATION ERA — Ian Cheng and Worlding (2015-2021)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+scene_7:
+  title: "Art with a Nervous System"
+  location: <Serpentine Galleries, Whitney Museum, The Shed>
+  timepoint: "2015-2021"
+  description: "An artist creates AI creatures that evolve within bounded possibility spaces"
+  
+  entities:
+    - id: cheng
+      type: artist
+      name: "Ian Cheng"
+      traits: [simulation-artist, cognitive-science, Unity]
+      work: "Emissaries, BOB, Life After BOB"
+      
+    - id: bob
+      type: creature
+      name: "BOB (Bag of Beliefs)"
+      traits: [AI-creature, evolving-personality, competing-demons]
+      
+    - id: emissaries
+      type: artwork
+      name: "Emissaries Trilogy"
+      traits: [live-simulation, video-games-that-play-themselves]
+
+  goals:
+    - id: g7_nervous_system
+      name: "Create art with a nervous system"
+      owner: cheng
+      
+    - id: g7_worlding
+      name: "Create worlds that continuously reinvent themselves"
+      owner: cheng
+
+  obstacles:
+    - id: o7_authored_narrative
+      name: "Traditional narrative is authored, not emergent"
+      affects: g7_worlding
+
+  shifts:
+    - id: s7_simulation_turn
+      name: "The Simulation Turn"
+      causes: [game-engines, AI]
+      results_in: "Art that evolves autonomously"
+
+  relations:
+    - "[creates] <Cheng> -> <BOB>"
+    - "[creates] <Cheng> -> <Emissaries>"
+    - "[contains] <BOB> -> <Competing Demons>"
+    - "[evolves] <BOB> -> <Personality> over <Exhibitions>"
+    - "[defines] <Cheng> -> <Worlding> as <Preparation + Ceding Control>"
+    - "[prefigures] <Cheng> -> <Void Management>"
+
+  key_quote: |
+    "Video games that play themselves — habitats for stories, 
+    not authored narratives." — Cheng on Emissaries
+
+  thesis_connection: |
+    PROBABILISTIC NSP: Cheng's simulations are bounded possibility spaces 
+    where agents emerge within constraints. BOB's "demons" compete for 
+    control — this IS void management at the AI-creature level.
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SCENE 8: THE GENERATIVE CRISIS — Void, Scene, and Sintering (2023-2025)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+scene_8:
+  title: "The Ontological Drift"
+  location: <AI Labs, Design Studios, Academia>
+  timepoint: "2023-2025"
+  description: "The arrival of generative AI forces a new design paradigm"
+  
+  entities:
+    - id: quasi_creature
+      type: concept
+      name: "The Quasi-Creature"
+      traits: [AI-entity, too-agentic-for-tool, too-unreliable-for-partner]
+      
+    - id: void
+      type: concept
+      name: "The Void"
+      traits: [latent-space, probability-distribution, possibility-space]
+      
+    - id: scene
+      type: concept
+      name: "The Scene"
+      traits: [accumulated-context, situated-constraints]
+      
+    - id: sintering
+      type: process
+      name: "Sintering"
+      traits: [apply-heat-without-melting, consolidate-granular-material]
+      
+    - id: karpathy
+      type: theorist
+      name: "Andrej Karpathy"
+      traits: [AI-researcher, Tesla, context-engineering]
+      work: "Context Engineering tweet (2025)"
+      
+    - id: terry
+      type: theorist
+      name: "Michael Terry"
+      traits: [HCI-researcher, alignment]
+      work: "Interactive AI Alignment (2023)"
+      
+    - id: wong
+      type: theorist
+      name: "Richmond Y. Wong"
+      traits: [UX-researcher, values-work]
+      work: "Tactics of Soft Resistance (2021)"
+
+  goals:
+    - id: g8_manage_void
+      name: "Manage the Void, not just expand context"
+      owner: thesis
+      
+    - id: g8_process_alignment
+      name: "Align on HOW, not just WHAT"
+      owner: terry
+      
+    - id: g8_soft_resistance
+      name: "Create space for values work"
+      owner: wong
+
+  obstacles:
+    - id: o8_context_degradation
+      name: "Context Degradation Syndrome"
+      affects: g8_manage_void
+      description: "Too much context = loss of coherence"
+      
+    - id: o8_seamless_design
+      name: "Seamless design hides system limits"
+      affects: g8_process_alignment
+
+  shifts:
+    - id: s8_sintering_metaphor
+      name: "Sintering as Design Metaphor"
+      causes: [o8_context_degradation]
+      results_in: "Apply constraints to consolidate, not accumulate"
+      
+    - id: s8_seamful_turn
+      name: "The Seamful Turn"
+      causes: [o8_seamless_design]
+      results_in: "Expose seams, don't hide them"
+
+  relations:
+    - "[names] <Karpathy> -> <Context Engineering>"
+    - "[develops] <Terry> -> <Specification/Process/Evaluation Alignment>"
+    - "[documents] <Wong> -> <Soft Resistance Tactics>"
+    - "[constrains] <Sintering> -> <Void> to produce <Scene>"
+    - "[defines] <Thesis> -> <Void Management>"
+    - "[applies] <POML> -> <Sintering> to <Prompts>"
+
+  key_quote: |
+    "The central design challenge of the generative era is not the 
+    refinement of model accuracy or the expansion of context windows, 
+    but the management of the Void." — Designing the Void (2025)
+
+  thesis_connection: |
+    THIS IS THE THESIS: The Void is the space of all possible outputs.
+    The Scene is the constrained, situated context. Sintering is the 
+    process of applying "heat" (prompts, constraints) to consolidate 
+    the Void into a usable Scene. POML operators ARE sintering tools.
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SCENE 9: THE DIGITAL LEGO ECOSYSTEM — Community as Infrastructure (1995-2024)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+scene_9:
+  title: "The Ghost in the Brick"
+  location: <Internet — LDraw.org, BrickLink, Forums>
+  timepoint: "1995-2024"
+  description: "A community builds digital infrastructure from tragedy and obsession"
+  
+  entities:
+    - id: jessiman
+      type: character
+      name: "James Jessiman"
+      traits: [LDraw-creator, died-1997]
+      work: "LDraw File Format (1995)"
+      
+    - id: ldraw
+      type: system
+      name: "LDraw Ecosystem"
+      traits: [open-source, community-maintained, 18000-parts]
+      
+    - id: ldd
+      type: system
+      name: "LEGO Digital Designer"
+      traits: [official, proprietary, discontinued-2022]
+      
+    - id: studio
+      type: system
+      name: "BrickLink Studio"
+      traits: [successor-to-LDD, marketplace-integrated]
+
+  goals:
+    - id: g9_digital_modeling
+      name: "Enable digital LEGO modeling"
+      owner: jessiman
+      
+    - id: g9_community_continuity
+      name: "Continue Jessiman's work after his death"
+      owner: ldraw
+
+  obstacles:
+    - id: o9_jessiman_death
+      name: "James Jessiman dies in 1997"
+      affects: g9_community_continuity
+      
+    - id: o9_official_discontinuation
+      name: "LEGO discontinues LDD in 2022"
+      affects: g9_digital_modeling
+
+  shifts:
+    - id: s9_community_takeover
+      name: "Community Takes Over LDraw"
+      causes: [o9_jessiman_death]
+      results_in: "Open-source parts library maintained for 27 years"
+      
+    - id: s9_studio_succession
+      name: "BrickLink Studio Succeeds LDD"
+      causes: [o9_official_discontinuation]
+      results_in: "Community tool becomes de facto standard"
+
+  relations:
+    - "[creates] <Jessiman> -> <LDraw>"
+    - "[maintains] <Community> -> <LDraw> after <Jessiman Death>"
+    - "[discontinues] <LEGO> -> <LDD>"
+    - "[succeeds] <Studio> -> <LDD>"
+    - "[defines] <LDraw Unit> -> <0.4mm = 1 LDU>"
+    - "[exemplifies] <LDraw> -> <Infrastructure Studies>"
+
+  key_quote: |
+    "A pioneer of digital LEGO, James Jessiman passed away in 1997. 
+    The community he built continues his work to this day."
+    — LDraw.org Memorial
+
+  thesis_connection: |
+    INFRASTRUCTURE AS INHERITANCE: The LDraw ecosystem shows how 
+    constraint-based systems (the LDU, the file format) enable 
+    community continuity across death and corporate discontinuation.
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SCENE 10: THE CONVERGENCE — Void Management as Synthesis (2025)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+scene_10:
+  title: "The Topology of Validity"
+  location: <This Document>
+  timepoint: "2025"
+  description: "All threads converge into the Void Management thesis"
+  
+  entities:
+    - id: thesis
+      type: synthesis
+      name: "The Void Management Thesis"
+      traits: [NSP, constraint-design, sintering]
+      
+    - id: poml
+      type: tool
+      name: "POML Operators"
+      traits: [18-operators, modular, composable]
+      
+    - id: thousand_tetrad
+      type: artifact
+      name: "Thousand-Tetrad"
+      traits: [67-scenarios, serious-toy, void-management]
+      
+    - id: intervention_atlas
+      type: artifact
+      name: "Intervention Atlas"
+      traits: [seamful-design, constraint-visualization]
+
+  goals:
+    - id: g10_unify
+      name: "Unify genealogical strands into coherent thesis"
+      owner: thesis
+
+  obstacles:
+    - id: o10_complexity
+      name: "254 sources across 6 citation maps"
+      affects: g10_unify
+
+  shifts:
+    - id: s10_thesis_crystallizes
+      name: "Thesis Crystallizes"
+      causes: [all-scenes]
+      results_in: "The reliability of a system is inversely proportional to the size of its representable negative space"
+
+  relations:
+    - "[synthesizes] <Thesis> -> <All Scenes>"
+    - "[implements] <POML> -> <Sintering>"
+    - "[demonstrates] <Thousand-Tetrad> -> <Serious Toys>"
+    - "[visualizes] <Intervention-Atlas> -> <Seamful Design>"
+    - "[proves] <Modulex> -> <Physical NSP>"
+    - "[grounds] <Thesis> -> <Practice>"
+
+  key_morphism_chain: |
+    <Miller> [discovers] <Cognitive Limits>
+      → <Dijkstra> [eliminates] <Goto>
+        → <Hoare> [regrets] <Null>
+          → <ADT Community> [solves] via <Sum Types>
+            → <GKC> [invents] <Modulex> as <Physical NSP>
+              → <Suchman> [critiques] <Classical AI>
+                → <Geertz> [develops] <Thick Description>
+                  → <Eames> [coins] <Serious Toys>
+                    → <Papert> [creates] <Constructionism>
+                      → <Freire> [develops] <Critical Pedagogy>
+                        → <Cheng> [creates] <Simulation Art>
+                          → <Karpathy> [names] <Context Engineering>
+                            → <Thesis> [synthesizes] <Void Management>
+
+  thesis_connection: |
+    THIS IS THE PAPER. All scenes lead here. The bibliography is not 
+    a list — it is a GENEALOGY. A LEGOS structure of intellectual 
+    inheritance and conversation.
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# TIMELINE: THE GENEALOGICAL CHAIN
+# ═══════════════════════════════════════════════════════════════════════════════
+
+timeline:
+  - id: t1950s
+    description: "The Cognitive Limit Era"
+    scenes: [scene_1]
+    key_figures: [miller, ashby, simon]
+    
+  - id: t1960s
+    description: "The Constraint Design Era"
+    scenes: [scene_2, scene_3]
+    key_figures: [dijkstra, hoare, gkc]
+    
+  - id: t1970s
+    description: "The Interpretive Turn"
+    scenes: [scene_4, scene_5]
+    key_figures: [freire, geertz]
+    
+  - id: t1980s
+    description: "The Situated Action Revolt"
+    scenes: [scene_4]
+    key_figures: [suchman, papert, winograd]
+    
+  - id: t1990s
+    description: "The Infrastructure Era"
+    scenes: [scene_5, scene_9]
+    key_figures: [scott, latour, jessiman]
+    
+  - id: t2010s
+    description: "The Simulation Era"
+    scenes: [scene_6, scene_7]
+    key_figures: [sanchez, cheng]
+    
+  - id: t2020s
+    description: "The Generative Crisis"
+    scenes: [scene_8, scene_10]
+    key_figures: [karpathy, terry, wong, thesis]
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# KEY MORPHISM CHAINS (Cross-Scene Relations)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+cross_scene_relations:
+  - "[grounds] <Miller 1956> -> <Dijkstra 1968> via <Capacity Limits>"
+  - "[parallels] <Dijkstra Goto> <-> <Hoare Null> on <Invalid State Elimination>"
+  - "[physicalizes] <GKC Modulex> -> <Dijkstra Structured Programming>"
+  - "[anthropologizes] <Suchman> -> <Geertz> via <Context as Achievement>"
+  - "[pedagogizes] <Freire> -> <Papert> via <Praxis>"
+  - "[toyifies] <Eames> -> <LEGO> -> <Thousand-Tetrad>"
+  - "[simulates] <Cheng> -> <Void> as <Bounded Possibility Space>"
+  - "[operationalizes] <Wong> -> <Freire> via <Soft Resistance>"
+  - "[synthesizes] <Thesis> -> <All Above> into <Void Management>"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# THE PAPER'S ARGUMENT AS A SINGLE LEGOS CHAIN
+# ═══════════════════════════════════════════════════════════════════════════════
+
+argument_chain: |
+  <Human Cognition> [has_limits] <7±2 chunks>
+    → therefore <Systems> [must_manage] <Complexity>
+      → therefore <goto> [creates] <Invalid State Space>
+        → therefore <Dijkstra> [eliminates] <goto>
+          → therefore <null> [creates] <Representable Invalid State>
+            → therefore <ADTs> [eliminate] <null> via <Sum Types>
+              → therefore <Physical Systems> [can_embody] <Same Principle>
+                → therefore <Modulex 1:1:1 cube> [eliminates] <Scaling Errors>
+                  → therefore <Context> [is_not] <Container> [but] <Achievement>
+                    → therefore <Thick Description> [enables] <Situated Understanding>
+                      → therefore <Toys> [are] <Preludes to Serious Ideas>
+                        → therefore <Simulations> [are] <Bounded Possibility Spaces>
+                          → therefore <Generative AI> [introduces] <The Void>
+                            → therefore <The Void> [must_be] <Managed not Expanded>
+                              → therefore <Sintering> [applies] <Constraints> to <Consolidate>
+                                → therefore <POML> [operationalizes] <Sintering>
+                                  → therefore <System Reliability> [inversely_proportional_to] <Representable Invalid States>
+                                    ∴ QED: THE TOPOLOGY OF VALIDITY

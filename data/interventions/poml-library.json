@@ -1,0 +1,168 @@
+{
+    "meta": {
+        "schema_version": "0.5.0",
+        "project": "poml-library",
+        "type": "meta-infrastructure",
+        "generated": "2025-12-09",
+        "framework": "Ehrlichman/Meadows + Wong Infrastructure"
+    },
+    "system_overview": "9 POML (Prompt Object Markup Language) files totaling 1,374 lines representing meta-prompt infrastructure—prompts that generate prompts, extract ideal types, produce structured analytical outputs.",
+    "leverage_point_analysis": {
+        "mindsets_paradigms": {
+            "current": "Prompts as ephemeral text; one-off conversations",
+            "target": "Prompts as structured, versionable, composable infrastructure",
+            "leverage": "transformative",
+            "intervention": "recursive.poml principle: prompts all the way down"
+        },
+        "organizing_principles": {
+            "current": "Prompt engineering as ad-hoc craft",
+            "target": "POML as standard with schemas, inheritance, composition",
+            "leverage": "high",
+            "intervention": "Library provides reusable patterns"
+        },
+        "information_flows": {
+            "current": "No visibility into which prompts others use",
+            "target": "POML registry with community curation",
+            "leverage": "medium",
+            "intervention": "Share, fork, extend pattern"
+        },
+        "system_infrastructure": {
+            "current": "Copy-paste prompts between conversations",
+            "target": "POML compiler that validates and executes",
+            "leverage": "low",
+            "intervention": "Technical infrastructure for prompt lifecycle"
+        }
+    },
+    "poml_library_contents": [
+        {
+            "file": "forensic.poml",
+            "lines": 351,
+            "type": "analytical",
+            "purpose": "Multi-ledger ethical diagnostic with 7 lenses and stress tests",
+            "meta_rule": "Apply plural ethics frames simultaneously; use Lessig modes as repair levers"
+        },
+        {
+            "file": "mythos.poml",
+            "lines": 93,
+            "type": "analytical",
+            "purpose": "Weberian ideal type extraction + Bayesian updating + myth layer",
+            "meta_rule": "Build ideal types as limiting constructs; update beliefs with evidence"
+        },
+        {
+            "file": "tactics.poml",
+            "lines": 239,
+            "type": "analytical",
+            "purpose": "De Certeau tactics concordance extraction from source texts",
+            "meta_rule": "Map tactics vs strategies; identify mētis in practice"
+        },
+        {
+            "file": "parody.poml",
+            "lines": 280,
+            "type": "generative",
+            "purpose": "POML→POML forge for parody essay generation",
+            "meta_rule": "Extract ideal type + parodic mechanics; generate child POML"
+        },
+        {
+            "file": "parody-gen.poml",
+            "lines": 62,
+            "type": "generative",
+            "purpose": "Light parody prompt generator",
+            "meta_rule": "Rapid scaffold for parody essay production"
+        },
+        {
+            "file": "inverse-essay.poml",
+            "lines": 47,
+            "type": "generative",
+            "purpose": "Essay reversal + myth layer extraction",
+            "meta_rule": "Invert source text to expose latent prompt logic"
+        },
+        {
+            "file": "prompt.poml",
+            "lines": 184,
+            "type": "transformative",
+            "purpose": "Natural language → POML transformer",
+            "meta_rule": "Convert flat prompts into structured POML format"
+        },
+        {
+            "file": "recursive.poml",
+            "lines": 72,
+            "type": "recursive",
+            "purpose": "Prompts that generate prompts that generate prompts",
+            "meta_rule": "Every prompt must spawn at least 3 further prompts"
+        },
+        {
+            "file": "meta-prime.poml",
+            "lines": 46,
+            "type": "recursive",
+            "purpose": "Extract author's implicit 'prompt logic' from their texts",
+            "meta_rule": "Surface the OS of any thinker; generate prompts in their style"
+        }
+    ],
+    "infrastructure_mapping": {
+        "dynamic_processes": {
+            "embedded_values": "LLM culture values novel outputs; infrastructure is invisible",
+            "process_redesign_opportunity": "Make prompt engineering as visible as code engineering"
+        },
+        "social_positionalities": {
+            "power_dynamics": "Prompt engineers often invisible; 'vibe coders' dismissed",
+            "safety_concerns": "Sharing prompts can reveal competitive advantage",
+            "legitimized_expertise": "POML legitimizes prompt work as engineering discipline"
+        },
+        "invisible_work": {
+            "articulation_labor": "1,374 lines compress 150+ hours of iteration",
+            "emotional_labor": "Dead ends, frustrated rewrites, breakthrough moments",
+            "unrecognized_labor": "Prompts look 'obvious' once finished; labor invisible"
+        },
+        "embedded_systems": {
+            "standards": "No POML standard yet (aspirational)",
+            "policies": "N/A",
+            "economic_logics": "LLM providers capture value from user prompt engineering labor",
+            "legal_context": "IP around prompts is unclear"
+        }
+    },
+    "integrated_intervention_strategies": [
+        {
+            "intervention": "Create 9-file POML library",
+            "targeted_leverage": "mindsets_paradigms",
+            "infrastructure_work": "Demonstrate prompts as infrastructure; provide reusable patterns across domains",
+            "viability_rating": "high",
+            "status": "completed"
+        },
+        {
+            "intervention": "Document library with typology and course connections",
+            "targeted_leverage": "information_flows",
+            "infrastructure_work": "poml-library.md explains each file; connects to course readings",
+            "viability_rating": "high",
+            "status": "completed"
+        },
+        {
+            "intervention": "Build POML registry/community",
+            "targeted_leverage": "organizing_principles",
+            "infrastructure_work": "Shared platform for POML discovery, validation, extension",
+            "viability_rating": "medium",
+            "status": "future"
+        },
+        {
+            "intervention": "Create POML compiler",
+            "targeted_leverage": "system_infrastructure",
+            "infrastructure_work": "Validate schema, execute against LLM, return structured output",
+            "viability_rating": "medium",
+            "status": "future"
+        }
+    ],
+    "trail_analysis": {
+        "visible_trail": {
+            "total_lines": 1374,
+            "files": 9,
+            "observation": "High visibility—structured, documented, versioned"
+        },
+        "invisible_trail": [
+            "5+ versions of forensic.poml before stabilizing",
+            "Figuring out how to nest POML inside POML (parody.poml)",
+            "recursive.poml breakthrough: 'prompts all the way down'",
+            "Each POML represents dozens of iterations"
+        ],
+        "trail_awareness_level": 2
+    },
+    "meta_rule": "Analyze prompt engineering by asking: What structures enable prompt reuse, composition, and recursion (POML as infrastructure), AND what infrastructural conditions (community platforms, IP norms, economic incentives) would make prompt work visible and valued?"
+}

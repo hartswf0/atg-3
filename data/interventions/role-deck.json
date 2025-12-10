@@ -1,0 +1,139 @@
+{
+    "meta": {
+        "schema_version": "0.5.0",
+        "project": "role-deck",
+        "week": 7,
+        "generated": "2025-12-09",
+        "framework": "Ehrlichman/Meadows + Wong Infrastructure"
+    },
+    "system_overview": "Ethical Identity Cards applying Bartle taxonomy to ethics practitioners, helping them identify their position within organizational games and choose tactics appropriate to their constraints.",
+    "leverage_point_analysis": {
+        "mindsets_paradigms": {
+            "current": "Ethics = individual conscience; practitioners as solo heroes",
+            "target": "Ethics = strategic positioning within organizational game",
+            "leverage": "transformative",
+            "intervention": "Make the game visible; identity as tactical choice"
+        },
+        "organizing_principles": {
+            "current": "Practitioners work in isolation",
+            "target": "Coalition-building based on complementary positions",
+            "leverage": "high",
+            "intervention": "Cards provide vocabulary for collective strategy"
+        },
+        "information_flows": {
+            "current": "Role identifications private; no collective mapping",
+            "target": "Network visibility: 'we have too many Achievers'",
+            "leverage": "medium",
+            "intervention": "Track role identifications across organizations"
+        },
+        "system_infrastructure": {
+            "current": "No framework for practitioner identity",
+            "target": "Physical cards for workshop use",
+            "leverage": "low",
+            "intervention": "Printable deck for facilitated sessions"
+        }
+    },
+    "infrastructure_mapping": {
+        "dynamic_processes": {
+            "embedded_values": "Organizations value individual contributions; collective action suspect",
+            "process_redesign_opportunity": "Legitimate coalition-building language"
+        },
+        "social_positionalities": {
+            "power_dynamics": "Senior staff can take risks; junior employees must conform",
+            "safety_concerns": "Some can be 'Killers' (disrupters); others risk career",
+            "legitimized_expertise": "Game design framing legitimizes tactical thinking about ethics"
+        },
+        "invisible_work": {
+            "articulation_labor": "Wong's research documents the 'soft resistance' practitioners do",
+            "emotional_labor": "Managing cognitive dissonance between values and constraints",
+            "unrecognized_labor": "Quiet resource redirection, project delays, coalition building"
+        },
+        "embedded_systems": {
+            "standards": "Performance reviews reward individual achievement",
+            "policies": "HR policies may constrain collective action",
+            "economic_logics": "Ethics practitioner as individual hero serves corporate interests",
+            "legal_context": "Whistleblower protections (inadequate)"
+        }
+    },
+    "bartle_taxonomy": {
+        "achiever": {
+            "description": "Driven by measurable outcomes and visible wins",
+            "tactics": [
+                "Create KPIs for ethics work",
+                "Document wins publicly",
+                "Build case studies"
+            ],
+            "risks": "May sacrifice depth for metrics; feeds corporate capture"
+        },
+        "explorer": {
+            "description": "Investigates systems, finds hidden problems, maps territory",
+            "tactics": [
+                "Conduct audits",
+                "Map power structures",
+                "Research edge cases"
+            ],
+            "risks": "May never move from research to action; analysis paralysis"
+        },
+        "socializer": {
+            "description": "Builds relationships and coalitions; values connection",
+            "tactics": [
+                "Create informal networks",
+                "Build trust across silos",
+                "Facilitate dialogue"
+            ],
+            "risks": "May prioritize harmony over confrontation; avoid hard truths"
+        },
+        "killer": {
+            "description": "Disrupts harmful systems; willing to create conflict",
+            "tactics": [
+                "Leak information",
+                "Escalate to media",
+                "Resign publicly"
+            ],
+            "risks": "Career-ending moves; requires accumulated capital or exit plan"
+        }
+    },
+    "integrated_intervention_strategies": [
+        {
+            "intervention": "Create Bartle-based role cards",
+            "targeted_leverage": "mindsets_paradigms",
+            "infrastructure_work": "Make organizational game visible; provide tactical vocabulary; identity as choice",
+            "viability_rating": "high",
+            "status": "completed"
+        },
+        {
+            "intervention": "Workshop activity: map collective role composition",
+            "targeted_leverage": "information_flows",
+            "infrastructure_work": "Participants map who plays which role; identify gaps and coalitions",
+            "viability_rating": "high",
+            "status": "future"
+        },
+        {
+            "intervention": "Connect cards to organizational data",
+            "targeted_leverage": "system_infrastructure",
+            "infrastructure_work": "Level 2: actual org chart + role mapping; identify strategic positions",
+            "viability_rating": "low",
+            "status": "future"
+        }
+    ],
+    "trail_analysis": {
+        "visible_trail": {
+            "commits": 8,
+            "key_commits": [
+                "Initial commit",
+                "FarmOS Ecosystem visualization",
+                "Full Movie experience"
+            ],
+            "observation": "Higher visibility—iteration apparent"
+        },
+        "invisible_trail": [
+            "Reading Chivukula on identity claims",
+            "Reading Rattay on moral stress",
+            "Reading Wong on soft resistance",
+            "TILTH investigation embedded showing project failure",
+            "Decision to use Bartle taxonomy (from game design)"
+        ],
+        "trail_awareness_level": 1
+    },
+    "meta_rule": "Analyze practitioner positions by asking: What role in the organizational game does each person occupy, AND what infrastructural conditions (job security, performance metrics, career trajectories) constrain which tactics are available from each position?"
+}

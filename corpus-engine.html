@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Corpus Engine — Transclusion Highlight</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0a0a0a;
+            --surface: #111;
+            --border: #222;
+            --text: #ccc;
+            --text-dim: #666;
+            --accent-essay: #ff6b35;
+            --accent-pyramid: #35b8ff;
+            --accent-intervention: #b535ff;
+            --accent-poml: #35ff8b;
+            --highlight: #ffff00;
+        }
+
+        body {
+            font-family: 'SF Mono', 'Consolas', monospace;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 13px;
+            line-height: 1.7;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            height: 48px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+
+        .header-title {
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            color: var(--text-dim);
+        }
+
+        .search-box {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 12px;
+            width: 300px;
+            outline: none;
+        }
+
+        .search-box:focus {
+            border-color: var(--highlight);
+        }
+
+        .search-box::placeholder {
+            color: var(--text-dim);
+        }
+
+        .stats {
+            font-size: 10px;
+            color: var(--text-dim);
+        }
+
+        /* Main container */
+        .main {
+            display: flex;
+            height: calc(100vh - 48px);
+            margin-top: 48px;
+        }
+
+        /* Column container */
+        .columns {
+            display: flex;
+            flex: 1;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+        }
+
+        .column {
+            min-width: 380px;
+            max-width: 500px;
+            flex: 1;
+            height: 100%;
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .column.collapsed {
+            min-width: 40px;
+            max-width: 40px;
+        }
+
+        .column-header {
+            height: 44px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            cursor: pointer;
+        }
+
+        .column.collapsed .column-header {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            padding: 16px 0;
+            height: 100%;
+            justify-content: flex-start;
+        }
+
+        .column-title {
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .column-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .column[data-type="essay"] .column-dot {
+            background: var(--accent-essay);
+        }
+
+        .column[data-type="pyramid"] .column-dot {
+            background: var(--accent-pyramid);
+        }
+
+        .column[data-type="intervention"] .column-dot {
+            background: var(--accent-intervention);
+        }
+
+        .column[data-type="poml"] .column-dot {
+            background: var(--accent-poml);
+        }
+
+        .column-count {
+            font-size: 9px;
+            color: var(--text-dim);
+        }
+
+        .column.collapsed .column-count {
+            display: none;
+        }
+
+        .column-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+
+        .column.collapsed .column-content {
+            display: none;
+        }
+
+        /* Document cards */
+        .doc-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .doc-card:hover {
+            border-color: #444;
+        }
+
+        .doc-card.expanded {
+            border-color: var(--highlight);
+        }
+
+        .doc-header {
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .doc-name {
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .doc-meta {
+            font-size: 9px;
+            color: var(--text-dim);
+        }
+
+        .doc-body {
+            padding: 16px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .doc-card.expanded .doc-body {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .doc-section {
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 10px;
+            color: var(--text-dim);
+            margin-bottom: 8px;
+            letter-spacing: 0.1em;
+        }
+
+        .section-text {
+            color: var(--text);
+            line-height: 1.8;
+        }
+
+        /* Highlighting */
+        .highlight {
+            background: rgba(255, 255, 0, 0.3);
+            color: #fff;
+            padding: 0 2px;
+        }
+
+        .highlight-count {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--highlight);
+            color: #000;
+            padding: 8px 16px;
+            font-size: 11px;
+            font-weight: 600;
+            display: none;
+            z-index: 100;
+        }
+
+        .highlight-count.visible {
+            display: block;
+        }
+
+        /* Trail panel */
+        .trail-panel {
+            width: 280px;
+            background: var(--surface);
+            border-left: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            transition: width 0.3s;
+        }
+
+        .trail-panel.collapsed {
+            width: 40px;
+        }
+
+        .trail-header {
+            height: 44px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            cursor: pointer;
+        }
+
+        .trail-panel.collapsed .trail-header {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            height: 100%;
+            padding: 16px 0;
+        }
+
+        .trail-title {
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            color: var(--text-dim);
+        }
+
+        .trail-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+
+        .trail-panel.collapsed .trail-content {
+            display: none;
+        }
+
+        .trail-item {
+            padding: 8px 12px;
+            background: var(--bg);
+            margin-bottom: 8px;
+            font-size: 10px;
+            border-left: 2px solid var(--border);
+        }
+
+        .trail-item.search {
+            border-left-color: var(--highlight);
+        }
+
+        .trail-item.expand {
+            border-left-color: var(--accent-essay);
+        }
+
+        .trail-item.navigate {
+            border-left-color: var(--accent-pyramid);
+        }
+
+        .trail-time {
+            color: var(--text-dim);
+            font-size: 9px;
+        }
+
+        .trail-action {
+            color: var(--text);
+            margin-top: 4px;
+        }
+
+        /* Export button */
+        .export-btn {
+            margin: 16px;
+            padding: 10px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-family: inherit;
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .export-btn:hover {
+            border-color: var(--highlight);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #444;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .column {
+                min-width: 100vw;
+                max-width: 100vw;
+            }
+
+            .trail-panel {
+                position: fixed;
+                right: 0;
+                top: 48px;
+                bottom: 0;
+                z-index: 50;
+            }
+
+            .trail-panel.collapsed {
+                width: 0;
+                border: none;
+            }
+
+            .search-box {
+                width: 150px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-title">CORPUS ENGINE</div>
+        <input type="text" class="search-box" placeholder="Search across all documents..." id="searchBox">
+        <div class="stats" id="stats">Loading...</div>
+    </header>
+
+    <main class="main">
+        <div class="columns" id="columns"></div>
+        <aside class="trail-panel" id="trailPanel">
+            <div class="trail-header" onclick="toggleTrail()">
+                <div class="trail-title">TRAIL</div>
+            </div>
+            <div class="trail-content" id="trailContent"></div>
+            <button class="export-btn" onclick="exportTrail()">EXPORT TRAIL</button>
+        </aside>
+    </main>
+
+    <div class="highlight-count" id="highlightCount"></div>
+
+    <script>
+        // State
+        const state = {
+            documents: {},
+            trail: [],
+            currentSearch: '',
+            expandedDocs: new Set()
+        };
+
+        // Document manifest
+        const manifest = {
+            essay: [
+                { path: 'docs/ghost-in-the-brick.md', name: 'Ghost in the Brick' },
+                { path: 'docs/immaterial-hand.md', name: 'Immaterial Hand' },
+                { path: 'docs/stitched-mind.md', name: 'Stitched Mind' },
+                { path: 'docs/atlas-of-interventions.md', name: 'Atlas of Interventions' },
+                { path: 'docs/topological-turn-paper.md', name: 'Topological Turn' },
+                { path: 'docs/decerteau-tactics-paper.md', name: 'De Certeau Tactics' },
+                { path: 'docs/infrastructural-void-paper.md', name: 'Infrastructural Void' },
+                { path: 'docs/void-management-thesis-paper.md', name: 'Void Management Thesis' }
+            ],
+            pyramid: [
+                { path: 'docs/pyramids/void-management-pyramid.md', name: 'Void Management' },
+                { path: 'docs/pyramids/sinter-report-pyramid.md', name: 'Sinter Report' },
+                { path: 'docs/pyramids/context-engineering-pyramid.md', name: 'Context Engineering' },
+                { path: 'docs/pyramids/paragon-essay-pyramid.md', name: 'Paragon Essay' },
+                { path: 'docs/pyramids/leverage-analysis-pyramid.md', name: 'Leverage Analysis' },
+                { path: 'docs/pyramids/trail-documentation-pyramid.md', name: 'Trail Documentation' },
+                { path: 'docs/pyramids/negative-space-pyramid.md', name: 'Negative Space' },
+                { path: 'docs/pyramids/digital-lego-ecosystem-pyramid.md', name: 'Digital LEGO' }
+            ],
+            intervention: [
+                { path: 'data/interventions/1000-small-futures.json', name: '1000 Small Futures', isJson: true },
+                { path: 'data/interventions/poml-library.json', name: 'POML Library', isJson: true },
+                { path: 'data/interventions/role-deck.json', name: 'Role Deck', isJson: true },
+                { path: 'data/interventions/dirty-disclosure.json', name: 'Dirty Disclosure', isJson: true },
+                { path: 'data/interventions/haunted-tools.json', name: 'Haunted Tools', isJson: true },
+                { path: 'data/interventions/the-fork.json', name: 'The Fork', isJson: true },
+                { path: 'data/interventions/func-sub.json', name: 'Func Sub', isJson: true },
+                { path: 'data/interventions/liberty-machines.json', name: 'Liberty Machines', isJson: true },
+                { path: 'data/interventions/privacy-value-labels.json', name: 'Privacy Value Labels', isJson: true },
+                { path: 'data/interventions/tractor-dce-gyo.json', name: 'Tractor DCE GYO', isJson: true }
+            ],
+            poml: [
+                { path: 'forensic.poml', name: 'Forensic' },
+                { path: 'tactics.poml', name: 'Tactics' },
+                { path: 'mythos.poml', name: 'Mythos' },
+                { path: 'parody.poml', name: 'Parody' },
+                { path: 'recursive.poml', name: 'Recursive' },
+                { path: 'prompt.poml', name: 'Prompt Transform' },
+                { path: 'meta-prime.poml', name: 'Meta Prime' }
+            ]
+        };
+
+        // Initialize
+        async function init() {
+            await loadAllDocuments();
+            renderColumns();
+            setupSearch();
+            updateStats();
+        }
+
+        async function loadAllDocuments() {
+            const allDocs = [];
+            for (const [type, docs] of Object.entries(manifest)) {
+                for (const doc of docs) {
+                    allDocs.push(loadDocument(doc.path, doc.name, type, doc.isJson));
+                }
+            }
+            await Promise.all(allDocs);
+        }
+
+        async function loadDocument(path, name, type, isJson = false) {
+            try {
+                const response = await fetch(path);
+                if (!response.ok) throw new Error(`Failed to load ${path}`);
+                const text = await response.text();
+
+                let sections = [];
+                if (isJson) {
+                    const json = JSON.parse(text);
+                    sections = parseJsonToSections(json);
+                } else if (path.endsWith('.poml')) {
+                    sections = parsePomlToSections(text);
+                } else {
+                    sections = parseMarkdownToSections(text);
+                }
+
+                state.documents[path] = { name, type, path, sections, raw: text };
+            } catch (e) {
+                console.warn(`Could not load ${path}:`, e.message);
+            }
+        }
+
+        function parseMarkdownToSections(text) {
+            const sections = [];
+            const lines = text.split('\n');
+            let currentSection = { title: 'Introduction', content: [] };
+
+            for (const line of lines) {
+                if (line.startsWith('## ')) {
+                    if (currentSection.content.length > 0) {
+                        sections.push({
+                            title: currentSection.title,
+                            text: currentSection.content.join('\n').trim()
+                        });
+                    }
+                    currentSection = { title: line.replace(/^#+\s*/, ''), content: [] };
+                } else if (line.startsWith('# ') && sections.length === 0) {
+                    currentSection.title = line.replace(/^#+\s*/, '');
+                } else {
+                    currentSection.content.push(line);
+                }
+            }
+
+            if (currentSection.content.length > 0) {
+                sections.push({
+                    title: currentSection.title,
+                    text: currentSection.content.join('\n').trim()
+                });
+            }
+
+            return sections;
+        }
+
+        function parseJsonToSections(json) {
+            const sections = [];
+
+            if (json.system_overview) {
+                sections.push({ title: 'Overview', text: json.system_overview });
+            }
+
+            if (json.leverage_point_analysis) {
+                for (const [key, val] of Object.entries(json.leverage_point_analysis)) {
+                    if (val && typeof val === 'object') {
+                        sections.push({
+                            title: key.replace(/_/g, ' ').toUpperCase(),
+                            text: Object.entries(val).map(([k, v]) => `${k}: ${v}`).join('\n')
+                        });
+                    }
+                }
+            }
+
+            if (json.meta_rule) {
+                sections.push({ title: 'Meta Rule', text: json.meta_rule });
+            }
+
+            return sections;
+        }
+
+        function parsePomlToSections(text) {
+            const sections = [];
+            const matches = text.match(/<([a-z-]+)[^>]*>([\s\S]*?)<\/\1>/gi) || [];
+
+            for (const match of matches.slice(0, 5)) {
+                const tagMatch = match.match(/<([a-z-]+)/i);
+                const contentMatch = match.match(/>([\s\S]*?)</);
+                if (tagMatch && contentMatch) {
+                    sections.push({
+                        title: tagMatch[1].toUpperCase(),
+                        text: contentMatch[1].trim().slice(0, 500)
+                    });
+                }
+            }
+
+            if (sections.length === 0) {
+                sections.push({ title: 'POML', text: text.slice(0, 500) });
+            }
+
+            return sections;
+        }
+
+        function renderColumns() {
+            const container = document.getElementById('columns');
+            container.innerHTML = '';
+
+            for (const [type, docs] of Object.entries(manifest)) {
+                const typeDocs = docs.filter(d => state.documents[d.path]);
+                if (typeDocs.length === 0) continue;
+
+                const col = document.createElement('div');
+                col.className = 'column';
+                col.dataset.type = type;
+
+                col.innerHTML = `
+                    <div class="column-header" onclick="toggleColumn(this.parentElement)">
+                        <div class="column-title">
+                            <div class="column-dot"></div>
+                            ${type.toUpperCase()}
+                        </div>
+                        <div class="column-count">${typeDocs.length} docs</div>
+                    </div>
+                    <div class="column-content"></div>
+                `;
+
+                const content = col.querySelector('.column-content');
+                for (const doc of typeDocs) {
+                    const docData = state.documents[doc.path];
+                    if (!docData) continue;
+
+                    const card = document.createElement('div');
+                    card.className = 'doc-card';
+                    card.dataset.path = doc.path;
+
+                    const sectionCount = docData.sections.length;
+
+                    card.innerHTML = `
+                        <div class="doc-header" onclick="toggleDoc('${doc.path}')">
+                            <div class="doc-name">${docData.name}</div>
+                            <div class="doc-meta">${sectionCount} sections</div>
+                        </div>
+                        <div class="doc-body" id="body-${doc.path.replace(/[\/\.]/g, '-')}"></div>
+                    `;
+
+                    content.appendChild(card);
+                }
+
+                container.appendChild(col);
+            }
+        }
+
+        function toggleColumn(col) {
+            col.classList.toggle('collapsed');
+            logTrail('navigate', `${col.classList.contains('collapsed') ? 'Collapsed' : 'Expanded'} ${col.dataset.type}`);
+        }
+
+        function toggleDoc(path) {
+            const card = document.querySelector(`[data-path="${path}"]`);
+            const bodyId = `body-${path.replace(/[\/\.]/g, '-')}`;
+            const body = document.getElementById(bodyId);
+
+            if (state.expandedDocs.has(path)) {
+                state.expandedDocs.delete(path);
+                card.classList.remove('expanded');
+            } else {
+                state.expandedDocs.add(path);
+                card.classList.add('expanded');
+
+                const docData = state.documents[path];
+                if (docData && body.innerHTML === '') {
+                    body.innerHTML = docData.sections.map(s => `
+                        <div class="doc-section">
+                            <div class="section-title">${escapeHtml(s.title)}</div>
+                            <div class="section-text">${highlightText(escapeHtml(s.text), state.currentSearch)}</div>
+                        </div>
+                    `).join('');
+                }
+
+                logTrail('expand', `Opened: ${docData.name}`);
+            }
+        }
+
+        function setupSearch() {
+            const searchBox = document.getElementById('searchBox');
+            let debounceTimer;
+
+            searchBox.addEventListener('input', (e) => {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    performSearch(e.target.value);
+                }, 300);
+            });
+        }
+
+        function performSearch(query) {
+            state.currentSearch = query.toLowerCase().trim();
+
+            if (!state.currentSearch) {
+                clearHighlights();
+                return;
+            }
+
+            let totalMatches = 0;
+
+            for (const [path, doc] of Object.entries(state.documents)) {
+                const card = document.querySelector(`[data-path="${path}"]`);
+                if (!card) continue;
+
+                const text = doc.sections.map(s => s.text).join(' ').toLowerCase();
+                const matches = (text.match(new RegExp(state.currentSearch, 'gi')) || []).length;
+
+                if (matches > 0) {
+                    card.style.display = 'block';
+                    card.style.borderColor = `rgba(255, 255, 0, ${Math.min(0.2 + matches * 0.1, 0.8)})`;
+                    totalMatches += matches;
+
+                    // Re-render body if expanded
+                    if (state.expandedDocs.has(path)) {
+                        const bodyId = `body-${path.replace(/[\/\.]/g, '-')}`;
+                        const body = document.getElementById(bodyId);
+                        body.innerHTML = doc.sections.map(s => `
+                            <div class="doc-section">
+                                <div class="section-title">${escapeHtml(s.title)}</div>
+                                <div class="section-text">${highlightText(escapeHtml(s.text), state.currentSearch)}</div>
+                            </div>
+                        `).join('');
+                    }
+                } else {
+                    card.style.display = 'block';
+                    card.style.borderColor = '';
+                }
+            }
+
+            const countEl = document.getElementById('highlightCount');
+            if (totalMatches > 0) {
+                countEl.textContent = `${totalMatches} matches across corpus`;
+                countEl.classList.add('visible');
+                logTrail('search', `"${state.currentSearch}" → ${totalMatches} matches`);
+            } else {
+                countEl.classList.remove('visible');
+            }
+        }
+
+        function clearHighlights() {
+            for (const card of document.querySelectorAll('.doc-card')) {
+                card.style.borderColor = '';
+            }
+            document.getElementById('highlightCount').classList.remove('visible');
+
+            // Re-render without highlights
+            for (const path of state.expandedDocs) {
+                const doc = state.documents[path];
+                if (!doc) continue;
+                const bodyId = `body-${path.replace(/[\/\.]/g, '-')}`;
+                const body = document.getElementById(bodyId);
+                if (body) {
+                    body.innerHTML = doc.sections.map(s => `
+                        <div class="doc-section">
+                            <div class="section-title">${escapeHtml(s.title)}</div>
+                            <div class="section-text">${escapeHtml(s.text)}</div>
+                        </div>
+                    `).join('');
+                }
+            }
+        }
+
+        function highlightText(text, query) {
+            if (!query) return text;
+            const regex = new RegExp(`(${escapeRegex(query)})`, 'gi');
+            return text.replace(regex, '<span class="highlight">$1</span>');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function escapeRegex(str) {
+            return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        // Trail
+        function logTrail(type, action) {
+            const now = new Date();
+            const time = now.toLocaleTimeString('en-US', { hour12: false });
+
+            state.trail.unshift({ type, action, time, timestamp: now.toISOString() });
+
+            if (state.trail.length > 50) state.trail.pop();
+
+            renderTrail();
+        }
+
+        function renderTrail() {
+            const content = document.getElementById('trailContent');
+            content.innerHTML = state.trail.slice(0, 20).map(t => `
+                <div class="trail-item ${t.type}">
+                    <div class="trail-time">${t.time}</div>
+                    <div class="trail-action">${t.action}</div>
+                </div>
+            `).join('');
+        }
+
+        function toggleTrail() {
+            document.getElementById('trailPanel').classList.toggle('collapsed');
+        }
+
+        function exportTrail() {
+            const data = {
+                exported: new Date().toISOString(),
+                session: state.trail
+            };
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `corpus-trail-${Date.now()}.json`;
+            a.click();
+
+            logTrail('export', 'Trail exported');
+        }
+
+        function updateStats() {
+            const docCount = Object.keys(state.documents).length;
+            const sectionCount = Object.values(state.documents).reduce((a, d) => a + d.sections.length, 0);
+            document.getElementById('stats').textContent = `${docCount} docs / ${sectionCount} sections`;
+        }
+
+        // Initialize on load
+        init();
+
+        console.log('CORPUS ENGINE');
+        console.log('Search to highlight across all documents');
+        console.log('Click cards to expand');
+        console.log('Trail records your reading path');
+    </script>
+</body>
+
+</html>

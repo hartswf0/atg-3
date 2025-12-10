@@ -1,0 +1,131 @@
+{
+    "meta": {
+        "schema_version": "0.5.0",
+        "project": "the-fork",
+        "weeks": [
+            11,
+            12,
+            13,
+            14
+        ],
+        "generated": "2025-12-09",
+        "framework": "Ehrlichman/Meadows + Wong Infrastructure"
+    },
+    "system_overview": "A research hub and ethical negotiation simulation treating moral frameworks as negotiating agents rather than decision algorithms, using Railway Game / trolley problem variations.",
+    "leverage_point_analysis": {
+        "mindsets_paradigms": {
+            "current": "Ethics = find the right answer; frameworks as algorithms",
+            "target": "Ethics = negotiate among valid perspectives; frameworks as voices",
+            "leverage": "transformative",
+            "intervention": "Experience productive conflict between frameworks"
+        },
+        "organizing_principles": {
+            "current": "Ethical dilemmas presented as puzzles with solutions",
+            "target": "Dilemmas as negotiations requiring mediation",
+            "leverage": "high",
+            "intervention": "Railway Game structures dialogue between frameworks"
+        },
+        "information_flows": {
+            "current": "Past ethical decisions invisible; no pattern tracking",
+            "target": "Trail records how user mediated before; surfaces biases",
+            "leverage": "medium",
+            "intervention": "Decision history with rationale capture"
+        },
+        "system_infrastructure": {
+            "current": "Static trolley problem presentations",
+            "target": "3D train scenes with forking narratives",
+            "leverage": "low",
+            "intervention": "Visual/spatial representation of decisions"
+        }
+    },
+    "infrastructure_mapping": {
+        "dynamic_processes": {
+            "embedded_values": "Ethics education values correct answers; negotiation seen as compromise",
+            "process_redesign_opportunity": "Frame ethical dialogue as productive, not evasive"
+        },
+        "social_positionalities": {
+            "power_dynamics": "Philosophy expertise privileged; practitioners defer",
+            "safety_concerns": "Admitting uncertainty can seem weak",
+            "legitimized_expertise": "Tool legitimizes practitioner mediation (not just philosopher answers)"
+        },
+        "invisible_work": {
+            "articulation_labor": "Kayla Evans collaboration: she wanted direction, Watson pushed back",
+            "emotional_labor": "Mediating between frameworks when they genuinely conflict",
+            "unrecognized_labor": "Maintaining consistency across decision history"
+        },
+        "embedded_systems": {
+            "standards": "Bioethics review protocols, AI ethics guidelines",
+            "policies": "Organizational decision-making frameworks",
+            "economic_logics": "Speed incentives conflict with deliberation",
+            "legal_context": "Liability frameworks around ethical decisions"
+        }
+    },
+    "frameworks_as_agents": [
+        {
+            "framework": "Utilitarianism",
+            "voice": "Maximize aggregate welfare across all affected parties",
+            "blind_spots": "Individual rights, distribution, measurement problems"
+        },
+        {
+            "framework": "Deontology",
+            "voice": "Respect rights and duties regardless of consequences",
+            "blind_spots": "Conflicting duties, rigid application, context-blindness"
+        },
+        {
+            "framework": "Virtue Ethics",
+            "voice": "What would a person of practical wisdom do here?",
+            "blind_spots": "Cultural variation, action guidance, institutional application"
+        },
+        {
+            "framework": "Care Ethics",
+            "voice": "Protect relationships and respond to vulnerability",
+            "blind_spots": "Scale limitations, justice concerns, power in care relations"
+        },
+        {
+            "framework": "Capabilities",
+            "voice": "Expand real freedoms and human flourishing",
+            "blind_spots": "Resource constraints, capability conflicts, measurement"
+        }
+    ],
+    "integrated_intervention_strategies": [
+        {
+            "intervention": "Create Railway Game with framework agents",
+            "targeted_leverage": "mindsets_paradigms",
+            "infrastructure_work": "Each framework argues its position; user mediates rather than solves",
+            "viability_rating": "high",
+            "status": "completed"
+        },
+        {
+            "intervention": "Track negotiation patterns over time",
+            "targeted_leverage": "information_flows",
+            "infrastructure_work": "Trail records mediation decisions; surfaces which frameworks user tends to favor",
+            "viability_rating": "medium",
+            "status": "future"
+        },
+        {
+            "intervention": "Use in Responsible AI workshops",
+            "targeted_leverage": "organizing_principles",
+            "infrastructure_work": "Real dilemmas from practitioner experience; negotiation as professional skill",
+            "viability_rating": "high",
+            "status": "future"
+        }
+    ],
+    "trail_analysis": {
+        "visible_trail": {
+            "commits": 10,
+            "key_commits": [
+                "Initial development",
+                "README with unified research statement"
+            ],
+            "observation": "Medium visibility—research hub function shows connections"
+        },
+        "invisible_trail": [
+            "Kayla Uleah Evans collaboration and friction",
+            "Decision: not a 'real platform'—produces guides instead",
+            "Responsible AI Summit as context",
+            "Railway Game metaphor development"
+        ],
+        "trail_awareness_level": 1
+    },
+    "meta_rule": "Analyze ethical decisions by asking: Which frameworks are in productive tension here, AND what infrastructural conditions (decision speed, expertise legitimization, liability) constrain which mediations are possible?"
+}

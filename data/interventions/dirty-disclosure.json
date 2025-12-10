@@ -1,0 +1,96 @@
+{
+    "meta": {
+        "schema_version": "0.5.0",
+        "project": "dirty-disclosure",
+        "week": 1,
+        "generated": "2025-12-09",
+        "framework": "Ehrlichman/Meadows + Wong Infrastructure"
+    },
+    "system_overview": "An interactive web artifact exposing the double bind of AI disclosure mandates: sophisticated AI use becomes harder to report as it becomes more valuable, creating structural incentives for either misrepresentation or self-censorship.",
+    "leverage_point_analysis": {
+        "mindsets_paradigms": {
+            "current": "Disclosure = itemized confession of AI 'prompts used'",
+            "target": "Disclosure = visible process trail during work",
+            "leverage": "transformative",
+            "intervention": "Demonstrate paradox so vividly that paradigm shift becomes necessary"
+        },
+        "organizing_principles": {
+            "current": "ACM policy treats AI as discrete tool, not thought partner",
+            "target": "Policies recognize collaboration spectrum",
+            "leverage": "high",
+            "intervention": "Create vocabulary for 'symbiotic use' vs 'transactional use'"
+        },
+        "information_flows": {
+            "current": "Instructors see only post-hoc reports, not actual collaboration patterns",
+            "target": "Trail visible during work (like pair programming metrics)",
+            "leverage": "medium",
+            "intervention": "Trail-aware tools that show process, not just product"
+        },
+        "system_infrastructure": {
+            "current": "LLM conversations ephemeral; no persistent collaboration record",
+            "target": "User-controlled persistent logs",
+            "leverage": "low",
+            "intervention": "Export/archive conversation trails"
+        }
+    },
+    "infrastructure_mapping": {
+        "dynamic_processes": {
+            "embedded_values": "ACM policies assume knowledge production is individual; AI = cheating risk",
+            "process_redesign_opportunity": "Disclosure as observation during work, not confession after"
+        },
+        "social_positionalities": {
+            "power_dynamics": "Students have low power to critique disclosure mandates; instructors hold legibility power",
+            "safety_concerns": "Undergrads may not risk critique that PhD students can",
+            "legitimized_expertise": "Policies favor 'legitimate' (minimal, tidy) AI use over sophisticated collaboration"
+        },
+        "invisible_work": {
+            "articulation_labor": "Translating disclosure anxiety into intellectual problem",
+            "emotional_labor": "Managing 'sword of Damocles' feeling all semester",
+            "unrecognized_labor": "Prompt engineering, iteration, dead ends—invisible in final disclosure"
+        },
+        "embedded_systems": {
+            "standards": "ACM disclosure policy (2024 revision)",
+            "policies": "Academic integrity frameworks treating AI as cheating vector",
+            "economic_logics": "LLM providers benefit from 'legitimate use' framing",
+            "legal_context": "Copyright ambiguity around AI-assisted work"
+        }
+    },
+    "integrated_intervention_strategies": [
+        {
+            "intervention": "Create Disclosure Theatre interface demonstrating the double bind",
+            "targeted_leverage": "mindsets_paradigms",
+            "infrastructure_work": "Build artifact that exposes structural problem; provide vocabulary (mētis vs techne, symbiotic vs transactional)",
+            "viability_rating": "high",
+            "status": "completed"
+        },
+        {
+            "intervention": "Write critical disclosure statement in final project",
+            "targeted_leverage": "information_flows",
+            "infrastructure_work": "Use assignment submission itself as soft resistance; piggyback on required disclosure format",
+            "viability_rating": "high",
+            "status": "completed"
+        },
+        {
+            "intervention": "Form 'disclosure reform' working group",
+            "targeted_leverage": "organizing_principles",
+            "infrastructure_work": "Build network of students + instructors + STS scholars who recognize the problem",
+            "viability_rating": "medium",
+            "status": "future"
+        }
+    ],
+    "trail_analysis": {
+        "visible_trail": {
+            "commits": 1,
+            "commit_message": "first commit",
+            "observation": "Minimal—only creation visible"
+        },
+        "invisible_trail": [
+            "Reading Bateson's double bind theory",
+            "Connecting to ACM policy critique",
+            "Week 1 disclosure anxiety crystallizing into intellectual problem",
+            "Decision to make anxiety itself the subject"
+        ],
+        "trail_awareness_level": 1
+    },
+    "meta_rule": "Analyze disclosure systems by asking: What paradigm governs what counts as 'honest' AI use, AND what infrastructural conditions (policies, power dynamics, invisible labor) make certain disclosures possible and others illegible?"
+}

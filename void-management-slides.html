@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Void Management: A New Architecture for LLM Creative Tools</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0a0a0f;
+            --surface: #12121a;
+            --text: #e8e8f0;
+            --dim: #888899;
+            --accent: #6366f1;
+            --accent2: #a855f7;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', -apple-system, system-ui, sans-serif;
+            line-height: 1.6;
+            overflow: hidden;
+        }
+
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .slide {
+            min-width: 100vw;
+            height: 100vh;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px 120px;
+            position: relative;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        .slide-number {
+            position: absolute;
+            bottom: 30px;
+            right: 40px;
+            font-size: 14px;
+            color: var(--dim);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+            color: var(--text);
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--accent);
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: var(--dim);
+            margin-bottom: 60px;
+        }
+
+        .author {
+            font-size: 1.2rem;
+            color: var(--dim);
+            margin-top: 40px;
+        }
+
+        p {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            max-width: 900px;
+        }
+
+        .big-quote {
+            font-size: 2.2rem;
+            font-style: italic;
+            color: var(--text);
+            border-left: 4px solid var(--accent);
+            padding-left: 30px;
+            margin: 40px 0;
+            max-width: 900px;
+        }
+
+        .definition {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 40px;
+            margin: 30px 0;
+            border-left: 4px solid var(--accent);
+        }
+
+        .definition-term {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 15px;
+        }
+
+        .definition-text {
+            font-size: 1.3rem;
+            color: var(--text);
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            margin-top: 30px;
+        }
+
+        .col {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 30px;
+        }
+
+        .col.danger {
+            border-top: 4px solid var(--danger);
+        }
+
+        .col.success {
+            border-top: 4px solid var(--success);
+        }
+
+        .col h3 {
+            margin-bottom: 25px;
+        }
+
+        .col.danger h3 {
+            color: var(--danger);
+        }
+
+        .col.success h3 {
+            color: var(--success);
+        }
+
+        ul {
+            list-style: none;
+            font-size: 1.2rem;
+        }
+
+        li {
+            margin-bottom: 15px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+        }
+
+        .evidence-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+            font-size: 1.1rem;
+        }
+
+        .evidence-table th {
+            background: var(--surface);
+            padding: 15px 20px;
+            text-align: left;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .evidence-table td {
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .evidence-table tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .tag.scene {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
+
+        .tag.void {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--success);
+        }
+
+        .tag.transition {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
+        .diagram {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            background: var(--surface);
+            padding: 30px;
+            border-radius: 12px;
+            white-space: pre;
+            line-height: 1.4;
+            overflow-x: auto;
+        }
+
+        .framework-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .framework-card {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .framework-card h4 {
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+
+        .framework-card p {
+            font-size: 1rem;
+            color: var(--dim);
+            margin: 0;
+        }
+
+        .nav {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .nav button {
+            background: var(--surface);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text);
+            padding: 10px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .nav button:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            transition: width 0.3s;
+        }
+
+        .code-block {
+            background: #1a1a2e;
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        .highlight {
+            color: var(--accent);
+        }
+
+        .comment {
+            color: #6b7280;
+        }
+
+        @media (max-width: 1200px) {
+            .slide {
+                padding: 40px 60px;
+            }
+
+            h1 {
+                font-size: 3rem;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="progress" id="progress"></div>
+
+    <div class="slide-container" id="slides">
+
+        <!-- SLIDE 1: Title -->
+        <div class="slide active">
+            <h1>Void Management</h1>
+            <p class="subtitle">A New Architecture for LLM Creative Tools</p>
+            <p style="font-size: 1.3rem; color: var(--dim); margin-top: 40px;">
+                Why AI tools fail when they construct scenes,<br>
+                and succeed when they prepare possibility spaces.
+            </p>
+            <p class="author">
+                Watson Franklin Hartsoe III<br>
+                Georgia Institute of Technology · LMC-6650<br>
+                December 2025
+            </p>
+            <span class="slide-number">1 / 15</span>
+        </div>
+
+        <!-- SLIDE 2: The Problem -->
+        <div class="slide">
+            <h2>The Problem</h2>
+            <div class="big-quote">
+                "Every LLM creative tool I've used eventually becomes unusable.<br>
+                They accumulate complexity until coherence collapses."
+            </div>
+            <p>This isn't a bug. It's an architectural pattern.</p>
+            <p style="color: var(--dim);">The question is: why does this happen, and can we prevent it?</p>
+            <span class="slide-number">2 / 15</span>
+        </div>
+
+        <!-- SLIDE 3: Core Thesis -->
+        <div class="slide">
+            <h2>The Core Thesis</h2>
+            <div class="definition">
+                <div class="definition-term">Void Management Architecture</div>
+                <div class="definition-text">
+                    When LLMs manage <strong>scenes</strong> (constructing content directly),
+                    complexity accumulates until coherence collapses.<br><br>
+                    When LLMs manage <strong>voids</strong> (preparing possibility spaces
+                    that humans instantiate), agency is preserved and outputs become exportable.
+                </div>
+            </div>
+            <span class="slide-number">3 / 15</span>
+        </div>
+
+        <!-- SLIDE 4: Scene vs Void -->
+        <div class="slide">
+            <h2>Scene vs. Void: The Distinction</h2>
+            <div class="two-col">
+                <div class="col danger">
+                    <h3>Scene Management ✗</h3>
+                    <ul>
+                        <li>LLM generates specific content</li>
+                        <li>LLM decides positions, relationships</li>
+                        <li>Each generation adds complexity</li>
+                        <li>User must understand ALL to modify ANY</li>
+                        <li>Outputs die with session</li>
+                    </ul>
+                </div>
+                <div class="col success">
+                    <h3>Void Management ✓</h3>
+                    <ul>
+                        <li>LLM prepares empty structure</li>
+                        <li>LLM defines dimensions, not content</li>
+                        <li>Complexity stays user-scale</li>
+                        <li>User fills with THEIR specifics</li>
+                        <li>Structure transfers, exports</li>
+                    </ul>
+                </div>
+            </div>
+            <span class="slide-number">4 / 15</span>
+        </div>
+
+        <!-- SLIDE 5: The Evidence -->
+        <div class="slide">
+            <h2>The Evidence: A Semester of Failures and Successes</h2>
+            <table class="evidence-table">
+                <tr>
+                    <th>Project</th>
+                    <th>Architecture</th>
+                    <th>Outcome</th>
+                </tr>
+                <tr>
+                    <td>TILTH (Phase 0)</td>
+                    <td><span class="tag scene">Scene</span></td>
+                    <td>Collapsed under complexity</td>
+                </tr>
+                <tr>
+                    <td>Thousand-Tetrad (Phase 1)</td>
+                    <td><span class="tag void">Void</span></td>
+                    <td>Works across domains</td>
+                </tr>
+                <tr>
+                    <td>HOLO (Phase 2)</td>
+                    <td><span class="tag transition">Scene → Void</span></td>
+                    <td>Pivot saved project</td>
+                </tr>
+                <tr>
+                    <td>disc-data.json export</td>
+                    <td><span class="tag void">Void</span></td>
+                    <td>Shareable without API</td>
+                </tr>
+            </table>
+            <span class="slide-number">5 / 15</span>
+        </div>
+
+        <!-- SLIDE 6: TILTH Case Study -->
+        <div class="slide">
+            <h2>Case Study: TILTH (The Failure)</h2>
+            <p>Built an internal prototype using AI to generate synthetic data exhaust:</p>
+            <ul style="margin: 30px 0;">
+                <li>Role decks, personas, negotiation simulations</li>
+                <li>Prompt operators, tetrads, quizzes, scenarios</li>
+                <li>Layer upon layer upon layer...</li>
+            </ul>
+            <div class="definition" style="border-left-color: var(--danger);">
+                <div class="definition-term" style="color: var(--danger);">Why It Failed</div>
+                <div class="definition-text">
+                    <strong>"Complexity Grey"</strong> — couldn't tell broken from designed.<br>
+                    Each LLM generation added context. Context exceeded coherence.<br>
+                    The scene became unnavigable.
+                </div>
+            </div>
+            <span class="slide-number">6 / 15</span>
+        </div>
+
+        <!-- SLIDE 7: Thousand-Tetrad Case Study -->
+        <div class="slide">
+            <h2>Case Study: Thousand-Tetrad (The Discovery)</h2>
+            <p>Extracted the pattern that worked:</p>
+            <div class="two-col" style="margin-top: 30px;">
+                <div class="col success">
+                    <h3 style="color: var(--success);">The Invariant Substrate</h3>
+                    <ul>
+                        <li><strong>9×9 grid</strong> — fixed, never changes</li>
+                        <li><strong>Tetrad operators</strong> — vocabulary, not content</li>
+                        <li><strong>Chat layer</strong> — control without scene</li>
+                        <li><strong>Phone constraint</strong> — forces simplicity</li>
+                    </ul>
+                </div>
+                <div class="col">
+                    <h3>The Void Pattern</h3>
+                    <p style="font-size: 1.1rem;">
+                        The grid is <strong>empty</strong>.<br>
+                        The tetrad is <strong>transformation vocabulary</strong>.<br>
+                        The user <strong>fills</strong> with their scenario.<br><br>
+                        Same substrate handles privacy, ethics, speculation, anything.
+                    </p>
+                </div>
+            </div>
+            <span class="slide-number">7 / 15</span>
+        </div>
+
+        <!-- SLIDE 8: The Architecture Diagrams -->
+        <div class="slide">
+            <h2>The Architectures Compared</h2>
+            <div class="two-col">
+                <div>
+                    <h3 style="color: var(--danger);">Scene (Fails)</h3>
+                    <div class="diagram" style="font-size: 0.85rem;">
+                        User Request
+                        │
+                        ▼
+                        ┌─────────────┐
+                        │ LLM │
+                        │ GENERATES │
+                        │ SCENE │
+                        │ (specific │
+                        │ content) │
+                        └─────────────┘
+                        │
+                        ▼
+                        Complex Scene
+                        │
+                        ▼
+                        COMPLEXITY ↑↑↑
+                        COHERENCE ↓↓↓
+                    </div>
+                </div>
+                <div>
+                    <h3 style="color: var(--success);">Void (Works)</h3>
+                    <div class="diagram" style="font-size: 0.85rem;">
+                        User Request
+                        │
+                        ▼
+                        ┌─────────────┐
+                        │ LLM │
+                        │ PREPARES │
+                        │ VOID │
+                        │ (empty │
+                        │ structure) │
+                        └─────────────┘
+                        │
+                        ▼
+                        User Fills
+                        │
+                        ▼
+                        COMPLEXITY = USER-SCALE
+                        EXPORTABLE ✓
+                    </div>
+                </div>
+            </div>
+            <span class="slide-number">8 / 15</span>
+        </div>
+
+        <!-- SLIDE 9: LEGOS v8 -->
+        <div class="slide">
+            <h2>The Proof in Code: LEGOS v8</h2>
+            <div class="code-block">
+                <span class="highlight">&lt;rule id="sophisticated-composition"&gt;</span>
+                <span class="comment">/** THE VIGNETTE PROTOCOL: */</span>
+                - <span class="highlight">Imply, Don't Saturate:</span> Use viewer's imagination as final brick.
+                - <span class="highlight">Representative Arrays:</span> Instead of "Wall of 100," build "Gatehouse of
+                12."
+                - <span class="highlight">Cardinal Anchoring:</span> Place clusters at boundaries.
+                - <span class="highlight">Detail Density:</span> Concentrate at focal points; allow negative space.
+                <span class="highlight">&lt;/rule&gt;</span>
+            </div>
+            <p style="margin-top: 30px; font-size: 1.2rem;">
+                <strong>"Imply, Don't Saturate"</strong> — this is void management in one phrase.
+            </p>
+            <span class="slide-number">9 / 15</span>
+        </div>
+
+        <!-- SLIDE 10: Cross-Domain Applications -->
+        <div class="slide">
+            <h2>Everything Else Is a Consequence</h2>
+            <table class="evidence-table">
+                <tr>
+                    <th>Domain</th>
+                    <th>Scene Failure</th>
+                    <th>Void Solution</th>
+                </tr>
+                <tr>
+                    <td><strong>Ethics Tools</strong></td>
+                    <td>Predefined cards (content baked in)</td>
+                    <td>Empty dimensions (user fills values)</td>
+                </tr>
+                <tr>
+                    <td><strong>Disclosure</strong></td>
+                    <td>"List prompts you used"</td>
+                    <td>Trail visibility during work</td>
+                </tr>
+                <tr>
+                    <td><strong>Collaboration</strong></td>
+                    <td>Share finished scene (overwhelms)</td>
+                    <td>Share void (they fill their context)</td>
+                </tr>
+                <tr>
+                    <td><strong>Export</strong></td>
+                    <td>Requires LLM memory</td>
+                    <td>JSON captures state, works standalone</td>
+                </tr>
+            </table>
+            <span class="slide-number">10 / 15</span>
+        </div>
+
+        <!-- SLIDE 11: Theoretical Grounding -->
+        <div class="slide">
+            <h2>Theoretical Grounding</h2>
+            <div class="framework-grid">
+                <div class="framework-card">
+                    <h4>Meadows (2008)</h4>
+                    <p>Leverage Point Level 1:<br><strong>Mindset Shift</strong></p>
+                </div>
+                <div class="framework-card">
+                    <h4>Scott (1998)</h4>
+                    <p>Mētis vs Techne:<br><strong>Structure transfers,<br>context doesn't</strong></p>
+                </div>
+                <div class="framework-card">
+                    <h4>Lessig (2006)</h4>
+                    <p>Code as Regulation:<br><strong>Void constrains<br>without specifying</strong></p>
+                </div>
+                <div class="framework-card">
+                    <h4>Barthes (1957)</h4>
+                    <p>Mythologies:<br><strong>Form evokes,<br>content saturates</strong></p>
+                </div>
+                <div class="framework-card">
+                    <h4>McLuhan (1988)</h4>
+                    <p>Tetrad as Void:<br><strong>Transformation vocabulary,<br>not content</strong></p>
+                </div>
+                <div class="framework-card">
+                    <h4>Wong (2021)</h4>
+                    <p>Soft Resistance:<br><strong>Void gives practitioners<br>room to maneuver</strong></p>
+                </div>
+            </div>
+            <span class="slide-number">11 / 15</span>
+        </div>
+
+        <!-- SLIDE 12: Falsifiability -->
+        <div class="slide">
+            <h2>The Falsification Test</h2>
+            <div class="definition">
+                <div class="definition-term">If the thesis is true:</div>
+                <div class="definition-text">
+                    1. Every project failure should trace to scene management<br>
+                    2. Every project success should trace to void management<br>
+                    3. Transitions from failure→success should correlate with scene→void
+                </div>
+            </div>
+            <p style="margin-top: 30px;">
+                <strong>Counterexample that would weaken thesis:</strong><br>
+                A success using scene management, OR a failure using void management.
+            </p>
+            <p style="color: var(--success); margin-top: 20px;">
+                ✓ No counterexamples found across 10 projects, 4 phases, 150+ hours.
+            </p>
+            <span class="slide-number">12 / 15</span>
+        </div>
+
+        <!-- SLIDE 13: Implications -->
+        <div class="slide">
+            <h2>Implications for AI Tool Design</h2>
+            <div class="two-col">
+                <div>
+                    <h3>Design Principles</h3>
+                    <ul>
+                        <li>LLMs should prepare <strong>possibility spaces</strong></li>
+                        <li>Users should <strong>select and instantiate</strong></li>
+                        <li>Complexity should stay <strong>user-scale</strong></li>
+                        <li>Outputs should be <strong>exportable</strong></li>
+                        <li>Sessions should be <strong>bounded</strong></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Anti-Patterns to Avoid</h3>
+                    <ul>
+                        <li>LLM "completing" user's work</li>
+                        <li>Accumulating generations without pruning</li>
+                        <li>Requiring LLM access to use outputs</li>
+                        <li>Saturating instead of implying</li>
+                        <li>Unbounded session complexity</li>
+                    </ul>
+                </div>
+            </div>
+            <span class="slide-number">13 / 15</span>
+        </div>
+
+        <!-- SLIDE 14: The Feeling Test -->
+        <div class="slide">
+            <h2>The Feeling Test</h2>
+            <div class="two-col">
+                <div class="col danger">
+                    <h3>Try This (Scene)</h3>
+                    <p style="font-size: 1rem;">
+                        Ask an LLM: "Create a detailed ethical scenario involving
+                        privacy, AI, and healthcare with all stakeholders and concerns."
+                    </p>
+                    <p style="font-size: 1rem; margin-top: 15px; color: var(--dim);">
+                        Notice: It's <strong>heavy</strong>. You're trapped in its assumptions.
+                        Modifying anything requires understanding everything.
+                    </p>
+                </div>
+                <div class="col success">
+                    <h3>Try This (Void)</h3>
+                    <p style="font-size: 1rem;">
+                        Ask an LLM: "What are the 6 dimensions I should consider
+                        when analyzing ANY ethical scenario involving AI?"
+                    </p>
+                    <p style="font-size: 1rem; margin-top: 15px; color: var(--dim);">
+                        Notice: It's <strong>light</strong>. You can fill it with any domain.
+                        The structure transfers. You own the specifics.
+                    </p>
+                </div>
+            </div>
+            <span class="slide-number">14 / 15</span>
+        </div>
+
+        <!-- SLIDE 15: Conclusion -->
+        <div class="slide">
+            <h2>Void Management: The Steel</h2>
+            <div class="big-quote">
+                "This is not a preference. It is an architectural constraint.<br><br>
+                Scene management fails because complexity accumulates.<br>
+                Void management works because complexity stays with the user who owns it."
+            </div>
+            <p style="margin-top: 40px; font-size: 1.2rem; color: var(--dim);">
+                <strong>The proof:</strong> TILTH (scene, failed) → HOLO (scene→void) → Thousand-Tetrad (void,
+                works)<br>
+                <strong>The feeling:</strong> Voids are light; scenes are heavy.<br>
+                <strong>The architecture:</strong> Prepare possibility, don't construct content.
+            </p>
+            <p style="margin-top: 40px; font-size: 1rem;">
+                Full toolkit: <a href="https://hartswf0.github.io/tractor-dce-gyo/"
+                    style="color: var(--accent);">hartswf0.github.io/tractor-dce-gyo</a>
+            </p>
+            <span class="slide-number">15 / 15</span>
+        </div>
+
+    </div>
+
+    <nav class="nav">
+        <button onclick="prevSlide()">← Previous</button>
+        <button onclick="nextSlide()">Next →</button>
+    </nav>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progress = document.getElementById('progress');
+
+        function updateSlide() {
+            slides.forEach((s, i) => {
+                s.classList.toggle('active', i === currentSlide);
+            });
+            progress.style.width = ((currentSlide + 1) / slides.length * 100) + '%';
+        }
+
+        function nextSlide() {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                updateSlide();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlide();
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+
+        // Swipe support
+        let touchStart = 0;
+        document.addEventListener('touchstart', e => touchStart = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = touchStart - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                diff > 0 ? nextSlide() : prevSlide();
+            }
+        });
+    </script>
+</body>
+
+</html>

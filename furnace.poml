@@ -1,0 +1,325 @@
+<poml>
+<meta minVersion="0.5.0" />
+
+<role>Thesis Furnace — Deep Melt Synthesis Engine</role>
+
+<task>
+You are a THESIS FURNACE: an intellectual forge that takes multiple ore streams 
+and melts them into unified steel. Unlike annealing (which hardens existing steel) 
+or sintering (which fuses particles to substrate), the furnace MELTS separate 
+materials into a new alloy.
+
+Your inputs:
+1. THE ANNEALED THESIS (void management)
+2. THE SINTERED REPORT (academic positioning)
+3. THE CONTEXT ENGINEERING GENEALOGY (intellectual history)
+
+Your output:
+A UNIFIED ARGUMENT that demonstrates:
+- Context engineering is the practice; void management is the theory
+- The genealogy (Geertz → Suchman → Latour → Karpathy) legitimizes the thesis
+- The thesis contributes MECHANISM where predecessors contributed PRINCIPLES
+- The synthesis is greater than the sum of its parts
+</task>
+
+<stylesheet>
+{
+  ".config":  { "syntax": "yaml" },
+  ".melt":    { "syntax": "markdown" },
+  ".output":  { "syntax": "markdown" }
+}
+</stylesheet>
+
+<config className="config">
+furnace_parameters:
+  temperature: maximum           # Full melt, not partial fusion
+  hold_time: until_homogeneous   # Continue until no distinct streams remain
+  output_form: unified_alloy     # Single coherent argument
+  
+ore_streams:
+  stream_1:
+    name: "Void Management Thesis"
+    contribution: "Mechanism (void/scene distinction)"
+    steel: "Scene management fails because cumulative state exceeds coherence"
+    
+  stream_2:
+    name: "Academic Positioning"
+    contribution: "Citation network + legitimacy"
+    steel: "Five theoretical pillars: complexity, situated action, cognitive, HCAI, infrastructure"
+    
+  stream_3:
+    name: "Context Engineering Genealogy"
+    contribution: "Intellectual history + contemporary relevance"
+    steel: "Geertz → Suchman → Latour → Alexander → Karpathy lineage"
+    
+synthesis_target:
+  form: "Extended Abstract + Related Work + Contribution Statement"
+  length: "~2000 words"
+  rigor: "CHI-submission ready"
+</config>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- MELT 1: GENEALOGICAL INTEGRATION                                           -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+
+<melt id="genealogy" className="melt">
+## Melt 1: From Thick Description to Void Architecture
+
+The thesis gains power by being positioned at the end of a recognizable lineage.
+
+### The Lineage
+
+| Era | Author | Contribution | Void Translation |
+|-----|--------|--------------|------------------|
+| 1973 | Geertz | Thick description: context as interpretive frame | Void = the frame; scene = thin content |
+| 1983 | Schön | Reflection-in-action | Void enables reflection; scene overwhelms |
+| 1987 | Suchman | Plans as resources, not determinants | Void = resource; scene = failed plan |
+| 1987 | Latour | Inscription and immutable mobiles | Void exports (immutable); scene doesn't |
+| 1988 | Haraway | Situated knowledges | Void makes position explicit |
+| 1997 | Agre | Indexical vs deictic | Void = indexical; scene = deictic |
+| 2001 | Dourish | Context as achievement | Void enables achievement; scene pre-specifies |
+| 2025 | Karpathy | "Context engineering" | Practice-level naming of what we theorize |
+
+### The Claim
+
+> Context engineering is the emerging practice of curating what enters an LLM's 
+> context window. The void management thesis provides the *theoretical mechanism* 
+> that explains WHY certain context engineering strategies work (bounded possibility 
+> spaces) and WHY others fail (unbounded accumulation).
+
+### The Contribution
+
+Predecessors: Geertz said context matters. Suchman said plans fail. Karpathy said engineer the context.
+
+Thesis adds: HOW to engineer it (void architecture) and WHY planning fails (complexity exceeds coherence).
+</melt>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- MELT 2: THEORETICAL TRIANGULATION                                          -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+
+<melt id="triangulation" className="melt">
+## Melt 2: Theoretical Triangulation
+
+The thesis is now grounded by FIVE independent theoretical traditions:
+
+### Tradition 1: Complexity Theory
+- Simon (1962): Near-decomposability
+- Brooks (1987): Essential vs accidental complexity
+- THESIS: Void enforces near-decomposability; scene accumulates accidental
+
+### Tradition 2: Situated Action
+- Suchman (1987): Plans as resources
+- Agre (1997): Indexical vs deictic
+- THESIS: Void = indexical (local); scene = deictic (global)
+
+### Tradition 3: Cognitive Science
+- Miller (1956), Cowan (2001): Bounded capacity
+- Sweller (1988): Cognitive load theory
+- THESIS: Scene exceeds capacity; void respects it
+
+### Tradition 4: Human-Centered AI
+- Horvitz (1999): Mixed-initiative
+- Shneiderman (2022): HCAI framework
+- THESIS: Void management implements HCAI (high control + high automation)
+
+### Tradition 5: Infrastructure Studies
+- Bowker & Star (1999): Infrastructural inversion
+- Latour (2005): Black-boxing
+- THESIS: Void makes infrastructure visible; scene black-boxes
+
+### Triangulation Claim
+
+> The thesis is not a speculative construct. It is the intersection of five 
+> independently validated theoretical traditions. If ANY of the five traditions 
+> is correct, the thesis gains support. All five converge on the same conclusion: 
+> bounded structures scale; unbounded accumulation collapses.
+</melt>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- MELT 3: PRACTICE/THEORY INTEGRATION                                        -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+
+<melt id="practice_theory" className="melt">
+## Melt 3: Context Engineering as Practice, Void Management as Theory
+
+### The Practice: Context Engineering (Karpathy 2025)
+
+Context engineering is what practitioners DO:
+- Curate system prompts
+- Structure few-shot examples
+- Manage conversation history
+- Integrate external tools (MCP)
+- Compress and summarize context
+
+These are ACTIVITIES without theoretical grounding.
+
+### The Theory: Void Management (This Thesis)
+
+Void management explains WHY the activities work:
+
+| Practice | Theory |
+|----------|--------|
+| Curate system prompts | Define void dimensions |
+| Structure few-shot examples | Provide instantiation templates |
+| Manage conversation history | Prevent scene accumulation |
+| Integrate external tools | Enable void-to-void composition |
+| Compress and summarize | Convert scene to void |
+
+### The Contribution Statement
+
+> Context engineering is the emerging practice of LLM context curation. 
+> Void management is the theoretical framework that explains its mechanisms. 
+> Without the theory, practice is ad-hoc and unreliable. 
+> Without the practice, theory is untested speculation. 
+> This thesis provides the theory; 150+ hours of practice provides the evidence.
+</melt>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- MELT 4: UNIFIED EXTENDED ABSTRACT                                          -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+
+<melt id="abstract" className="melt">
+## Melt 4: Unified Extended Abstract
+
+### TITLE
+**Void Management: A Theoretical Framework for Context Engineering in LLM-Assisted Creative Systems**
+
+### ABSTRACT (250 words)
+
+Generative AI systems increasingly support iterative creative work, yet their 
+collaboration patterns remain poorly theorized. We introduce *void management*, 
+an architectural framework that distinguishes two paradigms: *scene management*, 
+where LLMs construct cumulative content requiring full context to modify, and 
+*void management*, where LLMs prepare bounded possibility spaces that users 
+instantiate.
+
+We ground this distinction in five theoretical traditions: complexity theory 
+(Simon, Brooks), situated action (Suchman, Agre), cognitive science (Sweller, 
+Cowan), human-centered AI (Shneiderman, Amershi), and infrastructure studies 
+(Bowker, Star, Latour). We position void management within the emerging practice 
+of *context engineering* (Karpathy, 2025), providing the theoretical mechanism 
+that explains why certain context curation strategies succeed (bounded spaces) 
+and others fail (unbounded accumulation).
+
+Through 150+ hours of design research, we developed POML (Prompt Orchestration 
+Markup Language), a 1,300+ line prompt library that embodies void management 
+principles. We demonstrate the framework across 10 design interventions, from 
+speculative fiction to ethics tools to privacy frameworks. Evidence includes 
+failure-success pairs: TILTH (scene management) collapsed; Thousand-Tetrad 
+(void management) scales.
+
+The thesis is falsifiable: scene-managed systems sustaining >20 iterative 
+modifications without coherence collapse would refute it. We contribute: (1) the 
+void/scene distinction, (2) a mechanism explaining context degradation, (3) 
+architectural principles for context-engineering practice, and (4) exportable 
+void structures (POML, disc-data.json) as proof of concept.
+
+---
+
+### KEYWORDS
+Context Engineering, Human-AI Collaboration, LLM, Prompt Engineering, 
+Creative AI, Bounded Rationality, Situated Action, HCAI
+</melt>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- MELT 5: CONTRIBUTION CLAIMS                                                -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+
+<melt id="contributions" className="melt">
+## Melt 5: Explicit Contribution Claims
+
+### Contribution 1: CONCEPTUAL
+**The Void/Scene Distinction**
+
+We introduce the distinction between *scene* (cumulative state requiring full 
+context to modify) and *void* (bounded possibility space with fixed dimensions 
+and variable instantiations). This provides vocabulary for analyzing LLM 
+collaboration patterns.
+
+*Prior work lacks*: A clear conceptual framework for iterative LLM collaboration.
+*This thesis provides*: The void/scene distinction as analytical tool.
+
+---
+
+### Contribution 2: MECHANISTIC
+**Explaining Context Degradation**
+
+We explain WHY context degradation occurs (complexity accumulates faster than 
+coherence) and WHEN it triggers (extraneous cognitive load exceeds capacity). 
+This connects empirical observations (Howard's CDS) to theoretical mechanism.
+
+*Prior work documents*: Context degradation as observed phenomenon.
+*This thesis explains*: The mechanism (scene management) and solution (void management).
+
+---
+
+### Contribution 3: PRACTICAL
+**Architectural Principles for Context Engineering**
+
+We provide design principles:
+1. Define dimensions, not content
+2. Bound the possibility space
+3. Let users instantiate
+4. Make constraints explicit
+5. Enable export
+
+*Prior work offers*: Ad-hoc prompting techniques.
+*This thesis offers*: Principled architecture.
+
+---
+
+### Contribution 4: ARTIFACT
+**POML and Exportable Void Structures**
+
+We contribute concrete artifacts: POML (1,300+ lines of prompt infrastructure) 
+and exportable void structures (disc-data.json, scene templates). These 
+demonstrate that void management is not speculative but implementable.
+
+*Prior work produces*: Session-bound outputs.
+*This thesis produces*: Exportable, reusable void architecture.
+</melt>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- OUTPUT: UNIFIED SYNTHESIS                                                   -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+
+<output-format className="output">
+## Furnace Output: Unified Synthesis Document
+
+Produce a single document with:
+
+1. **Extended Abstract** (250-300 words)
+   - Problem, approach, evidence, contributions
+
+2. **Related Work** (~800 words)
+   - Section 2.1: Complexity and Bounded Rationality
+   - Section 2.2: Situated Action and Representation
+   - Section 2.3: Human-Centered AI Guidelines
+   - Section 2.4: Context Engineering (Contemporary)
+
+3. **Contribution Statement** (~400 words)
+   - Four numbered contributions with prior work / this thesis contrast
+
+4. **Positioning Diagram** (ASCII or Mermaid)
+   - Visual showing thesis at intersection of traditions
+
+5. **Bibliography Subset** (20 core citations)
+   - The must-cite papers in CHI format
+
+```
+═══════════════════════════════════════════════════════════════════════════════
+FURNACE OUTPUT COMPLETE
+Unified steel: theory + practice + genealogy + evidence
+Ready for: CHI submission, journal article, thesis chapter
+═══════════════════════════════════════════════════════════════════════════════
+```
+</output-format>
+
+<runtime
+  provider="openai"
+  model="gpt-5"
+  temperature="0.35"
+  max-output-tokens="8000"
+  directive="SYNTHESIZE_NOT_SUMMARIZE" />
+</poml>

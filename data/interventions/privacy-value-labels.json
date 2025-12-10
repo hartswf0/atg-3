@@ -1,0 +1,99 @@
+{
+    "meta": {
+        "schema_version": "0.5.0",
+        "project": "privacy-value-labels",
+        "week": 3,
+        "generated": "2025-12-09",
+        "framework": "Ehrlichman/Meadows + Wong Infrastructure"
+    },
+    "system_overview": "A mobile-first Contextual Integrity worksheet operationalizing Mulligan/Koopman/Doty's multi-dimensional privacy framework for practical use in design meetings.",
+    "leverage_point_analysis": {
+        "mindsets_paradigms": {
+            "current": "Privacy = legal compliance checkbox",
+            "target": "Privacy = multi-dimensional design material",
+            "leverage": "transformative",
+            "intervention": "Make dimensionality tangible and portable"
+        },
+        "organizing_principles": {
+            "current": "CI framework is academic, not operational",
+            "target": "14 dimensions as workshop-ready format",
+            "leverage": "high",
+            "intervention": "Mobile-first interface that fits in pocket"
+        },
+        "information_flows": {
+            "current": "Privacy discussed abstractly or not at all in design meetings",
+            "target": "Specific dimensions raised during actual work",
+            "leverage": "medium",
+            "intervention": "Label/Deck/Learn views for different meeting contexts"
+        },
+        "system_infrastructure": {
+            "current": "No portable CI tool exists",
+            "target": "Single-file HTML that works on any phone",
+            "leverage": "low",
+            "intervention": "Zero-dependency deployment"
+        }
+    },
+    "infrastructure_mapping": {
+        "dynamic_processes": {
+            "embedded_values": "Design meetings prioritize speed; privacy seen as blocker",
+            "process_redesign_opportunity": "Privacy dimensions as design prompts, not obstacles"
+        },
+        "social_positionalities": {
+            "power_dynamics": "UX researchers may lack authority to raise privacy concerns",
+            "safety_concerns": "Raising privacy can be seen as slowing project",
+            "legitimized_expertise": "Tool legitimizes UX/research voice on privacy (not just legal)"
+        },
+        "invisible_work": {
+            "articulation_labor": "Translating CI theory into actionable dimensions",
+            "emotional_labor": "Advocating for privacy in speed-focused culture",
+            "unrecognized_labor": "Maintaining privacy awareness across sprints"
+        },
+        "embedded_systems": {
+            "standards": "GDPR, CCPA, sector-specific regulations",
+            "policies": "Organizational privacy policies (often superficial)",
+            "economic_logics": "Data monetization incentives conflict with privacy",
+            "legal_context": "Contextual Integrity as emerging legal framework"
+        }
+    },
+    "integrated_intervention_strategies": [
+        {
+            "intervention": "Create portable 14-dimension CI worksheet",
+            "targeted_leverage": "organizing_principles",
+            "infrastructure_work": "Make academic framework operational; provide Label/Deck/Learn views for different contexts",
+            "viability_rating": "high",
+            "status": "completed"
+        },
+        {
+            "intervention": "Track which dimensions get used/skipped",
+            "targeted_leverage": "information_flows",
+            "infrastructure_work": "Create feedback loop—suggest commonly-missed dimensions based on domain",
+            "viability_rating": "medium",
+            "status": "future"
+        },
+        {
+            "intervention": "Auto-populate labels from observed data flows",
+            "targeted_leverage": "system_infrastructure",
+            "infrastructure_work": "Level 2 trail integration—compare intended vs actual information sharing",
+            "viability_rating": "medium",
+            "status": "future"
+        }
+    ],
+    "trail_analysis": {
+        "visible_trail": {
+            "commits": 2,
+            "commit_messages": [
+                "first commit",
+                "added some new ideas"
+            ],
+            "observation": "Minimal iteration visible"
+        },
+        "invisible_trail": [
+            "Reading Mulligan/Koopman/Doty multi-dimensional privacy paper",
+            "Reading Malkin's additional dimensions",
+            "Observing UX designers struggling with privacy in meetings",
+            "Decision to make mobile-first"
+        ],
+        "trail_awareness_level": 1
+    },
+    "meta_rule": "Analyze privacy tools by asking: What paradigm governs privacy (compliance vs. design material), AND what infrastructural conditions (meeting formats, power dynamics, economic incentives) make privacy advocacy possible or impossible?"
+}

@@ -1,0 +1,140 @@
+{
+    "meta": {
+        "schema_version": "0.5.0",
+        "project": "haunted-tools",
+        "week": 5,
+        "generated": "2025-12-09",
+        "framework": "Ehrlichman/Meadows + Wong Infrastructure"
+    },
+    "system_overview": "A Barthesian mythology catalog exposing 'haunted tools'—ethics instruments that avoid transferring real resources (budget, time, rights, risk) while performing the appearance of values work.",
+    "leverage_point_analysis": {
+        "mindsets_paradigms": {
+            "current": "Ethics tools = good; more tools = more ethics",
+            "target": "Tools are potentially mythological; require transfer audit",
+            "leverage": "transformative",
+            "intervention": "Semiotic scalpel method (form/concept/twist)"
+        },
+        "organizing_principles": {
+            "current": "Tool adoption by appearance and vendor marketing",
+            "target": "Transfer audit: what resources actually move?",
+            "leverage": "high",
+            "intervention": "Vocabulary for skeptical analysis"
+        },
+        "information_flows": {
+            "current": "New ethics tools launched without critical review",
+            "target": "Community catalog with mythology analysis",
+            "leverage": "medium",
+            "intervention": "Pattern-matching for haunted tool detection"
+        },
+        "system_infrastructure": {
+            "current": "Corporate ethics budgets fund consultants and tools",
+            "target": "Budgets tied to actual risk/resource transfer",
+            "leverage": "low",
+            "intervention": "Audit mechanisms for ethics spending"
+        }
+    },
+    "infrastructure_mapping": {
+        "dynamic_processes": {
+            "embedded_values": "Ethics purchasing = liability mitigation appearance",
+            "process_redesign_opportunity": "Require transfer evidence before tool adoption"
+        },
+        "social_positionalities": {
+            "power_dynamics": "Skeptics labeled 'cynical'; tool vendors have marketing budgets",
+            "safety_concerns": "Junior employees can't call out haunted tools without career risk",
+            "legitimized_expertise": "Consulting/vendor expertise privileged over practitioner skepticism"
+        },
+        "invisible_work": {
+            "articulation_labor": "Translating Barthes mythology method into practical critique",
+            "emotional_labor": "Pointing out mythology makes you 'difficult'",
+            "unrecognized_labor": "Sustained skepticism is unpaid and often punished"
+        },
+        "embedded_systems": {
+            "standards": "ISO ethics certifications, ESG frameworks",
+            "policies": "Corporate ethics policies (often cosmetic)",
+            "economic_logics": "Ethics consulting is a market; haunted tools are products",
+            "legal_context": "Liability shields via ethics theatre"
+        }
+    },
+    "integrated_intervention_strategies": [
+        {
+            "intervention": "Create 7-tool Barthesian catalog",
+            "targeted_leverage": "mindsets_paradigms",
+            "infrastructure_work": "Provide form/concept/twist vocabulary; print/web hybrid for workshop use",
+            "viability_rating": "high",
+            "status": "completed"
+        },
+        {
+            "intervention": "Workshop activity: identify haunted tools in your org",
+            "targeted_leverage": "information_flows",
+            "infrastructure_work": "Make skepticism a legitimate workshop exercise; safe space for critique",
+            "viability_rating": "high",
+            "status": "future"
+        },
+        {
+            "intervention": "Create 'mythology watchers' network",
+            "targeted_leverage": "organizing_principles",
+            "infrastructure_work": "Community that documents new haunted tools as they emerge; collective vigilance",
+            "viability_rating": "medium",
+            "status": "future"
+        }
+    ],
+    "haunted_tools_catalog": [
+        {
+            "name": "The Deck",
+            "form": "Brainstorming cards",
+            "concept": "Structured creativity",
+            "twist": "Transfers design time, not budget/risk"
+        },
+        {
+            "name": "The Audit",
+            "form": "Checklists and assessments",
+            "concept": "Accountability",
+            "twist": "Captures liability, not harm reduction"
+        },
+        {
+            "name": "The Forum",
+            "form": "Stakeholder workshops",
+            "concept": "Inclusive process",
+            "twist": "Performs listening without committing to action"
+        },
+        {
+            "name": "The Dashboard",
+            "form": "Real-time metrics",
+            "concept": "Transparency",
+            "twist": "Shows what's measured, not what matters"
+        },
+        {
+            "name": "The Pledge",
+            "form": "Public commitments",
+            "concept": "Accountability",
+            "twist": "Transfers reputation risk, not operational change"
+        },
+        {
+            "name": "The Lab",
+            "form": "Innovation spaces",
+            "concept": "Experimentation",
+            "twist": "Contains disruption safely away from core business"
+        },
+        {
+            "name": "The Chief",
+            "form": "Executive ethics role",
+            "concept": "Leadership commitment",
+            "twist": "Individual hero absorbs structural responsibility"
+        }
+    ],
+    "trail_analysis": {
+        "visible_trail": {
+            "commits": 2,
+            "observation": "Minimal visible iteration"
+        },
+        "invisible_trail": [
+            "Reading Mattern 'Unboxing the Toolkit'",
+            "Reading Petterson et al. on power tools",
+            "Reading Barthes 'Mythologies' (the method)",
+            "Iterated through 10+ tool ideas before selecting 7",
+            "Deciding on print aesthetic"
+        ],
+        "trail_awareness_level": 1
+    },
+    "meta_rule": "Analyze ethics tools by asking: What mythology (form, concept, signification) does this tool perform, AND what infrastructural conditions (consulting markets, liability logics, career constraints) make certain tools adoptable regardless of actual impact?"
+}

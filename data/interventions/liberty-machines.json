@@ -1,0 +1,96 @@
+{
+    "meta": {
+        "schema_version": "0.5.0",
+        "project": "liberty-machines",
+        "week": 4,
+        "generated": "2025-12-09",
+        "framework": "Ehrlichman/Meadows + Wong Infrastructure"
+    },
+    "system_overview": "An interactive visualization of Lessig's four regulatory modalities (Law, Norms, Market, Architecture/Code), using the cigarette pack as case study in 'freedom theatre.'",
+    "leverage_point_analysis": {
+        "mindsets_paradigms": {
+            "current": "Law is the only form of regulation",
+            "target": "Architecture/code is equally powerful regulatory force",
+            "leverage": "transformative",
+            "intervention": "Visceral experience of code-as-regulation"
+        },
+        "organizing_principles": {
+            "current": "Policy analysis treats modalities separately",
+            "target": "Four-force framework as integrated analysis tool",
+            "leverage": "high",
+            "intervention": "Interactive diagram showing force interactions"
+        },
+        "information_flows": {
+            "current": "Second-order effects (how code constrains future code) invisible",
+            "target": "Modality interactions visible during analysis",
+            "leverage": "medium",
+            "intervention": "User moves forces around, sees cascading effects"
+        },
+        "system_infrastructure": {
+            "current": "Static policy analysis documents",
+            "target": "Interactive, reusable analysis template",
+            "leverage": "low",
+            "intervention": "Single-file HTML for any regulatory domain"
+        }
+    },
+    "infrastructure_mapping": {
+        "dynamic_processes": {
+            "embedded_values": "Policy analysis privileges legal expertise; code/architecture often neglected",
+            "process_redesign_opportunity": "Integrated four-force analysis as standard practice"
+        },
+        "social_positionalities": {
+            "power_dynamics": "Legal/policy analysts hold authority; technologists seen as implementers",
+            "safety_concerns": "Calling out code-as-regulation can threaten tech industry narratives",
+            "legitimized_expertise": "Tool legitimizes systems thinking across domains"
+        },
+        "invisible_work": {
+            "articulation_labor": "Translating Lessig's theory into interactive form",
+            "emotional_labor": "Navigating 'freedom' discourse that obscures actual constraints",
+            "unrecognized_labor": "Mapping modality interactions for specific domains"
+        },
+        "embedded_systems": {
+            "standards": "Platform policies, API terms of service",
+            "policies": "Sector-specific regulations (tobacco, alcohol, AI)",
+            "economic_logics": "Market forces as regulatory mechanism",
+            "legal_context": "Constitutional frameworks around liberty"
+        }
+    },
+    "integrated_intervention_strategies": [
+        {
+            "intervention": "Create interactive Lessig four modalities tool",
+            "targeted_leverage": "mindsets_paradigms",
+            "infrastructure_work": "Make code-as-regulation viscerally tangible; use cigarette pack as concrete case",
+            "viability_rating": "high",
+            "status": "completed"
+        },
+        {
+            "intervention": "Apply to AI regulation analysis",
+            "targeted_leverage": "information_flows",
+            "infrastructure_work": "Test framework on emerging regulatory domain; document modality interactions",
+            "viability_rating": "high",
+            "status": "future"
+        },
+        {
+            "intervention": "Pre-populate with real regulatory data",
+            "targeted_leverage": "system_infrastructure",
+            "infrastructure_work": "Pull actual tax rates, platform policies, legal restrictions; show numerical force strengths",
+            "viability_rating": "medium",
+            "status": "future"
+        }
+    ],
+    "trail_analysis": {
+        "visible_trail": {
+            "commits": 1,
+            "commit_message": "freedom theatre's curtain opens",
+            "observation": "Poetic commit message signals intentionality"
+        },
+        "invisible_trail": [
+            "Reading Lessig Chapter 7 on modalities",
+            "Reading Shilton's values levers",
+            "Reading Spitzberg on standards",
+            "Cigarette pack case study from class discussion"
+        ],
+        "trail_awareness_level": 1
+    },
+    "meta_rule": "Analyze regulatory systems by asking: Which modality (Law/Norms/Market/Code) has highest leverage for change, AND what infrastructural conditions (expertise legitimization, economic incentives, platform policies) constrain which modalities can be redesigned?"
+}

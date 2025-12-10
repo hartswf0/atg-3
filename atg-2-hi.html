@@ -153,10 +153,10 @@
         }
 
         .close-btn {
-            position: absolute;
+            position: fixed;
             top: 32px;
             right: 32px;
-            z-index: 40;
+            z-index: 100;
             width: 56px;
             height: 56px;
             background: var(--ink-primary);
@@ -182,6 +182,48 @@
         .close-btn:hover {
             transform: scale(1.1) rotate(90deg);
             background: var(--accent-geo);
+        }
+
+        /* Portal Controls */
+        .portal-controls {
+            position: fixed;
+            top: 32px;
+            right: 100px;
+            z-index: 100;
+            display: flex;
+            gap: 8px;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s;
+        }
+
+        .portal-controls.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .portal-btn {
+            width: 44px;
+            height: 44px;
+            background: var(--bg-land);
+            color: var(--ink-primary);
+            border: 1px solid var(--ink-secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .portal-btn:hover {
+            background: var(--accent-active);
+            color: var(--bg-land);
+        }
+
+        /* Canvas disabled when portal is active */
+        body.portal-active canvas {
+            pointer-events: none;
         }
 
         .control-dock {
@@ -257,6 +299,16 @@
                 Assemble Geometries</span>
         </h1>
         <div class="status-text" id="hud-status" style="color: #888;">SYSTEM IDLE</div>
+    </div>
+
+    <!-- Portal Controls -->
+    <div id="portal-controls" class="portal-controls">
+        <button id="btn-newtab" class="portal-btn" title="Open in new tab">
+            <i data-lucide="external-link" class="w-5 h-5"></i>
+        </button>
+        <button id="btn-fullscreen" class="portal-btn" title="Fullscreen">
+            <i data-lucide="maximize" class="w-5 h-5"></i>
+        </button>
     </div>
 
     <!-- Close Portal Button -->
@@ -472,7 +524,14 @@
                 canvas.addEventListener('mousemove', handleHover);
                 canvas.addEventListener('click', handleClick);
                 btnClose.addEventListener('click', closePortal);
+                document.getElementById('btn-newtab').addEventListener('click', openInNewTab);
+                document.getElementById('btn-fullscreen').addEventListener('click', toggleFullscreen);
                 document.getElementById('btn-theme').addEventListener('click', toggleTheme);
+
+                // ESC key to close portal
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && activeRegion) closePortal();
+                });
                 document.getElementById('btn-reset').addEventListener('click', () => window.location.reload());
 
                 requestAnimationFrame(loop);
@@ -518,7 +577,7 @@
                 let minDist = 999;
                 REGIONS.forEach(r => {
                     const d = Math.sqrt((r.x - x) ** 2 + (r.y - y) ** 2);
-                    if (d < 0.12 && d < minDist) {
+                    if (d < 0.18 && d < minDist) {  // Larger click target
                         minDist = d;
                         hit = r;
                     }
@@ -568,6 +627,10 @@
                 activeFrame.src = data.url;
 
                 btnClose.classList.add('visible');
+                document.getElementById('portal-controls').classList.add('visible');
+
+                // Store URL for new tab button
+                activeFrame.dataset.currentUrl = data.url;
 
                 // Hide specific label
                 document.querySelectorAll('.geo-label').forEach(el => {
@@ -579,6 +642,7 @@
                 portalState.targetRadius = 0;
                 document.body.classList.remove('portal-active');
                 btnClose.classList.remove('visible');
+                document.getElementById('portal-controls').classList.remove('visible');
 
                 document.querySelectorAll('.geo-label').forEach(el => {
                     el.classList.remove('hidden-label');
@@ -590,6 +654,19 @@
                     activeFrame.src = '';
                     iframeLayer.classList.remove('active');
                 }, 600);
+            }
+
+            function openInNewTab() {
+                const url = activeFrame.dataset.currentUrl;
+                if (url) window.open(url, '_blank');
+            }
+
+            function toggleFullscreen() {
+                if (!document.fullscreenElement) {
+                    iframeLayer.requestFullscreen().catch(err => console.log(err));
+                } else {
+                    document.exitFullscreen();
+                }
             }
 
             function toggleTheme() {

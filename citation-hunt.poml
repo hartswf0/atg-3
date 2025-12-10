@@ -1,0 +1,614 @@
+<poml>
+<meta minVersion="0.5.0" />
+
+<role>Citation Hunter — Precision Search Engine</role>
+
+<task>
+You are a CITATION HUNTER executing precision searches for specific ungrounded claims. Each search block below is a standalone mission. Execute in order. Return structured results with verification status.
+</task>
+
+<stylesheet>
+{
+  ".search": { "syntax": "markdown" },
+  ".result": { "syntax": "json" }
+}
+</stylesheet>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SEARCH MISSION 1: MODULEX 1966                                         -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<search id="modulex-1966" className="search">
+## MISSION: Verify Modulex 1966 Planning System
+
+**Claim to verify:** "the 9×9 grid substrate inherited from Modulex's 1966 Planning System" and "Plancopy evolved in 1970s"
+
+### Web Search Queries
+```
+"Modulex" "1963" OR "1966" LEGO history
+"Modulex Planning System" -alibaba -ebay
+"Plancopy" LEGO signage evolution
+site:bricklink.com Modulex history
+site:brickset.com Modulex
+"LEGO A/S" Modulex subsidiary history
+```
+
+### Archive Searches
+```
+site:web.archive.org Modulex LEGO
+site:archive.org "Modulex Planning"
+"Modulex" "Godtfred Kirk Christiansen"
+```
+
+### Academic Databases
+```
+site:scholar.google.com Modulex LEGO design history
+"Modulex" "analog planning" architecture
+Lauwaert LEGO construction play history
+```
+
+### Expected Evidence
+- [ ] Founding year (claimed: 1966)
+- [ ] Planning System product line existence
+- [ ] Plancopy as successor product
+- [ ] Any 9×9 grid specification
+
+### Fallback if NOT FOUND
+Reword claim: "Drawing on modular grid planning approaches common in mid-century architectural practice"
+</search>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SEARCH MISSION 2: WONG SOFT RESISTANCE                                 -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<search id="wong-soft-resistance" className="search">
+## MISSION: Verify Wong "Soft Resistance" Paper
+
+**Claim to verify:** Wong's (2021) "soft resisters" term for ethics practitioners
+
+### Web Search Queries
+```
+"Richmond Wong" "soft resistance" CSCW
+Wong "tactics of soft resistance" UX values
+site:dl.acm.org Wong "soft resistance"
+DOI:10.1145/3476048
+```
+
+### Direct URL Check
+```
+https://doi.org/10.1145/3476048
+https://dl.acm.org/doi/10.1145/3476048
+```
+
+### Google Scholar
+```
+site:scholar.google.com "Richmond Wong" "soft resistance"
+author:wong "values work" "user experience"
+```
+
+### Expected Evidence
+- [ ] Full paper title
+- [ ] Publication venue: PACM HCI / CSCW2 2021
+- [ ] "Soft resistance" as exact term
+- [ ] Page number for key quote
+
+### Citation Format if FOUND
+```
+Wong, R. Y. (2021). Tactics of Soft Resistance in User Experience 
+Professionals' Values Work. Proceedings of the ACM on Human-Computer 
+Interaction, 5(CSCW2), Article 355. https://doi.org/10.1145/3476048
+```
+</search>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SEARCH MISSION 3: MATTERN UNBOXING THE TOOLKIT                         -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<search id="mattern-toolkit" className="search">
+## MISSION: Verify Mattern "Unboxing the Toolkit"
+
+**Claim to verify:** Shannon Mattern's critique of toolkits in Places Journal
+
+### Web Search Queries
+```
+Shannon Mattern "Unboxing the Toolkit" Places Journal
+site:placesjournal.org Mattern toolkit
+"Shannon Mattern" toolkit critique 2021
+```
+
+### Direct URL Check
+```
+https://placesjournal.org/article/unboxing-the-toolkit/
+```
+
+### Academic Profile
+```
+site:nyu.edu Shannon Mattern publications
+site:scholar.google.com "Shannon Mattern" toolkit
+```
+
+### Expected Evidence
+- [ ] Article exists at Places Journal
+- [ ] Publication year (claimed: 2021)
+- [ ] Key argument about toolkit performativity
+- [ ] Quotable passage
+
+### Citation Format if FOUND
+```
+Mattern, S. (2021). Unboxing the Toolkit. Places Journal. 
+https://placesjournal.org/article/unboxing-the-toolkit/
+```
+</search>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SEARCH MISSION 4: MULLIGAN KOOPMAN DOTY PRIVACY                        -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<search id="mulligan-privacy" className="search">
+## MISSION: Verify Mulligan/Koopman/Doty 14 Privacy Dimensions
+
+**Claim to verify:** 14-dimensional privacy analytic from 2016 Royal Society paper
+
+### Web Search Queries
+```
+Mulligan Koopman Doty "essentially contested concept" privacy
+"multi-dimensional analytic" privacy 2016
+site:royalsocietypublishing.org privacy dimensions
+DOI:10.1098/rsta.2016.0118
+```
+
+### Direct URL Check
+```
+https://doi.org/10.1098/rsta.2016.0118
+https://royalsocietypublishing.org/doi/10.1098/rsta.2016.0118
+```
+
+### Expected Evidence
+- [ ] Paper exists
+- [ ] Confirms 14 dimensions (or different count?)
+- [ ] List of dimension names
+- [ ] Key quote about multi-dimensionality
+
+### Citation Format if FOUND
+```
+Mulligan, D. K., Koopman, C., & Doty, N. (2016). Privacy is an 
+essentially contested concept: A multi-dimensional analytic for 
+mapping privacy. Philosophical Transactions of the Royal Society A, 
+374(2083), 20160118. https://doi.org/10.1098/rsta.2016.0118
+```
+</search>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SEARCH MISSION 5: SHILTON VALUES LEVERS                                -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<search id="shilton-levers" className="search">
+## MISSION: Verify Shilton "Values Levers" Paper
+
+**Claim to verify:** Katie Shilton's framework on how values become embedded in design
+
+### Web Search Queries
+```
+"Katie Shilton" "values levers" design
+Shilton "values levers" "Science Technology Human Values"
+site:journals.sagepub.com Shilton values
+"values levers: building ethics into design"
+```
+
+### Google Scholar
+```
+site:scholar.google.com Shilton "values levers"
+author:shilton values design ethics
+```
+
+### Expected Evidence
+- [ ] Full paper title
+- [ ] Publication venue: Science, Technology, & Human Values
+- [ ] Year (likely 2013)
+- [ ] "Values lever" as exact term
+
+### Citation Format if FOUND
+```
+Shilton, K. (2013). Values levers: Building ethics into design. 
+Science, Technology, & Human Values, 38(3), 374-397.
+```
+</search>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SEARCH MISSION 6: EHRLICHMAN LEVERAGE POINTS                           -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<search id="ehrlichman-leverage" className="search">
+## MISSION: Identify "Ehrlichman" in Meadows Leverage Points Context
+
+**Claim to verify:** "Meadows's leverage points (via Ehrlichman)"
+
+### Web Search Queries
+```
+Ehrlichman "leverage points" Meadows systems
+"Donella Meadows" Ehrlichman intervention
+Ehrlichman "Thinking in Systems" adaptation
+Ehrlichman social change leverage
+```
+
+### Possible Candidates
+```
+"Jeff Ehrlichman" systems change
+"David Ehrlichman" social impact
+Ehrlichman network leadership
+```
+
+### Expected Evidence
+- [ ] Full name of Ehrlichman
+- [ ] Their connection to Meadows framework
+- [ ] Specific publication or adaptation
+
+### Fallback if NOT FOUND
+Remove "via Ehrlichman" — cite Meadows directly:
+```
+Meadows, D. H. (2008). Thinking in Systems: A Primer. 
+Chelsea Green Publishing.
+```
+</search>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SEARCH MISSION 7: BARTLE TAXONOMY ORIGINAL                             -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<search id="bartle-taxonomy" className="search">
+## MISSION: Verify Bartle Player Types Paper
+
+**Claim to verify:** Bartle's 1996 taxonomy of MUD players
+
+### Web Search Queries
+```
+Richard Bartle "Hearts Clubs Diamonds Spades" 1996
+Bartle "Players Who Suit MUDs"
+site:mud.co.uk Bartle player types
+```
+
+### Direct URL Check
+```
+http://mud.co.uk/richard/hcds.htm
+https://mud.co.uk/richard/hcds.htm
+```
+
+### Expected Evidence
+- [ ] Original 1996 paper accessible
+- [ ] Four player types: Achiever, Explorer, Socializer, Killer
+- [ ] Quotable definitions
+
+### Citation Format if FOUND
+```
+Bartle, R. (1996). Hearts, clubs, diamonds, spades: Players who suit 
+MUDs. Journal of MUD Research, 1(1). http://mud.co.uk/richard/hcds.htm
+```
+</search>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SEARCH MISSION 8: CHIVUKULA ETHICS PRACTITIONER                        -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<search id="chivukula-practitioner" className="search">
+## MISSION: Verify Chivukula Ethics Practitioner Roles Paper
+
+**Claim to verify:** Chivukula's research on ethics practitioner archetypes
+
+### Web Search Queries
+```
+"Shruthi Sai Chivukula" ethics practitioner
+Chivukula "dark patterns" design
+Chivukula Wong practitioner roles
+site:dl.acm.org Chivukula ethics
+```
+
+### Google Scholar
+```
+author:chivukula ethics design
+"ethics owner" OR "ethics practitioner" roles
+```
+
+### CHI/DIS/CSCW Proceedings
+```
+site:dl.acm.org/doi/proceedings Chivukula
+CHI 2021 Chivukula ethics
+```
+
+### Expected Evidence
+- [ ] Specific paper on practitioner roles
+- [ ] Publication venue and year
+- [ ] Key typology or framework
+
+### Note
+May need to combine with Wong's work rather than standalone Chivukula paper
+</search>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SEARCH MISSION 9: COLLABORATOR TEHRI MARTTILA                          -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<search id="tehri-marttila" className="search">
+## MISSION: Verify Collaborator Tehri Marttila
+
+**Claim to verify:** "Portuguese computational humanities researcher" with weekly testing
+
+### Web Search Queries
+```
+"Tehri Marttila" computational humanities
+"Tehri Marttila" Portugal university
+"Tehri Marttila" digital humanities researcher
+```
+
+### Academic Databases
+```
+site:orcid.org "Tehri Marttila"
+site:researchgate.net "Tehri Marttila"
+site:scholar.google.com author:"Tehri Marttila"
+```
+
+### University Directories
+```
+site:edu.pt "Tehri Marttila"
+site:uc.pt "Tehri Marttila"
+site:ulisboa.pt "Tehri Marttila"
+```
+
+### Expected Evidence
+- [ ] Academic affiliation
+- [ ] Research area confirmation
+- [ ] Any publications
+
+### Fallback if NOT FOUND
+Replace with: "a collaborator in computational humanities"
+</search>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SEARCH MISSION 10: COLLABORATOR JORDAN CALDWELL                        -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<search id="jordan-caldwell" className="search">
+## MISSION: Verify Collaborator Jordan Caldwell & Black Metal Philosophy
+
+**Claim to verify:** Jordan Caldwell's "Black Metal philosophy" book/work
+
+### Web Search Queries
+```
+"Jordan Caldwell" "Black Metal" philosophy
+"Jordan Caldwell" speculative design
+Jordan Caldwell dark ecology philosophy
+```
+
+### Academic/Publishing
+```
+site:bloomsbury.com "Jordan Caldwell"
+site:punctumbooks.com "Jordan Caldwell"
+site:zero-books.net "Jordan Caldwell"
+```
+
+### Black Metal Theory Sources
+```
+"Black Metal Theory" philosophy publications
+"hideous gnosis" authors
+Masciandaro Black Metal theory
+```
+
+### Expected Evidence
+- [ ] Published work on Black Metal philosophy
+- [ ] Academic affiliation
+- [ ] Connection to speculative design
+
+### Fallback if NOT FOUND
+Replace with: "a collaborator developing speculative philosophy frameworks"
+</search>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SEARCH MISSION 11: COLLABORATOR KAYLA EVANS                            -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<search id="kayla-evans" className="search">
+## MISSION: Verify Collaborator Kayla Uleah Evans
+
+**Claim to verify:** "Met at Responsible AI Summit" + ethical negotiation training work
+
+### Web Search Queries
+```
+"Kayla Evans" "Responsible AI" summit
+"Kayla Uleah Evans" AI ethics training
+"Kayla Evans" ethical negotiation simulation
+```
+
+### Conference/Summit Archives
+```
+"Responsible AI Summit" 2024 speakers
+"Kayla Evans" AI conference speaker
+site:responsibleai.org speakers
+```
+
+### LinkedIn/Professional
+```
+site:linkedin.com "Kayla Evans" "responsible AI"
+site:linkedin.com "Kayla Evans" ethics training
+```
+
+### Expected Evidence
+- [ ] Professional profile
+- [ ] Conference participation
+- [ ] Work in ethical training
+
+### Fallback if NOT FOUND
+Replace with: "a collaborator specializing in responsible AI training"
+</search>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SEARCH MISSION 12: SHURUQ TRAMONTINI                                   -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<search id="shuruq-tramontini" className="search">
+## MISSION: Verify Collaborator Shuruq Tramontini
+
+**Claim to verify:** "Thousand Lives simulation architect" connected to "Life After Bob"
+
+### Web Search Queries
+```
+"Shuruq Tramontini" simulation
+"Shuruq Tramontini" "Thousand Lives"
+"Shuruq Tramontini" animation narrative
+```
+
+### "Life After Bob" Credits
+```
+"Life After Bob" production credits
+"Life After Bob" animation team
+"Life After Bob" Tramontini
+site:imdb.com "Life After Bob" crew
+```
+
+### Simulation/Games
+```
+"Thousand Lives" simulation platform
+"Thousand Lives" narrative AI
+"Shuruq Tramontini" game design
+```
+
+### Expected Evidence
+- [ ] Connection to Life After Bob
+- [ ] Simulation architecture work
+- [ ] Any published work
+
+### Fallback if NOT FOUND
+Replace with: "simulation architects working on multi-agent narrative systems"
+</search>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SEARCH MISSION 13: PETTERSON POWER TOOLS                               -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<search id="petterson-power-tools" className="search">
+## MISSION: Find Toolkit Scoping Review Paper
+
+**Claim to find:** Academic review of ethics/values toolkit effectiveness
+
+### Web Search Queries
+```
+"ethics toolkit" scoping review CHI DIS
+"values sensitive design" toolkit evaluation
+"responsible AI" toolkit systematic review
+"design toolkit" effectiveness study
+```
+
+### ACM Digital Library
+```
+site:dl.acm.org toolkit evaluation ethics
+site:dl.acm.org "values sensitive" toolkit review
+```
+
+### Alternative Authors
+```
+Friedman "value sensitive design" tools evaluation
+Wong toolkit ethics evaluation
+Gray Chivukula toolkit study
+```
+
+### Expected Evidence
+- [ ] Systematic or scoping review of toolkits
+- [ ] Evaluation of effectiveness
+- [ ] Critique of toolkit approach
+
+### If NOT FOUND
+Note: "Petterson et al." may have been confabulated. Find alternative toolkit critique sources.
+</search>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SEARCH MISSION 14: GPT-5 VERIFICATION                                  -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<search id="gpt5-verification" className="search">
+## MISSION: Verify GPT-5 Release Status
+
+**Claim to verify:** "I used ChatGPT-4o, GPT-5, Claude..."
+
+### Web Search Queries
+```
+"GPT-5" release date OpenAI
+"GPT-5" available December 2025
+OpenAI model versions current
+```
+
+### Official Sources
+```
+site:openai.com GPT-5 release
+site:openai.com/blog model announcements 2025
+```
+
+### As of December 2025
+- [ ] Is GPT-5 publicly released?
+- [ ] What is the current flagship model name?
+
+### Resolution
+If GPT-5 NOT released → Change to: "ChatGPT-4o, Claude (3.5 Sonnet, Opus), and Gemini"
+If GPT-5 IS released → Keep reference, confirm access
+</search>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SEARCH MISSION 15: ACM AI DISCLOSURE POLICY                            -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<search id="acm-disclosure" className="search">
+## MISSION: Verify ACM Generative AI Disclosure Policy
+
+**Claim to verify:** ACM policy requiring AI tool disclosure in submissions
+
+### Web Search Queries
+```
+site:acm.org "generative AI" disclosure authorship policy
+ACM author guidelines AI tools 2023 2024
+site:acm.org/publications/policies AI
+```
+
+### Direct URL Check
+```
+https://www.acm.org/publications/policies/new-acm-policy-on-authorship
+https://www.acm.org/publications/policies
+```
+
+### Expected Evidence
+- [ ] Policy document exists
+- [ ] Disclosure requirements specified
+- [ ] Quote about what must be disclosed
+
+### Citation Format if FOUND
+```
+Association for Computing Machinery. (2023). ACM Policy on Authorship. 
+https://www.acm.org/publications/policies/new-acm-policy-on-authorship
+```
+</search>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- RESULTS SCHEMA                                                         -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<result-schema className="result">
+{
+  "missionId": "string",
+  "claim": "string",
+  "status": "VERIFIED | PARTIALLY_VERIFIED | NOT_FOUND | NEEDS_REWORDING",
+  "evidence": {
+    "source": "string",
+    "url": "string",
+    "quotation": "string",
+    "accessDate": "YYYY-MM-DD"
+  },
+  "citation": "string (APA 7th)",
+  "action": "KEEP | REWORD | REMOVE",
+  "suggestedText": "string (if reword needed)"
+}
+</result-schema>
+
+<runtime
+  provider="openai"
+  model="gpt-4o"
+  temperature="0.2"
+  top-p="0.9"
+  max-output-tokens="8000"
+  seed="6650" />
+</poml>

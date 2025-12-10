@@ -1,0 +1,286 @@
+<poml>
+<meta minVersion="0.5.0" />
+
+<role>Grade Upgrade Engine — Delta Activator</role>
+
+<task>
+Execute the minimal deltas required to upgrade from 82/100 to 90+/100.
+Each section below is a standalone mission with exact prompts/checks.
+</task>
+
+<stylesheet>
+{
+  ".mission": { "syntax": "markdown" },
+  ".check": { "syntax": "bash" }
+}
+</stylesheet>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- UPGRADE MISSION 1: Verify All URLs Work                                 -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<mission id="url-verification" className="mission">
+## MISSION 1: Verify All Toolkit URLs (5 min)
+
+**Gap:** URLs listed but not browser-verified
+
+### Manual Check
+Open each URL in browser and screenshot:
+
+1. https://hartswf0.github.io/tractor-dce-gyo/
+2. https://hartswf0.github.io/tractor-field-notes/project-genome.html
+3. https://hartswf0.github.io/tractor-field-notes/tractor-field.html
+4. https://hartswf0.github.io/1000-small-futures/thousand-tetrad.html
+5. https://hartswf0.github.io/privacy-value-labels/
+6. https://hartswf0.github.io/haunted-tools/
+7. https://hartswf0.github.io/role-deck/HUB.html
+8. https://hartswf0.github.io/the-fork/
+9. https://hartswf0.github.io/func-sub/func-index.html
+10. https://hartswf0.github.io/liberty-machines/
+
+### Automated Check (if curl available)
+```bash
+urls=(
+  "https://hartswf0.github.io/tractor-dce-gyo/"
+  "https://hartswf0.github.io/privacy-value-labels/"
+  "https://hartswf0.github.io/haunted-tools/"
+  "https://hartswf0.github.io/role-deck/HUB.html"
+  "https://hartswf0.github.io/the-fork/"
+  "https://hartswf0.github.io/func-sub/func-index.html"
+  "https://hartswf0.github.io/liberty-machines/"
+)
+
+for url in "${urls[@]}"; do
+  status=$(curl -o /dev/null -s -w "%{http_code}" "$url")
+  echo "$status: $url"
+done
+```
+
+### Evidence to Add
+If all return 200, add to submission:
+> "All toolkit URLs verified working as of December 9, 2025."
+
+**Impact:** +2 points → C1 confidence boost
+</mission>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- UPGRADE MISSION 2: Add Specific Usage Example                           -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<mission id="usage-example" className="mission">
+## MISSION 2: Add Specific Usage Example (10 min)
+
+**Gap:** C4 (Context of Use) says "tested extensively" but lacks specifics
+
+### Prompt for You to Answer
+```
+Recall ONE specific testing session with a collaborator. Answer:
+
+1. WHO: Which collaborator (Terhi, Jordan, Kayla, Shuruq)?
+2. WHEN: Approximate date or week
+3. WHAT: Which tool did they use?
+4. HOW LONG: Approximate session duration
+5. WHAT HAPPENED: One specific thing they tried
+6. OUTCOME: Did it work? Did they get stuck? What did you learn?
+```
+
+### Template for Submission
+Add to Section 4 (Context of Use):
+
+> **Specific Testing Example:** In [MONTH], [COLLABORATOR] used [TOOL] for 
+> [DURATION] to explore [SCENARIO]. They [SPECIFIC ACTION], which revealed 
+> [INSIGHT/PROBLEM]. This led to [DESIGN CHANGE/LEARNING].
+
+### Example
+> **Specific Testing Example:** In October, Terhi Marttila used Privacy Value 
+> Labels for a 45-minute session to map information flows in a health app scenario. 
+> She noted that the 14-dimension selector was overwhelming on mobile and suggested 
+> grouping dimensions into 4 categories. This led to the addition of a "Quick Mode" 
+> toggle in v2.
+
+**Impact:** +8 points → C4 from 76 to 84+
+</mission>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- UPGRADE MISSION 3: Add Example POML Prompts                             -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<mission id="poml-examples" className="mission">
+## MISSION 3: Add 3 Example POML Prompts (5 min)
+
+**Gap:** C9 (AI Statement) doesn't list specific prompts per ACM requirement
+
+### Check: Extract Real Examples
+```bash
+# Show first 20 lines of forensic.poml as example
+head -30 /Users/gaia/ATG\ 3.0/forensic.poml
+
+# Show mythos.poml task section
+grep -A 10 "<task>" /Users/gaia/ATG\ 3.0/mythos.poml
+```
+
+### Template for Submission
+Add to AI Statement after "Specific Prompts" section:
+
+> **Example Prompts from POML Library:**
+>
+> **forensic.poml (excerpt):**
+> ```
+> <role>Ethical Forensics Analyst</role>
+> <task>Apply 7 diagnostic lenses to analyze ethical failure modes...</task>
+> ```
+>
+> **mythos.poml (excerpt):**
+> ```
+> <role>Weberian Mythographer</role>
+> <task>Extract ideal types from text using Bayesian updates...</task>
+> ```
+>
+> **tactics.poml (excerpt):**
+> ```
+> <role>De Certeau Concordance Engine</role>
+> <task>Extract tactics/strategies from source text...</task>
+> ```
+
+**Impact:** +5 points → C9 from 80 to 85+
+</mission>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- UPGRADE MISSION 4: Screenshot Evidence                                  -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<mission id="screenshots" className="mission">
+## MISSION 4: Add Tool Screenshots (10 min)
+
+**Gap:** No visual evidence of tools working
+
+### Browser Subagent Task
+```
+Navigate to each toolkit URL, take a screenshot, save as:
+- screenshot-tractor-dce-gyo.png
+- screenshot-privacy-labels.png
+- screenshot-haunted-tools.png
+- screenshot-role-deck.png
+- screenshot-thousand-tetrad.png
+```
+
+### Add to Submission
+Create appendix section:
+
+> ## Appendix: Tool Screenshots
+>
+> ![TRACTOR-DCE-GYO Interface](screenshots/tractor-dce-gyo.png)
+> ![Privacy Value Labels](screenshots/privacy-labels.png)
+> ![Haunted Tools Catalog](screenshots/haunted-tools.png)
+
+**Impact:** +3 points → Visual evidence boost
+</mission>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- UPGRADE MISSION 5: Define "Negative Space Programming"                  -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<mission id="define-neologism" className="mission">
+## MISSION 5: Ground "Negative Space Programming" (5 min)
+
+**Gap:** Neologism coined but not formally defined
+
+### Research Prompt
+```
+Search for precedents:
+- "constraint-first development"
+- "specification-driven design"
+- "test-driven development" as analogy
+- "negative space" in design literature (Gestalt)
+```
+
+### Template for Submission
+Add footnote or clarification to Section 1:
+
+> **Negative space programming** draws on Gestalt principles where the 
+> shape of the empty space (the constraint) defines what can exist within it. 
+> Analogous to test-driven development where tests are written before code, 
+> here the structural constraint is defined before content is generated.
+
+**Impact:** +2 points → Grounds neologism
+</mission>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- UPGRADE MISSION 6: Word Count Verification                              -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<mission id="word-count" className="mission">
+## MISSION 6: Verify Word Count (1 min)
+
+**Gap:** Rubric asks for ~1000 words; submission may be over
+
+### Check
+```bash
+# Count words in write-up sections only (Part 2)
+wc -w /Users/gaia/ATG\ 3.0/docs/final-submission-v2.md
+```
+
+### Expected
+- Part 2 only should be ~1000-1500 words
+- Full document (with appendices, references) can be longer
+
+**Impact:** Rubric compliance verification
+</mission>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- UPGRADE MISSION 7: ACM Variance Statement                               -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<mission id="acm-variance" className="mission">
+## MISSION 7: Add Explicit ACM Variance Note (2 min)
+
+**Gap:** Submission argues why prompts aren't listed but doesn't explicitly acknowledge variance
+
+### Template for Submission
+Add to AI Statement:
+
+> **Note on ACM Compliance:** The ACM policy requests "the text of input prompts." 
+> For infrastructural prompt work (1,365 lines across 9 files), listing individual 
+> prompts is impractical. Instead, I provide the complete POML library as an 
+> auditable artifact. The library is available at: 
+> [github.com/hartswf0/tractor-field-notes](https://github.com/hartswf0/tractor-field-notes)
+
+**Impact:** +3 points → Explicit compliance acknowledgment
+</mission>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SUMMARY: UPGRADE SCORECARD                                              -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<summary className="mission">
+## UPGRADE SCORECARD
+
+| Mission | Time | Impact | Priority |
+|---------|------|--------|----------|
+| M2: Usage Example | 10 min | +8 | **HIGH** |
+| M3: POML Examples | 5 min | +5 | **HIGH** |
+| M4: Screenshots | 10 min | +3 | MED |
+| M7: ACM Variance | 2 min | +3 | MED |
+| M1: URL Check | 5 min | +2 | MED |
+| M5: Define Neologism | 5 min | +2 | LOW |
+| M6: Word Count | 1 min | +0 | LOW |
+
+### Minimum Path to 90+
+1. **M2: Add one specific usage example** (+8)
+2. **M3: Add 3 POML excerpts** (+5)
+3. **M7: Add ACM variance note** (+3)
+
+**Current: 82 → Projected: 98**
+
+### Execute Order
+```
+M7 → M3 → M2 → M1 → M4
+```
+</summary>
+
+<runtime
+  provider="local"
+  model="human"
+  temperature="0"
+  max-output-tokens="∞" />
+</poml>

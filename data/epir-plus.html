@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ekphrastic Scroll</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #000;
+            color: #ccc;
+            overflow: hidden;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .scroll-container {
+            display: flex;
+            height: 100vh;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .column {
+            min-width: 400px;
+            width: 400px;
+            height: 100vh;
+            border-right: 1px solid #222;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .column.collapsed {
+            min-width: 48px;
+            width: 48px;
+        }
+
+        .column-tab {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            padding: 20px 0;
+            background: #0a0a0a;
+            border-bottom: 1px solid #222;
+            cursor: pointer;
+            text-align: center;
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            color: #666;
+            transition: all 0.2s;
+            user-select: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 48px;
+            height: 100%;
+            z-index: 10;
+            opacity: 0;
+        }
+
+        .column.collapsed .column-tab {
+            opacity: 1;
+        }
+
+        .column-tab:hover {
+            background: #1a1a1a;
+            color: #999;
+        }
+
+        .column-header {
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            border-bottom: 1px solid #222;
+            background: #0a0a0a;
+            flex-shrink: 0;
+        }
+
+        .column.collapsed .column-header {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .column-title {
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            color: #666;
+        }
+
+        .column-marker {
+            width: 6px;
+            height: 6px;
+            background: #666;
+        }
+
+        .column[data-type="essay"] .column-marker {
+            background: #ff4444;
+        }
+
+        .column[data-type="poem"] .column-marker {
+            background: #44ff44;
+        }
+
+        .column[data-type="prompt"] .column-marker {
+            background: #4444ff;
+        }
+
+        .column[data-type="image"] .column-marker {
+            background: #ffff44;
+        }
+
+        .column-content {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 32px 24px;
+            opacity: 1;
+            transition: opacity 0.3s;
+        }
+
+        .column.collapsed .column-content {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .unit {
+            margin-bottom: 32px;
+            padding: 20px;
+            background: #0a0a0a;
+            border-left: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .unit:hover {
+            background: #1a1a1a;
+            padding-left: 24px;
+        }
+
+        .unit.active {
+            background: #1a1a1a;
+            border-left-color: #fff;
+            padding-left: 24px;
+        }
+
+        .column[data-type="essay"] .unit.active {
+            border-left-color: #ff4444;
+        }
+
+        .column[data-type="poem"] .unit.active {
+            border-left-color: #44ff44;
+        }
+
+        .column[data-type="prompt"] .unit.active {
+            border-left-color: #4444ff;
+        }
+
+        .column[data-type="image"] .unit.active {
+            border-left-color: #ffff44;
+        }
+
+        .unit-id {
+            font-size: 9px;
+            color: #444;
+            margin-bottom: 12px;
+            letter-spacing: 0.1em;
+        }
+
+        .unit-text {
+            color: #999;
+            line-height: 1.8;
+        }
+
+        .unit.active .unit-text {
+            color: #ccc;
+        }
+
+        .poem-line {
+            padding: 6px 0;
+            padding-left: 32px;
+            position: relative;
+        }
+
+        .poem-line::before {
+            content: attr(data-num);
+            position: absolute;
+            left: 0;
+            color: #444;
+            font-size: 9px;
+            width: 24px;
+            text-align: right;
+        }
+
+        .prompt-q {
+            font-size: 10px;
+            color: #666;
+            margin-bottom: 8px;
+            font-style: italic;
+        }
+
+        .prompt-a {
+            color: #999;
+        }
+
+        .barrel {
+            width: 100%;
+            aspect-ratio: 1;
+            background: #0a0a0a;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #1a1a1a;
+        }
+
+        .barrel::before,
+        .barrel::after {
+            content: '';
+            position: absolute;
+            background: #1a1a1a;
+        }
+
+        .barrel::before {
+            width: 1px;
+            height: 100%;
+            left: 50%;
+        }
+
+        .barrel::after {
+            width: 100%;
+            height: 1px;
+            top: 50%;
+        }
+
+        .barrel-label {
+            position: relative;
+            z-index: 1;
+            font-size: 9px;
+            color: #444;
+            text-align: center;
+        }
+
+        .image-prompt {
+            font-size: 10px;
+            color: #666;
+            line-height: 1.6;
+            margin-top: 8px;
+        }
+
+        .version-dots {
+            display: flex;
+            gap: 6px;
+            margin-top: 12px;
+            justify-content: center;
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            background: #222;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .dot:hover {
+            background: #444;
+        }
+
+        .dot.active {
+            background: #666;
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #000;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #222;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #333;
+        }
+
+        .collapse-hint {
+            position: absolute;
+            top: 50%;
+            right: 8px;
+            transform: translateY(-50%);
+            font-size: 16px;
+            color: #333;
+            cursor: pointer;
+            user-select: none;
+            transition: color 0.2s;
+            z-index: 5;
+        }
+
+        .collapse-hint:hover {
+            color: #666;
+        }
+
+        .column.collapsed .collapse-hint {
+            display: none;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .column.new {
+            animation: slideIn 0.4s ease-out;
+        }
+
+        .essay-full {
+            color: #888;
+            line-height: 1.8;
+        }
+
+        .origin-marker {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-size: 8px;
+            color: #333;
+            background: #000;
+            padding: 4px 8px;
+            border: 1px solid #1a1a1a;
+            letter-spacing: 0.1em;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="scroll-container" id="scrollContainer">
+        <div class="column" data-type="essay" data-index="0">
+            <div class="column-tab">ESSAY</div>
+            <div class="column-header">
+                <div class="column-title">ESSAY</div>
+                <div class="column-marker"></div>
+            </div>
+            <div class="collapse-hint">‹</div>
+            <div class="column-content" id="essay-content"></div>
+        </div>
+    </div>
+
+    <script>
+        const state = {
+            columns: ['essay'],
+            activeSelections: {},
+            columnIndex: 0
+        };
+
+        const corpus = {
+            essay: [
+                {
+                    id: 'E21',
+                    text: 'The earliest examples of ekphrastic poetry are not, it seems, principally focused on painting, but on utilitarian objects that happen to have ornamental or symbolic visual representations attached to them. Goblets, urns, vases, chests, cloaks, girdles, various sorts of weapons and armor, and architectural ornaments like friezes, reliefs, frescos and statues in situ provide the first objects of ekphrastic description probably because the detachment of painting as an isolated, autonomous, and moveable object of aesthetic contemplation is a relatively late development in the visual arts.'
+                },
+                {
+                    id: 'E22',
+                    text: 'I\'d like to begin, however, not at the origin, but with a very late and pure example of ekphrastic poetry, Wallace Stevens\'s "Anecdote of a Jar."'
+                },
+                {
+                    id: 'E23',
+                    text: 'Stevens\'s poem provides an allegory and a critique of its own generic identity and might almost be seen as a parody of the classical ekphrastic object. The jar appears, not as a crucial feature of an epic narrative, an ornament to a pastoral drama, or even a focus for elevated lyric meditation. Instead, the jar is the principal actor in a mere "anecdote," literally, an "unpublished," private story that is "not given out" and the tone of which would have to be described as impassive, neutral, and unforthcoming.'
+                },
+                {
+                    id: 'E24',
+                    text: 'And yet the emphasis on the shape, appearance, and what can only be described as the "activity" of the jar make it clear that this is no "mere" object, but a highly charged form and a representational form at that. The jar is, despite all the connotations of orderliness and aesthetic formality that commentators usually celebrate, a kind of idol or fetish, a made object that has appropriated human consciousness.'
+                },
+                {
+                    id: 'E26',
+                    text: 'As the metaphors of barrenness and fertility suggest, there is just a hint of the feminine in Stevens\'s jar, and the treatment of the ekphrastic image as a female other is a commonplace in the genre. The image of the jar as both "round upon the ground" and "tall and of a port in air" lends it an equivocal status as a kind of "phallic womb," as if the jar were both the erection and the visual image that provokes it.'
+                }
+            ],
+            poem: [
+                { id: 'L01', num: 1, text: 'I placed a jar in Tennessee,' },
+                { id: 'L02', num: 2, text: 'And round it was, upon a hill.' },
+                { id: 'L03', num: 3, text: 'It made the slovenly wilderness' },
+                { id: 'L04', num: 4, text: 'Surround that hill.' },
+                { id: 'L05', num: 5, text: 'The wilderness rose up to it,' },
+                { id: 'L06', num: 6, text: 'And sprawled around, no longer wild.' },
+                { id: 'L07', num: 7, text: 'The jar was round upon the ground' },
+                { id: 'L08', num: 8, text: 'And tall and of a port in air.' },
+                { id: 'L09', num: 9, text: 'It did not give of bird or bush,' },
+                { id: 'L10', num: 10, text: 'Like nothing else in Tennessee.' }
+            ]
+        };
+
+        function generatePrompts(lineId) {
+            return [
+                {
+                    id: `P${lineId}A`,
+                    origin: lineId,
+                    q: 'syntactic ambiguity',
+                    a: 'Round it was: is the jar round, or does "round it" mean around it? The syntax mirrors the jar\'s circular form and the circular arrangement of wilderness around it. Form equals content in the grammatical structure itself.'
+                },
+                {
+                    id: `P${lineId}B`,
+                    origin: lineId,
+                    q: 'human agency vanishing',
+                    a: 'I placed: the human agent appears only once in the opening line, then vanishes completely. Placing is an act of ordering, of imposing human design on landscape. It is fundamentally a colonial gesture—claiming territory through artifact.'
+                },
+                {
+                    id: `P${lineId}C`,
+                    origin: lineId,
+                    q: 'moral judgment of nature',
+                    a: 'Slovenly: this word implies moral failure, ethical disorder. Nature is messy, undisciplined, needs correction. But whose values are these? This is human projection onto landscape, revealing more about the observer than the observed.'
+                },
+                {
+                    id: `P${lineId}D`,
+                    origin: lineId,
+                    q: 'transformation as violence',
+                    a: 'No longer wild: domestication complete. But the negative formulation ("no longer") hints at loss. The jar civilizes but also kills something essential. Ekphrastic order is a form of violence against the natural.'
+                }
+            ];
+        }
+
+        function generateImages(promptId) {
+            return [
+                {
+                    id: `I${promptId}1`,
+                    origin: promptId,
+                    prompt: 'gray stoneware jar on Tennessee hilltop, stark afternoon light, wilderness valley below, minimal composition, documentary photography'
+                },
+                {
+                    id: `I${promptId}2`,
+                    origin: promptId,
+                    prompt: 'abstract geometric circles dominating organic landscape, order versus chaos, suprematist composition, constructivist geometry'
+                },
+                {
+                    id: `I${promptId}3`,
+                    origin: promptId,
+                    prompt: 'cylindrical ceramic form as monument, menacing presence in landscape, sterile commanding object, brutalist sculpture'
+                },
+                {
+                    id: `I${promptId}4`,
+                    origin: promptId,
+                    prompt: 'vessel with dual geometry: round base tall vertical body, hermaphroditic form, ambiguous phallic womb, surrealist object'
+                }
+            ];
+        }
+
+        function initEssay() {
+            const container = document.getElementById('essay-content');
+            corpus.essay.forEach(item => {
+                const unit = createUnit(item.id, `
+                    <div class="unit-id">${item.id}</div>
+                    <div class="unit-text essay-full">${item.text}</div>
+                `);
+                unit.addEventListener('click', () => selectEssay(item.id));
+                container.appendChild(unit);
+            });
+        }
+
+        function createUnit(id, innerHTML) {
+            const div = document.createElement('div');
+            div.className = 'unit';
+            div.dataset.id = id;
+            div.innerHTML = innerHTML;
+            return div;
+        }
+
+        function selectEssay(id) {
+            setActive('essay', id);
+            state.activeSelections.essay = id;
+
+            if (!state.columns.includes('poem')) {
+                addColumn('poem', 'POEM', corpus.poem.map(line =>
+                    createUnit(line.id, `
+                        <div class="unit-id">${line.id}</div>
+                        <div class="poem-line" data-num="${line.num}">${line.text}</div>
+                    `)
+                ));
+
+                document.querySelectorAll('[data-type="poem"] .unit').forEach(unit => {
+                    unit.addEventListener('click', () => selectPoem(unit.dataset.id));
+                });
+            }
+        }
+
+        function selectPoem(id) {
+            setActive('poem', id);
+            state.activeSelections.poem = id;
+
+            const prompts = generatePrompts(id);
+
+            removeColumnsAfter('poem');
+
+            addColumn('prompt', 'PROMPT', prompts.map(p =>
+                createUnit(p.id, `
+                    <div class="unit-id">${p.id}</div>
+                    <div class="origin-marker">← ${p.origin}</div>
+                    <div class="prompt-q">${p.q}</div>
+                    <div class="prompt-a">${p.a}</div>
+                `)
+            ));
+
+            document.querySelectorAll('[data-type="prompt"] .unit').forEach(unit => {
+                unit.addEventListener('click', () => selectPrompt(unit.dataset.id));
+            });
+        }
+
+        function selectPrompt(id) {
+            setActive('prompt', id);
+            state.activeSelections.prompt = id;
+
+            const images = generateImages(id);
+
+            removeColumnsAfter('prompt');
+
+            addColumn('image', 'IMAGE', images.map(img =>
+                createUnit(img.id, `
+                    <div class="unit-id">${img.id}</div>
+                    <div class="origin-marker">← ${img.origin}</div>
+                    <div class="barrel">
+                        <div class="barrel-label">IMAGE BARREL<br>${img.id}</div>
+                    </div>
+                    <div class="image-prompt">${img.prompt}</div>
+                    <div class="version-dots">
+                        <div class="dot active"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                    </div>
+                `)
+            ));
+
+            document.querySelectorAll('[data-type="image"] .unit').forEach(unit => {
+                unit.addEventListener('click', () => selectImage(unit.dataset.id));
+            });
+
+            document.querySelectorAll('[data-type="image"] .dot').forEach(dot => {
+                dot.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const parent = dot.closest('.unit');
+                    parent.querySelectorAll('.dot').forEach(d => d.classList.remove('active'));
+                    dot.classList.add('active');
+                });
+            });
+        }
+
+        function selectImage(id) {
+            setActive('image', id);
+            state.activeSelections.image = id;
+        }
+
+        function setActive(type, id) {
+            document.querySelectorAll(`[data-type="${type}"] .unit`).forEach(u => {
+                u.classList.remove('active');
+            });
+            const unit = document.querySelector(`[data-type="${type}"] [data-id="${id}"]`);
+            if (unit) unit.classList.add('active');
+        }
+
+        function addColumn(type, title, units) {
+            state.columnIndex++;
+            state.columns.push(type);
+
+            const col = document.createElement('div');
+            col.className = 'column new';
+            col.dataset.type = type;
+            col.dataset.index = state.columnIndex;
+
+            col.innerHTML = `
+                <div class="column-tab">${title}</div>
+                <div class="column-header">
+                    <div class="column-title">${title}</div>
+                    <div class="column-marker"></div>
+                </div>
+                <div class="collapse-hint">‹</div>
+                <div class="column-content"></div>
+            `;
+
+            const content = col.querySelector('.column-content');
+            units.forEach(unit => content.appendChild(unit));
+
+            const container = document.getElementById('scrollContainer');
+            container.appendChild(col);
+
+            // Setup collapse
+            const hint = col.querySelector('.collapse-hint');
+            const tab = col.querySelector('.column-tab');
+
+            hint.addEventListener('click', () => toggleCollapse(col));
+            tab.addEventListener('click', () => toggleCollapse(col));
+
+            setTimeout(() => {
+                col.classList.remove('new');
+                container.scrollLeft = container.scrollWidth;
+            }, 50);
+        }
+
+        function toggleCollapse(col) {
+            col.classList.toggle('collapsed');
+        }
+
+        function removeColumnsAfter(type) {
+            const typeIndex = state.columns.indexOf(type);
+            const toRemove = state.columns.slice(typeIndex + 1);
+
+            toRemove.forEach(t => {
+                const col = document.querySelector(`[data-type="${t}"]`);
+                if (col) col.remove();
+            });
+
+            state.columns = state.columns.slice(0, typeIndex + 1);
+        }
+
+        // Initialize
+        initEssay();
+
+        console.log('EKPHRASTIC SCROLL');
+        console.log('Click to unfold →');
+    </script>
+</body>
+
+</html>

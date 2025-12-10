@@ -1,0 +1,168 @@
+{
+    "meta": {
+        "schema_version": "0.5.0",
+        "project": "func-sub",
+        "weeks": [
+            11,
+            12,
+            13,
+            14
+        ],
+        "generated": "2025-12-09",
+        "framework": "Ehrlichman/Meadows + Wong Infrastructure"
+    },
+    "system_overview": "Training Grounds / 6-axis spatial reasoning substrate operationalizing Jordan Caldwell's Black Metal philosophy for self-alignment work through sonic explorations and SHED-INTEGRATE-GROUND operators.",
+    "leverage_point_analysis": {
+        "mindsets_paradigms": {
+            "current": "Clarity through simplification; reduce to essentials",
+            "target": "Clarity through noise; catharsis as insight (Black Metal principle)",
+            "leverage": "transformative",
+            "intervention": "Experience density-as-clarification"
+        },
+        "organizing_principles": {
+            "current": "Self-help frameworks flatten to templates",
+            "target": "6-axis system preserves complexity while enabling navigation",
+            "leverage": "high",
+            "intervention": "Axes + operators as spatial reasoning substrate"
+        },
+        "information_flows": {
+            "current": "No visibility into which axes get engaged",
+            "target": "Trail tracks axis movement; suggests underexplored dimensions",
+            "leverage": "medium",
+            "intervention": "Alignment journey visualized as path through 6D space"
+        },
+        "system_infrastructure": {
+            "current": "Physical book format (Jordan's project) doesn't translate easily",
+            "target": "Digital interface that captures some richness",
+            "leverage": "low",
+            "intervention": "Accept friction rather than force fit"
+        }
+    },
+    "six_axis_framework": {
+        "axis_1": {
+            "poles": [
+                "Comfort",
+                "Challenge"
+            ],
+            "description": "Security vs. growth edge"
+        },
+        "axis_2": {
+            "poles": [
+                "Chaos",
+                "Structure"
+            ],
+            "description": "Entropy vs. order"
+        },
+        "axis_3": {
+            "poles": [
+                "Isolation",
+                "Connection"
+            ],
+            "description": "Solitude vs. community"
+        },
+        "axis_4": {
+            "poles": [
+                "Surface",
+                "Depth"
+            ],
+            "description": "Immediate vs. foundational"
+        },
+        "axis_5": {
+            "poles": [
+                "Familiar",
+                "Strange"
+            ],
+            "description": "Known vs. uncanny"
+        },
+        "axis_6": {
+            "poles": [
+                "Control",
+                "Surrender"
+            ],
+            "description": "Agency vs. flow"
+        }
+    },
+    "operators": {
+        "SHED": {
+            "function": "Remove what no longer serves",
+            "axis_effects": "Often moves from Comfort→Challenge, Familiar→Strange"
+        },
+        "INTEGRATE": {
+            "function": "Absorb and synthesize disparate elements",
+            "axis_effects": "Often moves from Chaos→Structure, Isolation→Connection"
+        },
+        "GROUND": {
+            "function": "Anchor in embodied reality",
+            "axis_effects": "Often moves from Surface→Depth, Control→Surrender"
+        }
+    },
+    "infrastructure_mapping": {
+        "dynamic_processes": {
+            "embedded_values": "Self-help industry values simplification and actionability",
+            "process_redesign_opportunity": "Complexity as feature, not bug; density as clarification"
+        },
+        "social_positionalities": {
+            "power_dynamics": "Jordan's world is source; Watson operationalizes",
+            "safety_concerns": "Operationalization might flatten what makes it valuable",
+            "legitimized_expertise": "Black Metal philosophy is niche; may alienate mainstream"
+        },
+        "invisible_work": {
+            "articulation_labor": "Translating Jordan's physical book into digital form",
+            "emotional_labor": "Holding tension between fidelity and usability",
+            "unrecognized_labor": "Iterating on SHED-INTEGRATE-GROUND operators"
+        },
+        "embedded_systems": {
+            "standards": "Self-help industry tropes and formats",
+            "policies": "N/A (personal development)",
+            "economic_logics": "Wellness market incentives",
+            "legal_context": "N/A"
+        }
+    },
+    "collaboration_friction": {
+        "friction_source": "Jordan's book is designed for print; physical object; rich texture",
+        "system_response": "Could not absorb her variety quickly",
+        "lesson_learned": "Document friction rather than force fit; friction is the information",
+        "resolution": "Produced prompt guides and hands-on exposure rather than feature-complete tool"
+    },
+    "integrated_intervention_strategies": [
+        {
+            "intervention": "Create 6-axis spatial reasoning substrate",
+            "targeted_leverage": "organizing_principles",
+            "infrastructure_work": "Preserve complexity without reducing; axes + operators as navigation tools",
+            "viability_rating": "high",
+            "status": "completed"
+        },
+        {
+            "intervention": "Develop t-series sonic explorations",
+            "targeted_leverage": "mindsets_paradigms",
+            "infrastructure_work": "Sound as cathartic medium; density-as-clarification experience",
+            "viability_rating": "high",
+            "status": "completed"
+        },
+        {
+            "intervention": "Visualize alignment journey through 6D space",
+            "targeted_leverage": "information_flows",
+            "infrastructure_work": "Trail of axis positions over time; pattern recognition",
+            "viability_rating": "medium",
+            "status": "future"
+        }
+    ],
+    "trail_analysis": {
+        "visible_trail": {
+            "commits": 20,
+            "key_commits": [
+                "t-series sonic explorations begin",
+                "README: Black Metal as method, self-alignment framework"
+            ],
+            "observation": "Higher visibility—sonic experiments show iteration"
+        },
+        "invisible_trail": [
+            "Jordan Caldwell's Black Metal philosophy book (entire source)",
+            "Friction of system not absorbing her variety",
+            "Decision to accept friction rather than force fit",
+            "Tehri Marttila ontology collaboration"
+        ],
+        "trail_awareness_level": 1
+    },
+    "meta_rule": "Analyze self-alignment systems by asking: What axes of experience does this framework allow navigation of, AND what infrastructural conditions (collaboration dynamics, medium translation, fidelity vs. usability) shape what can be operationalized without flattening?"
+}

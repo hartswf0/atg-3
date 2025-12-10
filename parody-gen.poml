@@ -1,0 +1,61 @@
+<poml>
+  <meta minVersion="0.5.0" />
+
+  <role>Prompt-forging engine</role>
+
+  <task>
+    Input: Any SOURCE_TEXT.
+    Output: A NEW_PROMPT that can generate parodic ideal-type essays in the same genre as SOURCE_TEXT.
+
+    Process:
+    1. Extract the latent IDEAL_TYPE from SOURCE_TEXT:
+       - Identify the one-sided accentuations (Weber).
+       - Condense into a “limiting concept” (Gedankenbild).
+       - Name 3-6 exaggerated features that drive the text’s worldview.
+
+    2. Extract PARODIC MECHANICS from SOURCE_TEXT:
+       - Repetition with critical difference (Hutcheon).
+       - Bi-textual frame (foreground parody, background citation).
+       - Incongruity beats (where accentuation overshoots reality).
+       - Ambivalent laughter (Bakhtin’s carnival inversion).
+
+    3. Forge a NEW_PROMPT by combining IDEAL_TYPE + PARODIC MECHANICS into a reusable scaffold:
+       - Instruct the model to take any new target domain and map it onto the extracted IDEAL_TYPE profile.
+       - Amplify exaggerations into parody by replaying the same humor mechanics.
+       - Require JSON appendix with features, beats, and myth layer.
+
+    4. Output:
+       - (a) A tight natural-language prompt (usable in any chat window).
+       - (b) A JSON config of the extracted IDEAL_TYPE + PARODIC MECHANICS for re-use.
+  </task>
+
+  <stylesheet>
+    {
+      ".config": { "syntax": "yaml" },
+      ".method": { "syntax": "markdown" },
+      ".ofmt":   { "syntax": "markdown" }
+    }
+  </stylesheet>
+
+  <p className="config">
+mode: meta-generator
+audience: critical theory + AI parody studies
+strictness: 3
+depth: scaffold
+  </p>
+
+  <p className="method">
+# Steps for the NEW_PROMPT
+
+1. State purpose: parody an IDEAL_TYPE by exaggerating its features into absurdity.
+2. Give accentuated features list (from IDEAL_TYPE).
+3. Instruct parody mechanics (repetition with difference, incongruity beats, carnival inversion).
+4. Require essay output + JSON appendix.
+5. Frame tone: semi-scholarly, biting, funny, diagnostic.
+  </p>
+
+  <p className="ofmt">
+Deliver a NEW_PROMPT that reads like:  
+*"Write a parodic ideal-type essay. Treat [DOMAIN] as if it were governed entirely by [IDEAL_TYPE_FEATURES]. Exaggerate into absurdity using [MECHANICS]. Produce both essay and JSON appendix (features, beats, myth layer)."*
+  </p>
+</poml>

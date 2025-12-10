@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Thesis Trail Map — Void Management Manifold</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap');
+
+        :root {
+            --bg: #0a0a0f;
+            --fg: #f0ebe3;
+            --dim: #7a7a7a;
+            --gold: #d4a84b;
+            --pyramid: #4a9eff;
+            --essay: #4ade80;
+            --intervention: #a78bfa;
+            --poml: #fbbf24;
+            --source: #f472b6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Crimson Pro", Georgia, serif;
+            background: var(--bg);
+            color: var(--fg);
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* Full-screen canvas */
+        #viewport {
+            position: absolute;
+            inset: 0;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            cursor: crosshair;
+        }
+
+        .texture-overlay {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.05;
+            mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+        }
+
+        .vignette {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.4) 100%);
+        }
+
+        /* BIGGER click targets - Fitts' Law */
+        #labels-layer {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .map-pin {
+            position: absolute;
+            pointer-events: auto;
+            cursor: pointer;
+            padding: 12px;
+            /* Bigger hit area */
+            margin: -12px;
+        }
+
+        .pin-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.7);
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.2s;
+            box-shadow: 0 0 8px currentColor;
+        }
+
+        .pin-label {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-family: "Crimson Pro", Georgia, serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--fg);
+            white-space: nowrap;
+            text-shadow: 0 0 8px var(--bg), 0 0 16px var(--bg), 2px 2px 4px rgba(0, 0, 0, 0.9);
+            padding: 4px 10px;
+            border-radius: 4px;
+            background: rgba(10, 10, 15, 0.85);
+            transition: all 0.2s;
+        }
+
+        .map-pin:hover .pin-dot {
+            transform: translate(-50%, -50%) scale(1.4);
+            border-color: #fff;
+            box-shadow: 0 0 16px currentColor, 0 0 24px currentColor;
+        }
+
+        .map-pin:hover .pin-label {
+            background: rgba(10, 10, 15, 0.98);
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .map-pin.pyramid .pin-dot {
+            background: var(--pyramid);
+            color: var(--pyramid);
+        }
+
+        .map-pin.essay .pin-dot {
+            background: var(--essay);
+            color: var(--essay);
+        }
+
+        .map-pin.intervention .pin-dot {
+            background: var(--intervention);
+            color: var(--intervention);
+        }
+
+        .map-pin.poml .pin-dot {
+            background: var(--poml);
+            color: var(--poml);
+        }
+
+        .map-pin.source .pin-dot {
+            background: var(--source);
+            color: var(--source);
+        }
+
+        .map-pin.pyramid:hover .pin-label {
+            color: var(--pyramid);
+        }
+
+        .map-pin.essay:hover .pin-label {
+            color: var(--essay);
+        }
+
+        .map-pin.intervention:hover .pin-label {
+            color: var(--intervention);
+        }
+
+        .map-pin.poml:hover .pin-label {
+            color: var(--poml);
+        }
+
+        .map-pin.source:hover .pin-label {
+            color: var(--source);
+        }
+
+        /* Title */
+        .title-bar {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 50;
+            background: rgba(10, 10, 15, 0.92);
+            border: 1px solid rgba(212, 168, 75, 0.4);
+            padding: 14px 18px;
+            border-radius: 6px;
+            max-width: 280px;
+        }
+
+        .title-bar h1 {
+            font-family: "Crimson Pro", Georgia, serif;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--gold);
+            margin-bottom: 6px;
+        }
+
+        .title-bar .axes {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 10px;
+            color: var(--dim);
+            letter-spacing: 0.03em;
+            line-height: 1.5;
+        }
+
+        /* File Browser - Collapsible sidebar */
+        #file-browser {
+            position: fixed;
+            bottom: 70px;
+            left: 16px;
+            width: 200px;
+            max-height: 300px;
+            z-index: 60;
+            background: rgba(10, 10, 15, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 6px;
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+        }
+
+        #file-browser.open {
+            display: flex;
+        }
+
+        .browser-header {
+            padding: 10px 12px;
+            background: rgba(212, 168, 75, 0.15);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-family: "JetBrains Mono", monospace;
+            font-size: 10px;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .browser-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 6px 0;
+        }
+
+        .browser-section {
+            padding: 6px 12px 4px;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 9px;
+            color: var(--dim);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .browser-item {
+            padding: 6px 12px;
+            font-size: 12px;
+            color: var(--fg);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.15s;
+        }
+
+        .browser-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .browser-item.active {
+            background: rgba(212, 168, 75, 0.2);
+            color: var(--gold);
+        }
+
+        .browser-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* Controls */
+        .controls {
+            position: fixed;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 50;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            background: rgba(10, 10, 15, 0.92);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 10px 16px;
+            border-radius: 30px;
+        }
+
+        .controls button {
+            padding: 8px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            background: transparent;
+            color: var(--fg);
+            font-family: "JetBrains Mono", monospace;
+            font-size: 11px;
+            cursor: pointer;
+            border-radius: 14px;
+            transition: all 0.15s;
+        }
+
+        .controls button:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .controls button.active {
+            background: var(--gold);
+            color: #000;
+            border-color: var(--gold);
+        }
+
+        .controls input[type="range"] {
+            width: 140px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 2px;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        .controls input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            background: var(--gold);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* Legend */
+        .legend {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 50;
+            background: rgba(10, 10, 15, 0.92);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 12px 14px;
+            border-radius: 6px;
+            font-size: 11px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+            color: var(--dim);
+            font-family: "JetBrains Mono", monospace;
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .legend.hidden {
+            display: none;
+        }
+
+        /* Toggle buttons on map */
+        .map-toggles {
+            position: fixed;
+            bottom: 70px;
+            right: 16px;
+            z-index: 50;
+            display: flex;
+            gap: 6px;
+        }
+
+        .toggle-btn {
+            padding: 6px 10px;
+            background: rgba(10, 10, 15, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: var(--fg);
+            font-family: "JetBrains Mono", monospace;
+            font-size: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .toggle-btn.active {
+            background: var(--gold);
+            color: #000;
+        }
+
+        /* Preview Panel - DRAGGABLE */
+        #preview-panel {
+            position: fixed;
+            top: 60px;
+            right: 16px;
+            width: 500px;
+            height: calc(100vh - 140px);
+            z-index: 90;
+            background: rgba(15, 15, 20, 0.98);
+            border: 1px solid rgba(212, 168, 75, 0.4);
+            border-radius: 8px;
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            resize: both;
+            min-width: 350px;
+            min-height: 300px;
+        }
+
+        #preview-panel.open {
+            display: flex;
+        }
+
+        .preview-header {
+            padding: 8px 12px;
+            background: rgba(212, 168, 75, 0.15);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex-shrink: 0;
+            cursor: move;
+            user-select: none;
+        }
+
+        .preview-file-path {
+            padding: 4px 12px;
+            background: rgba(0, 0, 0, 0.3);
+            font-family: "JetBrains Mono", monospace;
+            font-size: 10px;
+            color: var(--dim);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .preview-file-path:empty {
+            display: none;
+        }
+
+        .preview-title {
+            font-family: "Crimson Pro", Georgia, serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--gold);
+        }
+
+        .preview-type {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 9px;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 10px;
+            margin-left: 8px;
+        }
+
+        .preview-controls {
+            display: flex;
+            gap: 6px;
+        }
+
+        .preview-btn {
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: var(--fg);
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .preview-btn:hover {
+            background: var(--gold);
+            color: #000;
+        }
+
+        .preview-nav {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-right: auto;
+            padding-right: 12px;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            margin-right: 12px;
+        }
+
+        .nav-btn {
+            padding: 6px 10px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: var(--fg);
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .nav-btn:hover {
+            background: var(--gold);
+            color: #000;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .nav-label {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 10px;
+            color: var(--dim);
+        }
+
+        .preview-body {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #preview-content {
+            padding: 16px;
+            font-size: 15px;
+            line-height: 1.8;
+            color: #ddd;
+            overflow-y: auto;
+            height: 100%;
+        }
+
+        #preview-content h1,
+        #preview-content h2,
+        #preview-content h3 {
+            font-family: "Crimson Pro", Georgia, serif;
+            color: var(--fg);
+            margin: 1em 0 0.5em;
+        }
+
+        #preview-content h1 {
+            font-size: 1.5em;
+        }
+
+        #preview-content h2 {
+            font-size: 1.3em;
+        }
+
+        #preview-content p {
+            margin-bottom: 0.8em;
+        }
+
+        #preview-content code {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 4px;
+            font-size: 0.85em;
+        }
+
+        #preview-content blockquote {
+            border-left: 2px solid var(--gold);
+            padding-left: 12px;
+            color: #999;
+            margin: 1em 0;
+        }
+
+        /* Raw code view */
+        .raw-code {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 12px;
+            line-height: 1.5;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 16px;
+            border-radius: 6px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+            color: #ccc;
+        }
+
+        .preview-btn.active {
+            background: var(--gold);
+            color: #000;
+        }
+
+        #preview-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #111;
+        }
+
+        /* Axis labels */
+        .axis-label {
+            position: fixed;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 11px;
+            color: var(--dim);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            z-index: 40;
+        }
+
+        .axis-x-left {
+            bottom: 70px;
+            left: 250px;
+        }
+
+        .axis-x-right {
+            bottom: 70px;
+            right: 16px;
+        }
+
+        .axis-y-top {
+            top: 120px;
+            left: 250px;
+            writing-mode: vertical-rl;
+        }
+
+        .axis-y-bottom {
+            bottom: 120px;
+            left: 250px;
+            writing-mode: vertical-rl;
+        }
+
+        @media (max-width: 768px) {
+            #preview-panel {
+                right: 10px;
+                left: 10px;
+                width: auto;
+                top: auto;
+                bottom: 80px;
+                height: 60vh;
+            }
+
+            #file-browser,
+            .legend {
+                display: none;
+            }
+
+            .axis-label {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="viewport">
+        <canvas id="canvas"></canvas>
+        <div class="texture-overlay"></div>
+        <div class="vignette"></div>
+        <div id="labels-layer"></div>
+    </div>
+
+    <div class="axis-label axis-x-left">← Theory</div>
+    <div class="axis-label axis-x-right">Practice →</div>
+    <div class="axis-label axis-y-top">Emergence ↑</div>
+    <div class="axis-label axis-y-bottom">↓ Constraint</div>
+
+    <div class="title-bar">
+        <h1>Thesis Trail Map</h1>
+        <div class="axes">X: Theory ↔ Practice<br>Y: Constraint ↔ Emergence</div>
+    </div>
+
+    <!-- File Browser - see all files -->
+    <div id="file-browser">
+        <div class="browser-header">All Regions (31)</div>
+        <div class="browser-list" id="browser-list"></div>
+    </div>
+
+    <div class="legend">
+        <div class="legend-item">
+            <div class="legend-dot" style="background:var(--pyramid)"></div> Pyramid ▲
+        </div>
+        <div class="legend-item">
+            <div class="legend-dot" style="background:var(--essay)"></div> Essay ◆
+        </div>
+        <div class="legend-item">
+            <div class="legend-dot" style="background:var(--intervention)"></div> Intervention ■
+        </div>
+        <div class="legend-item">
+            <div class="legend-dot" style="background:var(--poml)"></div> POML ●
+        </div>
+        <div class="legend-item">
+            <div class="legend-dot" style="background:var(--source)"></div> Source ○
+        </div>
+    </div>
+
+    <!-- Map Toggles -->
+    <div class="map-toggles">
+        <button class="toggle-btn" id="btn-toggle-files">☰ Files</button>
+        <button class="toggle-btn active" id="btn-toggle-legend">◉ Legend</button>
+    </div>
+
+    <div class="controls">
+        <button id="btn-play">▶ Play Trail</button>
+        <input type="range" id="scrubber" min="0" max="100" value="100">
+        <span id="progress-label" style="font-size:10px;color:var(--dim);min-width:40px;">100%</span>
+    </div>
+
+    <!-- Preview Panel -->
+    <div id="preview-panel">
+        <div class="preview-header" id="preview-drag-handle">
+            <button class="nav-btn" id="btn-prev" title="Previous">←</button>
+            <span class="nav-label" id="nav-label">1/24</span>
+            <button class="nav-btn" id="btn-next" title="Next">→</button>
+            <span class="preview-title" id="preview-title">Region</span>
+            <span class="preview-type" id="preview-type">—</span>
+            <div style="flex:1"></div>
+            <button class="preview-btn" id="btn-raw" title="Raw">{ }</button>
+            <button class="preview-btn" id="btn-copy" title="Copy">📋</button>
+            <button class="preview-btn" id="btn-newtab" title="Open">↗</button>
+            <button class="preview-btn" id="btn-close" title="Close">×</button>
+        </div>
+        <div class="preview-file-path" id="preview-file-path"></div>
+        <div class="preview-body">
+            <div id="preview-content"></div>
+            <iframe id="preview-iframe" style="display:none;"></iframe>
+        </div>
+    </div>
+
+    <script>
+        // === THESIS DATA with connections ===
+        const REGIONS = [
+            // PYRAMIDS
+            {
+                id: 'void-management', title: 'Void Management', type: 'pyramid', x: 0.28, y: 0.72, size: 9,
+                desc: 'Core thesis. 20-modification threshold. Systems die from accumulated void.',
+                file: 'docs/pyramids/void-management-pyramid.md', birth: 1,
+                connections: ['negative-space', 'unified-ontology', 'meadows']
+            },
+            {
+                id: 'negative-space', title: 'Negative Space', type: 'pyramid', x: 0.18, y: 0.82, size: 10,
+                desc: 'Making invalid states unrepresentable. Dijkstra → Rust lineage.',
+                file: 'docs/pyramids/negative-space-pyramid.md', birth: 2,
+                connections: ['dijkstra', 'void-management']
+            },
+            {
+                id: 'context-engineering', title: 'Context Engineering', type: 'pyramid', x: 0.45, y: 0.58, size: 6,
+                desc: 'Suchman meets Karpathy. Context as first-class object.',
+                file: 'docs/pyramids/context-engineering-pyramid.md', birth: 4,
+                connections: ['suchman', 'context-material', 'life-after-bob']
+            },
+            {
+                id: 'life-after-bob', title: 'Life After BOB', type: 'pyramid', x: 0.35, y: 0.48, size: 10,
+                desc: 'Ian Cheng worlding. Agent metabolism and stress.',
+                file: 'docs/pyramids/life-after-bob-pyramid.md', birth: 5,
+                connections: ['cheng', 'context-engineering']
+            },
+            {
+                id: 'digital-lego', title: 'Digital LEGO', type: 'pyramid', x: 0.55, y: 0.75, size: 9,
+                desc: 'LDraw + Modulex. Community-maintained constraints.',
+                file: 'docs/pyramids/digital-lego-ecosystem-pyramid.md', birth: 3,
+                connections: ['ghost-brick']
+            },
+            {
+                id: 'unified-ontology', title: 'Unified Ontology', type: 'pyramid', x: 0.32, y: 0.62, size: 26,
+                desc: 'Master ontological framework.',
+                file: 'docs/pyramids/unified-ontology.md', birth: 8,
+                connections: ['void-management', 'leverage-analysis', 'geertz']
+            },
+            {
+                id: 'sinter-report', title: 'Sinter Report', type: 'pyramid', x: 0.42, y: 0.45, size: 6,
+                desc: 'Academic gaps filled.',
+                file: 'docs/pyramids/sinter-report-pyramid.md', birth: 6
+            },
+            {
+                id: 'leverage-analysis', title: 'Leverage Analysis', type: 'pyramid', x: 0.15, y: 0.65, size: 6,
+                desc: 'Meadows operationalized.',
+                file: 'docs/pyramids/leverage-analysis-pyramid.md', birth: 7,
+                connections: ['meadows', 'unified-ontology']
+            },
+            {
+                id: 'context-material', title: 'Context Material', type: 'pyramid', x: 0.52, y: 0.52, size: 10,
+                desc: 'Context as design material.',
+                file: 'docs/pyramids/context-as-material-pyramid.md', birth: 9,
+                connections: ['context-engineering', 'poml-pyramid']
+            },
+            {
+                id: 'poml-pyramid', title: 'POML Architecture', type: 'pyramid', x: 0.62, y: 0.55, size: 6,
+                desc: 'Process-oriented markup.',
+                file: 'docs/pyramids/poml-library-pyramid.md', birth: 10,
+                connections: ['context-material', 'guardian']
+            },
+
+            // ESSAYS
+            {
+                id: 'ghost-brick', title: 'Ghost in the Brick', type: 'essay', x: 0.65, y: 0.78, size: 15,
+                desc: 'LDraw survives because text.',
+                file: 'docs/ghost-in-the-brick.md', birth: 11,
+                connections: ['digital-lego', 'immaterial-hand']
+            },
+            {
+                id: 'immaterial-hand', title: 'Immaterial Hand', type: 'essay', x: 0.72, y: 0.65, size: 12,
+                desc: 'The gesture repeats.',
+                file: 'docs/immaterial-hand.md', birth: 12,
+                connections: ['ghost-brick', 'atlas-interventions']
+            },
+            {
+                id: 'stitched-mind', title: 'Stitched Mind', type: 'essay', x: 0.48, y: 0.35, size: 14,
+                desc: 'Frankenstein architecture.',
+                file: 'docs/stitched-mind.md', birth: 13
+            },
+            {
+                id: 'atlas-interventions', title: 'Atlas of Interventions', type: 'essay', x: 0.78, y: 0.42, size: 16,
+                desc: '10 design research artifacts.',
+                file: 'docs/atlas-of-interventions.md', birth: 14,
+                connections: ['1000-futures', 'role-deck', 'the-fork', 'func-sub']
+            },
+
+            // INTERVENTIONS - live iframes
+            {
+                id: '1000-futures', title: '1000 Small Futures', type: 'intervention', x: 0.88, y: 0.28, size: 8,
+                desc: 'Tetrad training engine. Explore McLuhan\'s tetrad framework through interactive exercises.',
+                url: 'https://hartswf0.github.io/1000-small-futures/', birth: 15,
+                connections: ['mcluhan', 'atlas-interventions']
+            },
+            {
+                id: 'role-deck', title: 'Role Deck', type: 'intervention', x: 0.92, y: 0.38, size: 7,
+                desc: 'Shadow roles toolkit. Explore organizational archetypes and hidden dynamics.',
+                url: 'https://hartswf0.github.io/role-deck/', birth: 16,
+                connections: ['atlas-interventions']
+            },
+            {
+                id: 'the-fork', title: 'The Fork', type: 'intervention', x: 0.85, y: 0.48, size: 8,
+                desc: 'Ethical negotiation. Explore decision-making under constraint.',
+                url: 'https://hartswf0.github.io/the-fork/', birth: 17,
+                connections: ['atlas-interventions']
+            },
+            {
+                id: 'func-sub', title: 'Training Grounds', type: 'intervention', x: 0.90, y: 0.18, size: 9,
+                desc: '6-axis spatial reasoning. Practice functional substitution.',
+                url: 'https://hartswf0.github.io/func-sub/', birth: 18,
+                connections: ['atlas-interventions']
+            },
+
+            // POML
+            { id: 'guardian', title: 'Guardian', type: 'poml', x: 0.25, y: 0.32, size: 4, desc: 'Assessment protocol.', file: 'guardian.poml', birth: 19, connections: ['poml-pyramid'] },
+            { id: 'furnace', title: 'Furnace', type: 'poml', x: 0.20, y: 0.22, size: 3, desc: 'Sintering engine.', file: 'furnace.poml', birth: 20 },
+            { id: 'forge', title: 'Forge', type: 'poml', x: 0.30, y: 0.18, size: 3, desc: 'Document forging.', file: 'forge.poml', birth: 21 },
+            { id: 'sinter-poml', title: 'Sinter', type: 'poml', x: 0.35, y: 0.25, size: 2, desc: 'Sintering ops.', file: 'sinter.poml', birth: 22 },
+            { id: 'mythos', title: 'Mythos', type: 'poml', x: 0.15, y: 0.12, size: 3, desc: 'Narrative generation.', file: 'mythos.poml', birth: 23 },
+            { id: 'tactics', title: 'Tactics', type: 'poml', x: 0.12, y: 0.28, size: 2, desc: 'Tactical operations.', file: 'tactics.poml', birth: 24 },
+
+            // SOURCES
+            { id: 'meadows', title: 'Donella Meadows', type: 'source', x: 0.08, y: 0.78, size: 5, desc: 'Leverage Points (1999).', birth: 0, connections: ['void-management', 'leverage-analysis'] },
+            { id: 'scott', title: 'James C. Scott', type: 'source', x: 0.10, y: 0.88, size: 6, desc: 'Mētis vs Techne.', birth: 0 },
+            { id: 'dijkstra', title: 'Dijkstra', type: 'source', x: 0.08, y: 0.68, size: 4, desc: 'GOTO Harmful (1968).', birth: 0, connections: ['negative-space'] },
+            { id: 'cheng', title: 'Ian Cheng', type: 'source', x: 0.12, y: 0.45, size: 5, desc: 'Worlding Raga.', birth: 0, connections: ['life-after-bob'] },
+            { id: 'suchman', title: 'Lucy Suchman', type: 'source', x: 0.06, y: 0.55, size: 5, desc: 'Situated Actions.', birth: 0, connections: ['context-engineering'] },
+            { id: 'geertz', title: 'Clifford Geertz', type: 'source', x: 0.05, y: 0.48, size: 4, desc: 'Thick Description.', birth: 0, connections: ['unified-ontology'] },
+            { id: 'mcluhan', title: 'McLuhan', type: 'source', x: 0.10, y: 0.32, size: 4, desc: 'Laws of Media.', birth: 0, connections: ['1000-futures'] },
+        ];
+
+        const TERRAIN_SHAPES = {
+            pyramid: { radius: 12, steepness: 3.5, height: 1.8 },
+            essay: { radius: 22, steepness: 1.5, height: 1.2 },
+            intervention: { radius: 16, steepness: 0.8, height: 1.0 },
+            poml: { radius: 8, steepness: 4.0, height: 0.9 },
+            source: { radius: 14, steepness: 1.2, height: 0.7 }
+        };
+
+        const TYPE_COLORS = {
+            pyramid: '#4a9eff',
+            essay: '#4ade80',
+            intervention: '#a78bfa',
+            poml: '#fbbf24',
+            source: '#f472b6'
+        };
+
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width, height, dpr;
+        let progress = 100;
+        let playing = false;
+        let hovered = null;
+        let selected = null;
+
+        const GRID_SIZE = 120;
+        let grid = new Float32Array(GRID_SIZE * GRID_SIZE);
+
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            dpr = Math.min(window.devicePixelRatio || 1, 2);
+            canvas.width = width * dpr;
+            canvas.height = height * dpr;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            buildGrid();
+            renderLabels();
+            buildFileBrowser();
+        }
+
+        function buildGrid() {
+            grid.fill(0);
+            REGIONS.forEach(r => {
+                const gx = Math.floor(r.x * (GRID_SIZE - 1));
+                const gy = Math.floor((1 - r.y) * (GRID_SIZE - 1));
+                const shape = TERRAIN_SHAPES[r.type] || TERRAIN_SHAPES.source;
+                const sizeMultiplier = Math.sqrt((r.size || 5) / 5);
+                const radius = Math.floor(shape.radius * sizeMultiplier);
+                const heightMultiplier = shape.height * (1 + (r.size || 5) / 20);
+
+                for (let dy = -radius; dy <= radius; dy++) {
+                    for (let dx = -radius; dx <= radius; dx++) {
+                        const nx = gx + dx, ny = gy + dy;
+                        if (nx < 0 || nx >= GRID_SIZE || ny < 0 || ny >= GRID_SIZE) continue;
+                        const d = Math.sqrt(dx * dx + dy * dy);
+                        if (d < radius) {
+                            const t = 1 - d / radius;
+                            const falloff = Math.pow(t, shape.steepness);
+                            grid[ny * GRID_SIZE + nx] += falloff * heightMultiplier;
+                        }
+                    }
+                }
+            });
+        }
+
+        function buildFileBrowser() {
+            const list = document.getElementById('browser-list');
+            list.innerHTML = '';
+            const types = ['pyramid', 'essay', 'intervention', 'poml', 'source'];
+            const labels = { pyramid: 'Pyramids', essay: 'Essays', intervention: 'Interventions', poml: 'POML', source: 'Sources' };
+
+            types.forEach(type => {
+                const items = REGIONS.filter(r => r.type === type);
+                if (items.length === 0) return;
+
+                const section = document.createElement('div');
+                section.className = 'browser-section';
+                section.textContent = labels[type] + ` (${items.length})`;
+                list.appendChild(section);
+
+                items.forEach(r => {
+                    const item = document.createElement('div');
+                    item.className = 'browser-item';
+                    item.innerHTML = `<div class="browser-dot" style="background:${TYPE_COLORS[r.type]}"></div>${r.title}`;
+                    item.onclick = () => selectRegion(r);
+                    list.appendChild(item);
+                });
+            });
+        }
+
+        function renderLabels() {
+            const layer = document.getElementById('labels-layer');
+            layer.innerHTML = '';
+            const maxBirth = Math.max(...REGIONS.map(r => r.birth));
+            const currentBirth = (progress / 100) * maxBirth;
+
+            REGIONS.forEach(r => {
+                if (r.birth > currentBirth && r.birth > 0) return;
+
+                const pin = document.createElement('div');
+                pin.className = `map-pin ${r.type}`;
+                pin.style.left = (r.x * 100) + '%';
+                pin.style.top = ((1 - r.y) * 100) + '%';
+
+                const dot = document.createElement('div');
+                dot.className = 'pin-dot';
+
+                const label = document.createElement('div');
+                label.className = 'pin-label';
+                label.textContent = r.title;
+
+                pin.appendChild(dot);
+                pin.appendChild(label);
+
+                pin.onmouseenter = () => { hovered = r; };
+                pin.onmouseleave = () => { hovered = null; };
+                pin.onclick = () => selectRegion(r);
+
+                layer.appendChild(pin);
+            });
+        }
+
+        function drawContours() {
+            const cellW = width / GRID_SIZE;
+            const cellH = height / GRID_SIZE;
+            const levels = 20;
+
+            for (let l = 1; l <= levels; l++) {
+                const thr = l * 0.15;
+                const isMajor = l % 4 === 0;
+                const alpha = isMajor ? 0.35 : 0.12 + (l / levels) * 0.08;
+                ctx.strokeStyle = `rgba(212, 168, 75, ${alpha})`;
+                ctx.lineWidth = isMajor ? 1.8 : 0.7;
+                ctx.beginPath();
+
+                for (let y = 0; y < GRID_SIZE - 1; y++) {
+                    for (let x = 0; x < GRID_SIZE - 1; x++) {
+                        const v0 = grid[y * GRID_SIZE + x];
+                        const v1 = grid[y * GRID_SIZE + x + 1];
+                        const v2 = grid[(y + 1) * GRID_SIZE + x + 1];
+                        const v3 = grid[(y + 1) * GRID_SIZE + x];
+
+                        const bin = (v0 > thr ? 8 : 0) | (v1 > thr ? 4 : 0) | (v2 > thr ? 2 : 0) | (v3 > thr ? 1 : 0);
+                        if (bin === 0 || bin === 15) continue;
+
+                        const safe = (a, b) => a === b ? 0.5 : (thr - a) / (b - a);
+                        const lerp = (a, b, t) => a + t * (b - a);
+
+                        const a = { x: lerp(x, x + 1, safe(v0, v1)), y };
+                        const b = { x: x + 1, y: lerp(y, y + 1, safe(v1, v2)) };
+                        const c = { x: lerp(x, x + 1, safe(v3, v2)), y: y + 1 };
+                        const d = { x, y: lerp(y, y + 1, safe(v0, v3)) };
+
+                        const sx = p => p.x * cellW;
+                        const sy = p => p.y * cellH;
+
+                        switch (bin) {
+                            case 1: case 14: ctx.moveTo(sx(c), sy(c)); ctx.lineTo(sx(d), sy(d)); break;
+                            case 2: case 13: ctx.moveTo(sx(b), sy(b)); ctx.lineTo(sx(c), sy(c)); break;
+                            case 3: case 12: ctx.moveTo(sx(b), sy(b)); ctx.lineTo(sx(d), sy(d)); break;
+                            case 4: case 11: ctx.moveTo(sx(a), sy(a)); ctx.lineTo(sx(b), sy(b)); break;
+                            case 5: ctx.moveTo(sx(a), sy(a)); ctx.lineTo(sx(d), sy(d)); ctx.moveTo(sx(b), sy(b)); ctx.lineTo(sx(c), sy(c)); break;
+                            case 6: case 9: ctx.moveTo(sx(a), sy(a)); ctx.lineTo(sx(c), sy(c)); break;
+                            case 7: case 8: ctx.moveTo(sx(a), sy(a)); ctx.lineTo(sx(d), sy(d)); break;
+                            case 10: ctx.moveTo(sx(a), sy(a)); ctx.lineTo(sx(b), sy(b)); ctx.moveTo(sx(c), sy(c)); ctx.lineTo(sx(d), sy(d)); break;
+                        }
+                    }
+                }
+                ctx.stroke();
+            }
+        }
+
+        // Draw connections between regions
+        function drawConnections() {
+            ctx.globalAlpha = 0.25;
+            ctx.lineWidth = 1;
+            ctx.setLineDash([4, 4]);
+
+            REGIONS.forEach(r => {
+                if (!r.connections) return;
+                const px = r.x * width, py = (1 - r.y) * height;
+
+                r.connections.forEach(connId => {
+                    const target = REGIONS.find(t => t.id === connId);
+                    if (!target) return;
+                    const tx = target.x * width, ty = (1 - target.y) * height;
+
+                    ctx.strokeStyle = TYPE_COLORS[r.type];
+                    ctx.beginPath();
+                    ctx.moveTo(px, py);
+                    ctx.lineTo(tx, ty);
+                    ctx.stroke();
+                });
+            });
+
+            ctx.setLineDash([]);
+            ctx.globalAlpha = 1;
+        }
+
+        // Catmull-Rom spline
+        function catmullRom(p0, p1, p2, p3, t) {
+            const t2 = t * t, t3 = t2 * t;
+            return {
+                x: 0.5 * ((2 * p1.x) + (-p0.x + p2.x) * t + (2 * p0.x - 5 * p1.x + 4 * p2.x - p3.x) * t2 + (-p0.x + 3 * p1.x - 3 * p2.x + p3.x) * t3),
+                y: 0.5 * ((2 * p1.y) + (-p0.y + p2.y) * t + (2 * p0.y - 5 * p1.y + 4 * p2.y - p3.y) * t2 + (-p0.y + 3 * p1.y - 3 * p2.y + p3.y) * t3)
+            };
+        }
+
+        // Draw trail - ALWAYS on load
+        function drawTrail() {
+            const maxBirth = Math.max(...REGIONS.map(r => r.birth));
+            const currentBirth = (progress / 100) * maxBirth;
+            const visible = REGIONS.filter(r => r.birth > 0 && r.birth <= currentBirth).sort((a, b) => a.birth - b.birth);
+            if (visible.length < 2) return;
+
+            const points = visible.map(r => ({ x: r.x * width, y: (1 - r.y) * height }));
+
+            // Trail glow
+            ctx.strokeStyle = 'rgba(74, 158, 255, 0.15)';
+            ctx.lineWidth = 10;
+            ctx.lineJoin = 'round';
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(points[0].x, points[0].y);
+            for (let i = 0; i < points.length - 1; i++) {
+                const p0 = points[Math.max(i - 1, 0)];
+                const p1 = points[i];
+                const p2 = points[i + 1];
+                const p3 = points[Math.min(i + 2, points.length - 1)];
+                for (let t = 0; t <= 1; t += 0.1) {
+                    const pt = catmullRom(p0, p1, p2, p3, t);
+                    ctx.lineTo(pt.x, pt.y);
+                }
+            }
+            ctx.stroke();
+
+            // Main trail
+            ctx.strokeStyle = 'rgba(74, 158, 255, 0.6)';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, width, height);
+            drawContours();
+            drawConnections();
+            drawTrail();
+            requestAnimationFrame(draw);
+        }
+
+        // Get trail-order items for linear reading
+        function getTrailOrder() {
+            return REGIONS.filter(r => r.birth > 0).sort((a, b) => a.birth - b.birth);
+        }
+
+        function selectRegion(r) {
+            selected = r;
+            document.getElementById('preview-title').textContent = r.title;
+            document.getElementById('preview-type').textContent = r.type;
+            document.getElementById('preview-type').style.background = TYPE_COLORS[r.type] + '40';
+            document.getElementById('preview-type').style.color = TYPE_COLORS[r.type];
+
+            // Show file path
+            const pathEl = document.getElementById('preview-file-path');
+            pathEl.textContent = r.file || r.url || '';
+
+            // Update nav label
+            const trail = getTrailOrder();
+            const idx = trail.findIndex(t => t.id === r.id);
+            if (idx >= 0) {
+                document.getElementById('nav-label').textContent = `${idx + 1}/${trail.length}`;
+                document.getElementById('btn-prev').disabled = idx === 0;
+                document.getElementById('btn-next').disabled = idx === trail.length - 1;
+            } else {
+                document.getElementById('nav-label').textContent = '—';
+                document.getElementById('btn-prev').disabled = true;
+                document.getElementById('btn-next').disabled = true;
+            }
+
+            // Update file browser active state
+            document.querySelectorAll('.browser-item').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.browser-item').forEach(el => {
+                if (el.textContent.includes(r.title)) el.classList.add('active');
+            });
+
+            const content = document.getElementById('preview-content');
+            const iframe = document.getElementById('preview-iframe');
+            rawText = '';
+            showRaw = false;
+
+            if (r.url) {
+                content.style.display = 'none';
+                iframe.style.display = 'block';
+                iframe.src = r.url;
+                rawText = '';
+            } else if (r.file) {
+                fetch(r.file)
+                    .then(res => res.ok ? res.text() : Promise.reject('Not found'))
+                    .then(text => {
+                        rawText = text;
+                        content.innerHTML = parseMarkdown(text);
+                        content.style.display = 'block';
+                        iframe.style.display = 'none';
+                    })
+                    .catch(() => {
+                        rawText = '';
+                        content.innerHTML = `<h2>${r.title}</h2>
+                            <p>${r.desc}</p>
+                            <p style="margin-top:20px;padding:12px;background:rgba(255,100,100,0.1);border-radius:6px;font-size:12px;color:#f88;">
+                                ⚠️ Can't load file via file:// protocol.<br>
+                                Run a local server: <code>python3 -m http.server 8000</code><br>
+                                Then open: <a href="http://localhost:8000/thesis-terrain.html" style="color:#4af">localhost:8000</a>
+                            </p>`;
+                        content.style.display = 'block';
+                        iframe.style.display = 'none';
+                    });
+            } else {
+                rawText = r.desc || '';
+                content.innerHTML = `<h2>${r.title}</h2><p>${r.desc}</p>`;
+                content.style.display = 'block';
+                iframe.style.display = 'none';
+            }
+
+            document.getElementById('preview-panel').classList.add('open');
+        }
+
+        let rawText = ''; // Store raw text for copy/download/raw view
+        let showRaw = false;
+
+        function parseMarkdown(md) {
+            return md
+                .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+                .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+                .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/`([^`]+)`/g, '<code>$1</code>')
+                .replace(/^> (.*$)/gim, '<blockquote>$1</blockquote>')
+                .replace(/\n\n/g, '</p><p>');
+        }
+
+        function showContent() {
+            const content = document.getElementById('preview-content');
+            if (showRaw && rawText) {
+                content.innerHTML = `<pre class="raw-code">${rawText.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre>`;
+            } else if (rawText) {
+                content.innerHTML = parseMarkdown(rawText);
+            }
+            document.getElementById('btn-raw').classList.toggle('active', showRaw);
+        }
+
+        // Copy to clipboard
+        document.getElementById('btn-copy').onclick = () => {
+            if (rawText) {
+                navigator.clipboard.writeText(rawText).then(() => {
+                    const btn = document.getElementById('btn-copy');
+                    btn.textContent = '✓';
+                    setTimeout(() => btn.textContent = '📋', 1500);
+                });
+            }
+        };
+
+        // Toggle raw view
+        document.getElementById('btn-raw').onclick = () => {
+            showRaw = !showRaw;
+            showContent();
+        };
+
+        // Navigation - prev/next through trail
+        document.getElementById('btn-prev').onclick = () => {
+            if (!selected) return;
+            const trail = getTrailOrder();
+            const idx = trail.findIndex(t => t.id === selected.id);
+            if (idx > 0) selectRegion(trail[idx - 1]);
+        };
+
+        document.getElementById('btn-next').onclick = () => {
+            if (!selected) return;
+            const trail = getTrailOrder();
+            const idx = trail.findIndex(t => t.id === selected.id);
+            if (idx < trail.length - 1) selectRegion(trail[idx + 1]);
+        };
+
+        // Draggable panel
+        const panel = document.getElementById('preview-panel');
+        const handle = document.getElementById('preview-drag-handle');
+        let isDragging = false, dragX = 0, dragY = 0;
+
+        handle.addEventListener('mousedown', e => {
+            if (e.target.tagName === 'BUTTON') return;
+            isDragging = true;
+            dragX = e.clientX - panel.offsetLeft;
+            dragY = e.clientY - panel.offsetTop;
+            panel.style.transition = 'none';
+        });
+
+        document.addEventListener('mousemove', e => {
+            if (!isDragging) return;
+            panel.style.left = (e.clientX - dragX) + 'px';
+            panel.style.top = (e.clientY - dragY) + 'px';
+            panel.style.right = 'auto';
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+            panel.style.transition = '';
+        });
+
+        // Controls
+        document.getElementById('scrubber').oninput = (e) => {
+            progress = parseInt(e.target.value, 10);
+            document.getElementById('progress-label').textContent = progress + '%';
+            renderLabels();
+        };
+
+        document.getElementById('btn-play').onclick = () => {
+            playing = !playing;
+            document.getElementById('btn-play').textContent = playing ? '❚❚ Pause' : '▶ Play Trail';
+            if (playing) progress = 0;
+        };
+
+        document.getElementById('btn-close').onclick = () => {
+            document.getElementById('preview-panel').classList.remove('open');
+            document.getElementById('preview-iframe').src = '';
+            selected = null;
+            document.querySelectorAll('.browser-item').forEach(el => el.classList.remove('active'));
+        };
+
+        document.getElementById('btn-newtab').onclick = () => {
+            if (selected) window.open(selected.url || selected.file, '_blank');
+        };
+
+        // Toggle file browser
+        document.getElementById('btn-toggle-files').onclick = () => {
+            const fb = document.getElementById('file-browser');
+            const btn = document.getElementById('btn-toggle-files');
+            fb.classList.toggle('open');
+            btn.classList.toggle('active');
+        };
+
+        // Toggle legend
+        document.getElementById('btn-toggle-legend').onclick = () => {
+            const legend = document.querySelector('.legend');
+            const btn = document.getElementById('btn-toggle-legend');
+            legend.classList.toggle('hidden');
+            btn.classList.toggle('active');
+        };
+
+        let lastTime = performance.now();
+        function animate(now) {
+            if (playing) {
+                const dt = (now - lastTime) / 1000;
+                progress = Math.min(progress + dt * 8, 100);
+                document.getElementById('scrubber').value = progress;
+                document.getElementById('progress-label').textContent = Math.round(progress) + '%';
+                renderLabels();
+                if (progress >= 100) playing = false;
+            }
+            lastTime = now;
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+        requestAnimationFrame(draw);
+        requestAnimationFrame(animate);
+    </script>
+</body>
+
+</html>
