@@ -512,17 +512,55 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* Genome Nav Chips */
+        .genome-nav-chip {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            padding: 5px 12px;
+            border-radius: 16px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .genome-nav-chip:hover {
+            filter: brightness(1.3);
+            transform: scale(1.05);
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <header>
-            <h1>Project Genome</h1>
-            <p class="subtitle">An integrated narrative of toolkits, trails, and transformations—each project encoded
-                with its Creator Trail DNA.</p>
-            <p class="course-info">LMC-6650 Project Studio: Creating Toolkits & Engagements with Social Values<br>Fall
-                2025 · Richmond Y. Wong, PhD</p>
+
+        <!-- Genome Navigation Grid -->
+        <nav class="genome-nav"
+            style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;padding:12px 0;border-bottom:1px solid var(--surface-2);">
+            <a href="#dirty-disclosure" class="genome-nav-chip"
+                style="background:rgba(239, 68, 68, 0.2);color:#ef4444;">dirty-disclosure</a>
+            <a href="#privacy-value-labels" class="genome-nav-chip"
+                style="background:rgba(59, 130, 246, 0.2);color:#3b82f6;">privacy-value-labels</a>
+            <a href="#liberty-machines" class="genome-nav-chip"
+                style="background:rgba(16, 185, 129, 0.2);color:#10b981;">liberty-machines</a>
+            <a href="#haunted-tools" class="genome-nav-chip"
+                style="background:rgba(245, 158, 11, 0.2);color:#f59e0b;">haunted-tools</a>
+            <a href="#role-deck" class="genome-nav-chip"
+                style="background:rgba(139, 92, 246, 0.2);color:#8b5cf6;">role-deck</a>
+            <a href="#the-fork" class="genome-nav-chip"
+                style="background:rgba(236, 72, 153, 0.2);color:#ec4899;">the-fork</a>
+            <a href="#func-sub" class="genome-nav-chip"
+                style="background:rgba(236, 72, 153, 0.2);color:#ec4899;">func-sub</a>
+            <a href="#tractor-dce-gyo" class="genome-nav-chip"
+                style="background:rgba(6, 182, 212, 0.2);color:#06b6d4;">tractor-dce-gyo (Final)</a>
+        </nav>
+
+        <header style="text-align:center;padding:40px 0 30px;margin-bottom:40px;">
+            <h1
+                style="font-family:'Crimson Pro',serif;font-size:2.4rem;font-weight:600;color:var(--accent);margin-bottom:8px;">
+                🧬 Project Genome</h1>
+            <p class="subtitle" style="font-size:1rem;color:var(--ink-dim);max-width:700px;margin:0 auto;">An integrated
+                narrative of toolkits, trails, and transformations—each project encoded with its <strong>Creator Trail
+                    DNA</strong>.</p>
         </header>
 
         <!-- Arc Section -->
@@ -566,7 +604,7 @@
         <div class="timeline">
 
             <!-- Week 1: dirty-disclosure -->
-            <article class="project week1">
+            <article class="project week1" id="dirty-disclosure">
                 <div class="project-header">
                     <h2 class="project-name">dirty-disclosure</h2>
                     <span class="project-week">Week 1 · Aug 19</span>
@@ -619,7 +657,7 @@
             </article>
 
             <!-- Week 3: privacy-value-labels -->
-            <article class="project week3">
+            <article class="project week3" id="privacy-value-labels">
                 <div class="project-header">
                     <h2 class="project-name">privacy-value-labels</h2>
                     <span class="project-week">Week 3 · Sep 2</span>
@@ -664,7 +702,7 @@
             </article>
 
             <!-- Week 4: liberty-machines -->
-            <article class="project week4">
+            <article class="project week4" id="liberty-machines">
                 <div class="project-header">
                     <h2 class="project-name">liberty-machines</h2>
                     <span class="project-week">Week 4 · Sep 9</span>
@@ -712,7 +750,7 @@
             </article>
 
             <!-- Week 5: haunted-tools -->
-            <article class="project week5">
+            <article class="project week5" id="haunted-tools">
                 <div class="project-header">
                     <h2 class="project-name">haunted-tools</h2>
                     <span class="project-week">Week 5 · Sep 16</span>
@@ -770,7 +808,7 @@
             </article>
 
             <!-- Week 7: role-deck -->
-            <article class="project week7">
+            <article class="project week7" id="role-deck">
                 <div class="project-header">
                     <h2 class="project-name">role-deck</h2>
                     <span class="project-week">Week 7 · Sep 30</span>
@@ -892,7 +930,7 @@
             </article>
 
             <!-- Workshops: the-fork -->
-            <article class="project workshop">
+            <article class="project workshop" id="the-fork">
                 <div class="project-header">
                     <h2 class="project-name">the-fork</h2>
                     <span class="project-week">Weeks 11–14 · Nov</span>
@@ -941,7 +979,7 @@
             </article>
 
             <!-- Workshops: func-sub -->
-            <article class="project workshop">
+            <article class="project workshop" id="func-sub">
                 <div class="project-header">
                     <h2 class="project-name">func-sub (Training Grounds)</h2>
                     <span class="project-week">Weeks 11–14 · Nov</span>
@@ -1003,7 +1041,7 @@
             </article>
 
             <!-- Final: tractor-dce-gyo -->
-            <article class="project final">
+            <article class="project final" id="tractor-dce-gyo">
                 <div class="project-header">
                     <h2 class="project-name">tractor-dce-gyo</h2>
                     <span class="project-week">Week 16 · Dec 2–9</span>

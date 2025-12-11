@@ -1276,39 +1276,52 @@
                 width: 100% !important;
                 max-width: 100%;
                 height: 32vh;
+                min-height: 80px;
             }
 
+            /* Mobile: Horizontal resizer becomes VERTICAL drag bar */
             .resizer {
+                display: block !important;
+                width: 100% !important;
+                height: 20px !important;
+                cursor: ns-resize !important;
+                background: var(--border);
+                border-top: 2px solid var(--accent);
+                border-bottom: 2px solid var(--accent);
+                opacity: 0.8;
+            }
+
+            .resizer::after {
+                content: '⋮⋮⋮';
+                display: flex;
+                justify-content: center;
+                color: var(--text-muted);
+                font-size: 10px;
+                letter-spacing: 4px;
+            }
+
+            .text-panel {
+                flex: 1 !important;
+                min-height: 200px;
+            }
+
+            .brand {
+                display: none !important;
+            }
+
+            .header-controls {
+                justify-content: space-between;
+                width: 100%;
+            }
+
+            #tts-controls-wrapper {
                 display: none;
             }
 
-            @media (max-width: 600px) {
-                .brand {
-                    display: none !important;
-                }
-
-                /* Hide Title on Mobile */
-                .header-controls {
-                    justify-content: space-between;
-                    width: 100%;
-                }
-
-                .resizer {
-                    width: 14px;
-                    opacity: 0.8 !important;
-                    background: var(--border);
-                }
-
-                /* Bigger Touch Target */
-                #tts-controls-wrapper {
-                    display: none;
-                }
-
-                /* Hide TTS on mobile to save space */
-                #fullscreen-btn {
-                    display: inline-flex !important;
-                }
+            #fullscreen-btn {
+                display: inline-flex !important;
             }
+        }
     </style>
 </head>
 
@@ -1706,16 +1719,32 @@
         });
         document.addEventListener('mouseup', () => { isResizing = false; document.body.style.cursor = ''; document.body.style.userSelect = ''; });
 
-        // Touch Support for Resizer
-        resizer.addEventListener('touchstart', (e) => { isResizing = true; document.body.style.userSelect = 'none'; });
+        // Touch Support for Resizer (Mobile = Vertical, Desktop = Horizontal)
+        resizer.addEventListener('touchstart', (e) => {
+            isResizing = true;
+            document.body.style.userSelect = 'none';
+            e.preventDefault(); // Prevent scroll
+        });
         document.addEventListener('touchmove', (e) => {
             if (!isResizing) return;
-            const x = e.touches[0].clientX;
-            const containerWidth = document.body.clientWidth;
-            const newFlex = (x / containerWidth);
-            if (newFlex > 0.1 && newFlex < 0.9) {
-                gridPanel.style.flex = newFlex;
-                textPanel.style.flex = 1 - newFlex;
+            const isMobile = window.innerWidth <= 700;
+            if (isMobile) {
+                // VERTICAL resize: adjust grid-panel height
+                const y = e.touches[0].clientY;
+                const headerHeight = 50; // Approximate header height
+                const newHeight = y - headerHeight;
+                if (newHeight > 80 && newHeight < window.innerHeight - 150) {
+                    gridPanel.style.height = newHeight + 'px';
+                }
+            } else {
+                // HORIZONTAL resize (desktop)
+                const x = e.touches[0].clientX;
+                const containerWidth = document.body.clientWidth;
+                const newFlex = (x / containerWidth);
+                if (newFlex > 0.1 && newFlex < 0.9) {
+                    gridPanel.style.flex = newFlex;
+                    textPanel.style.flex = 1 - newFlex;
+                }
             }
         });
         document.addEventListener('touchend', () => { isResizing = false; document.body.style.userSelect = ''; });
@@ -1733,12 +1762,20 @@
         const trayResize = document.getElementById('tray-resize');
         let isTrayResizing = false;
         trayResize.addEventListener('mousedown', (e) => { isTrayResizing = true; document.body.style.cursor = 'ns-resize'; document.body.style.userSelect = 'none'; e.preventDefault(); });
+        // Touch for Tray Resize
+        trayResize.addEventListener('touchstart', (e) => { isTrayResizing = true; document.body.style.userSelect = 'none'; e.preventDefault(); });
         document.addEventListener('mousemove', (e) => {
             if (!isTrayResizing) return;
             const h = window.innerHeight - e.clientY;
             if (h > 70 && h < window.innerHeight - 80) document.documentElement.style.setProperty('--tray-height', h + 'px');
         });
+        document.addEventListener('touchmove', (e) => {
+            if (!isTrayResizing) return;
+            const h = window.innerHeight - e.touches[0].clientY;
+            if (h > 70 && h < window.innerHeight - 80) document.documentElement.style.setProperty('--tray-height', h + 'px');
+        });
         document.addEventListener('mouseup', () => { isTrayResizing = false; document.body.style.cursor = ''; document.body.style.userSelect = ''; });
+        document.addEventListener('touchend', () => { isTrayResizing = false; document.body.style.userSelect = ''; });
 
         // Settings
         function toggleSettings() { document.getElementById('settings-dropdown').classList.toggle('open'); }

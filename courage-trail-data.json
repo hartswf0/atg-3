@@ -1,0 +1,625 @@
+{
+    "generated_at": "2025-12-11T06:15:00Z",
+    "thesis": "Void Management: How constraints become infrastructure through Context Engineering.",
+    "repository": "ATG 3.0",
+    "total_zones": 8,
+    "trail_levels": {
+        "0": "Surface - User-facing portals and visualizations",
+        "1": "Interface - Interactive tools and studios",
+        "2": "Core - POML prompts and documentation engine",
+        "3": "Foundation - Data, scripts, and infrastructure"
+    },
+    "zones": [
+        {
+            "id": "core-portal",
+            "label": "CORE PORTAL",
+            "type": "mountain",
+            "color": "#4ade80",
+            "col": 5,
+            "row": 0,
+            "level": 0,
+            "position": {
+                "x": 0.50,
+                "y": 0.08
+            },
+            "trailLevel": 0,
+            "fileCount": 3,
+            "dateRange": "Nov - Dec 2025",
+            "intent": "Central navigation hub linking all ATG tools and documentation",
+            "artifacts": [
+                {
+                    "text": "index.html",
+                    "type": "artifact",
+                    "size_human": "32 KB"
+                },
+                {
+                    "text": "atg-3-full-index.html",
+                    "type": "artifact",
+                    "size_human": "38 KB"
+                },
+                {
+                    "text": "project-genome.html",
+                    "type": "artifact",
+                    "size_human": "51 KB"
+                }
+            ],
+            "decisions": [
+                "Terminal-aesthetic navigation",
+                "Genome-based project encoding",
+                "Single entry point philosophy"
+            ],
+            "patterns": [
+                "terminal-ui",
+                "genome-encoding",
+                "trail-aware"
+            ],
+            "obstacles": [
+                "Balancing density with navigability"
+            ]
+        },
+        {
+            "id": "terrain-visualizations",
+            "label": "TERRAIN MAPS",
+            "type": "plateau",
+            "color": "#f59e0b",
+            "col": 6,
+            "row": 1,
+            "level": 0,
+            "position": {
+                "x": 0.65,
+                "y": 0.18
+            },
+            "trailLevel": 0,
+            "fileCount": 10,
+            "dateRange": "Nov - Dec 2025",
+            "intent": "Spatial visualization of thesis concepts as navigable terrain",
+            "artifacts": [
+                {
+                    "text": "thesis-terrain.html",
+                    "type": "artifact",
+                    "size_human": "48 KB"
+                },
+                {
+                    "text": "atg-master-terrain.html",
+                    "type": "artifact",
+                    "size_human": "35 KB"
+                },
+                {
+                    "text": "atg-3-topo.html",
+                    "type": "artifact",
+                    "size_human": "30 KB"
+                },
+                {
+                    "text": "courage-trail-olog.html",
+                    "type": "artifact",
+                    "size_human": "77 KB"
+                },
+                {
+                    "text": "thesis-pathways.html",
+                    "type": "artifact",
+                    "size_human": "37 KB"
+                },
+                {
+                    "text": "intervention-atlas.html",
+                    "type": "artifact",
+                    "size_human": "47 KB"
+                }
+            ],
+            "decisions": [
+                "10×8 grid topology",
+                "Timeline playback navigation",
+                "Zone-to-file mapping"
+            ],
+            "patterns": [
+                "spatial-narrative",
+                "trail-olog",
+                "topological-turn"
+            ],
+            "obstacles": [
+                "Complex SVG rendering",
+                "Mobile responsiveness"
+            ]
+        },
+        {
+            "id": "poml-library",
+            "label": "POML FORGE",
+            "type": "forge",
+            "color": "#8b5cf6",
+            "col": 2,
+            "row": 3,
+            "level": 1,
+            "position": {
+                "x": 0.22,
+                "y": 0.38
+            },
+            "trailLevel": 2,
+            "fileCount": 18,
+            "dateRange": "Nov - Dec 2025",
+            "intent": "Prompt library for context engineering and LLM orchestration",
+            "artifacts": [
+                {
+                    "text": "genome.poml",
+                    "type": "artifact",
+                    "size_human": "9 KB"
+                },
+                {
+                    "text": "trail-olog-sequencer.poml",
+                    "type": "artifact",
+                    "size_human": "19 KB"
+                },
+                {
+                    "text": "guardian.poml",
+                    "type": "artifact",
+                    "size_human": "13 KB"
+                },
+                {
+                    "text": "forge.poml",
+                    "type": "artifact",
+                    "size_human": "14 KB"
+                },
+                {
+                    "text": "furnace.poml",
+                    "type": "artifact",
+                    "size_human": "15 KB"
+                },
+                {
+                    "text": "anneal.poml",
+                    "type": "artifact",
+                    "size_human": "15 KB"
+                },
+                {
+                    "text": "sinter.poml",
+                    "type": "artifact",
+                    "size_human": "17 KB"
+                },
+                {
+                    "text": "citation-hunt.poml",
+                    "type": "artifact",
+                    "size_human": "22 KB"
+                },
+                {
+                    "text": "tactics.poml",
+                    "type": "artifact",
+                    "size_human": "10 KB"
+                },
+                {
+                    "text": "forensic.poml",
+                    "type": "artifact",
+                    "size_human": "13 KB"
+                }
+            ],
+            "decisions": [
+                "POML as prompt markup language",
+                "Metallurgical metaphor (forge, furnace, anneal, sinter)",
+                "Role-based prompt architecture"
+            ],
+            "patterns": [
+                "context-engineering",
+                "void-management",
+                "metallurgical-metaphor"
+            ],
+            "obstacles": [
+                "Maintaining prompt coherence at scale"
+            ]
+        },
+        {
+            "id": "forager-tools",
+            "label": "ROCKY FORAGER",
+            "type": "forest",
+            "color": "#22c55e",
+            "col": 7,
+            "row": 2,
+            "level": 1,
+            "position": {
+                "x": 0.75,
+                "y": 0.28
+            },
+            "trailLevel": 1,
+            "fileCount": 5,
+            "dateRange": "Dec 2025",
+            "intent": "Transclusion and sintering engine for academic research collection",
+            "artifacts": [
+                {
+                    "text": "SHUFFLE/forager/rocky-forager.html",
+                    "type": "artifact",
+                    "size_human": "103 KB"
+                },
+                {
+                    "text": "SHUFFLE/forager/rocky-glossary.html",
+                    "type": "artifact",
+                    "size_human": "25 KB"
+                },
+                {
+                    "text": "rocky-branch.html",
+                    "type": "artifact",
+                    "size_human": "78 KB"
+                }
+            ],
+            "decisions": [
+                "Transclusion over copy",
+                "Tray-based collection metaphor",
+                "Heatmap visualization for collection density"
+            ],
+            "patterns": [
+                "transclusion",
+                "tray-sinter",
+                "heatmap-topology"
+            ],
+            "obstacles": [
+                "CORS restrictions for file:// access",
+                "Mobile touch resizing"
+            ]
+        },
+        {
+            "id": "documentation-corpus",
+            "label": "DOCS ARCHIVE",
+            "type": "archive",
+            "color": "#3b82f6",
+            "col": 3,
+            "row": 5,
+            "level": 2,
+            "position": {
+                "x": 0.32,
+                "y": 0.62
+            },
+            "trailLevel": 2,
+            "fileCount": 63,
+            "dateRange": "Nov - Dec 2025",
+            "intent": "Academic papers, ologs, citation maps, and research synthesis",
+            "artifacts": [
+                {
+                    "text": "docs/void-management-thesis-paper.md",
+                    "type": "artifact",
+                    "size_human": "15 KB"
+                },
+                {
+                    "text": "docs/context-engineering-genealogy.md",
+                    "type": "artifact",
+                    "size_human": "12 KB"
+                },
+                {
+                    "text": "docs/creator-trail-olog.md",
+                    "type": "artifact",
+                    "size_human": "9 KB"
+                },
+                {
+                    "text": "docs/rocky-forager-olog.md",
+                    "type": "artifact",
+                    "size_human": "5 KB"
+                },
+                {
+                    "text": "docs/ghost-in-the-brick.md",
+                    "type": "artifact",
+                    "size_human": "8 KB"
+                },
+                {
+                    "text": "docs/thickening-genealogy-paper.md",
+                    "type": "artifact",
+                    "size_human": "10 KB"
+                },
+                {
+                    "text": "docs/citation-map-context-material.md",
+                    "type": "artifact",
+                    "size_human": "7 KB"
+                }
+            ],
+            "decisions": [
+                "Olog-based documentation",
+                "Citation map architecture",
+                "Pyramid stacking for argument structure"
+            ],
+            "patterns": [
+                "olog-documentation",
+                "citation-mapping",
+                "pyramid-stacking"
+            ],
+            "obstacles": [
+                "Keeping documentation synchronized with code"
+            ]
+        },
+        {
+            "id": "data-layer",
+            "label": "DATA SUBSTRATE",
+            "type": "river",
+            "color": "#06b6d4",
+            "col": 1,
+            "row": 4,
+            "level": 2,
+            "position": {
+                "x": 0.12,
+                "y": 0.52
+            },
+            "trailLevel": 2,
+            "fileCount": 15,
+            "dateRange": "Nov - Dec 2025",
+            "intent": "JSON configuration files powering visualizations and tools",
+            "artifacts": [
+                {
+                    "text": "courage-trail-data.json",
+                    "type": "artifact",
+                    "size_human": "59 KB"
+                },
+                {
+                    "text": "data/leverage-infrastructure-analysis.json",
+                    "type": "artifact",
+                    "size_human": "25 KB"
+                },
+                {
+                    "text": "data/disc-data.json",
+                    "type": "artifact",
+                    "size_human": "12 KB"
+                }
+            ],
+            "decisions": [
+                "JSON-first data architecture",
+                "Human-readable configuration",
+                "Schema-driven visualization"
+            ],
+            "patterns": [
+                "json-substrate",
+                "schema-first",
+                "data-visualization"
+            ],
+            "obstacles": [
+                "Schema evolution management"
+            ]
+        },
+        {
+            "id": "shuffle-toolkit",
+            "label": "SHUFFLE STUDIO",
+            "type": "settlement",
+            "color": "#ec4899",
+            "col": 8,
+            "row": 3,
+            "level": 1,
+            "position": {
+                "x": 0.85,
+                "y": 0.38
+            },
+            "trailLevel": 1,
+            "fileCount": 94,
+            "dateRange": "Nov - Dec 2025",
+            "intent": "Collection of experimental tools, viewers, and studios",
+            "artifacts": [
+                {
+                    "text": "SHUFFLE/forager/",
+                    "type": "artifact",
+                    "size_human": "Forager Tools"
+                },
+                {
+                    "text": "SHUFFLE/slides/",
+                    "type": "artifact",
+                    "size_human": "Slideshow System"
+                },
+                {
+                    "text": "SHUFFLE/onyx/",
+                    "type": "artifact",
+                    "size_human": "ONYX Narrative"
+                }
+            ],
+            "decisions": [
+                "Modular tool architecture",
+                "Experimental isolation from core",
+                "Rapid prototyping space"
+            ],
+            "patterns": [
+                "modular-tools",
+                "experimental-space",
+                "studio-pattern"
+            ],
+            "obstacles": [
+                "Maintaining coherence across experiments"
+            ]
+        },
+        {
+            "id": "infrastructure",
+            "label": "DEPLOY ENGINE",
+            "type": "foundation",
+            "color": "#64748b",
+            "col": 9,
+            "row": 7,
+            "level": 3,
+            "position": {
+                "x": 0.92,
+                "y": 0.88
+            },
+            "trailLevel": 3,
+            "fileCount": 5,
+            "dateRange": "Nov - Dec 2025",
+            "intent": "Deployment scripts, manifest generation, and CI/CD",
+            "artifacts": [
+                {
+                    "text": "sync.sh",
+                    "type": "artifact",
+                    "size_human": "541 B"
+                },
+                {
+                    "text": "generate_manifest.js",
+                    "type": "artifact",
+                    "size_human": "4 KB"
+                },
+                {
+                    "text": "enrich_trail_data.py",
+                    "type": "artifact",
+                    "size_human": "4 KB"
+                }
+            ],
+            "decisions": [
+                "GitHub Pages deployment",
+                "Manifest-based file discovery",
+                "Python enrichment scripts"
+            ],
+            "patterns": [
+                "gh-pages",
+                "manifest-discovery",
+                "script-automation"
+            ],
+            "obstacles": [
+                "Large file handling in git"
+            ]
+        }
+    ],
+    "connections": [
+        {
+            "from": "core-portal",
+            "to": "terrain-visualizations"
+        },
+        {
+            "from": "core-portal",
+            "to": "forager-tools"
+        },
+        {
+            "from": "core-portal",
+            "to": "shuffle-toolkit"
+        },
+        {
+            "from": "core-portal",
+            "to": "documentation-corpus"
+        },
+        {
+            "from": "terrain-visualizations",
+            "to": "data-layer"
+        },
+        {
+            "from": "poml-library",
+            "to": "forager-tools"
+        },
+        {
+            "from": "poml-library",
+            "to": "documentation-corpus"
+        },
+        {
+            "from": "data-layer",
+            "to": "terrain-visualizations"
+        },
+        {
+            "from": "data-layer",
+            "to": "shuffle-toolkit"
+        },
+        {
+            "from": "documentation-corpus",
+            "to": "terrain-visualizations"
+        },
+        {
+            "from": "forager-tools",
+            "to": "documentation-corpus"
+        },
+        {
+            "from": "shuffle-toolkit",
+            "to": "forager-tools"
+        },
+        {
+            "from": "infrastructure",
+            "to": "core-portal"
+        },
+        {
+            "from": "infrastructure",
+            "to": "data-layer"
+        }
+    ],
+    "timeline": [
+        {
+            "date": "2025-11-18",
+            "label": "Project Inception",
+            "active": [
+                "core-portal",
+                "documentation-corpus"
+            ]
+        },
+        {
+            "date": "2025-11-25",
+            "label": "POML Forge Established",
+            "active": [
+                "core-portal",
+                "poml-library",
+                "documentation-corpus"
+            ]
+        },
+        {
+            "date": "2025-12-01",
+            "label": "Terrain Visualizations",
+            "active": [
+                "terrain-visualizations",
+                "data-layer",
+                "poml-library"
+            ]
+        },
+        {
+            "date": "2025-12-05",
+            "label": "Rocky Forager Launch",
+            "active": [
+                "forager-tools",
+                "shuffle-toolkit",
+                "documentation-corpus"
+            ]
+        },
+        {
+            "date": "2025-12-10",
+            "label": "Trail Olog Synthesis",
+            "active": [
+                "terrain-visualizations",
+                "data-layer",
+                "infrastructure",
+                "documentation-corpus"
+            ]
+        },
+        {
+            "date": "2025-12-11",
+            "label": "Genome Sequencing",
+            "active": [
+                "core-portal",
+                "poml-library",
+                "terrain-visualizations",
+                "forager-tools",
+                "documentation-corpus",
+                "data-layer",
+                "shuffle-toolkit",
+                "infrastructure"
+            ]
+        }
+    ],
+    "mutations": [
+        {
+            "date": "2025-11-20",
+            "type": "structural",
+            "description": "Added /docs folder for academic papers"
+        },
+        {
+            "date": "2025-11-28",
+            "type": "semantic",
+            "description": "Introduced 'Void Management' thesis framing"
+        },
+        {
+            "date": "2025-12-01",
+            "type": "dependency",
+            "description": "Integrated Trail Olog visualization system"
+        },
+        {
+            "date": "2025-12-08",
+            "type": "behavioral",
+            "description": "Shifted from Fix to Add commits (stabilization → features)"
+        },
+        {
+            "date": "2025-12-11",
+            "type": "structural",
+            "description": "Added genome.poml and trail-olog-sequencer.poml"
+        }
+    ],
+    "related": [
+        {
+            "id": "COURAGE",
+            "relation": "upstream",
+            "reason": "WAG/LEGOS framework origin"
+        },
+        {
+            "id": "tractor-dce-gyo",
+            "relation": "sibling",
+            "reason": "Shared thesis infrastructure"
+        },
+        {
+            "id": "hartswf0.github.io",
+            "relation": "downstream",
+            "reason": "Deployment target"
+        }
+    ]
+}

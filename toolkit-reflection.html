@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATG Toolkit Reflection | Academic Appendix</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0d1117;
+            --surface: #161b22;
+            --border: #30363d;
+            --ink: #c9d1d9;
+            --ink-dim: #8b949e;
+            --ink-faint: #484f58;
+            --accent: #58a6ff;
+            --accent-dim: #388bfd;
+            --green: #3fb950;
+            --amber: #d29922;
+            --red: #f85149;
+            --purple: #a371f7;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--ink);
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            line-height: 1.7;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+        }
+
+        /* Header */
+        header {
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 32px;
+            margin-bottom: 48px;
+        }
+
+        .meta-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+
+        h1 {
+            font-family: 'EB Garamond', serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: #fff;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--ink-dim);
+            max-width: 600px;
+        }
+
+        /* Table of Contents */
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 48px;
+        }
+
+        .toc h2 {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--ink-dim);
+            margin-bottom: 16px;
+        }
+
+        .toc-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px 32px;
+        }
+
+        .toc-list a {
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toc-list a:hover {
+            text-decoration: underline;
+        }
+
+        .toc-num {
+            color: var(--ink-faint);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+        }
+
+        /* Sections */
+        section {
+            margin-bottom: 56px;
+        }
+
+        h2 {
+            font-family: 'EB Garamond', serif;
+            font-size: 1.75rem;
+            font-weight: 400;
+            color: #fff;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        h2 .section-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: var(--accent);
+            padding: 4px 10px;
+            background: rgba(88, 166, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--ink);
+            margin: 24px 0 12px;
+        }
+
+        p {
+            margin-bottom: 16px;
+            text-align: justify;
+        }
+
+        /* Emphasis */
+        strong {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        em {
+            font-style: italic;
+            color: var(--ink);
+        }
+
+        /* Lists */
+        ul,
+        ol {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            font-size: 14px;
+        }
+
+        th,
+        td {
+            border: 1px solid var(--border);
+            padding: 12px 16px;
+            text-align: left;
+        }
+
+        th {
+            background: var(--surface);
+            font-weight: 600;
+            color: #fff;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            background: var(--bg);
+        }
+
+        /* Blockquotes */
+        blockquote {
+            border-left: 3px solid var(--accent);
+            padding-left: 20px;
+            margin: 24px 0;
+            color: var(--ink-dim);
+            font-style: italic;
+        }
+
+        /* Code */
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9em;
+            background: var(--surface);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--accent);
+        }
+
+        /* Citations */
+        .citation-block {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 24px 0;
+        }
+
+        .citation {
+            font-size: 14px;
+            color: var(--ink-dim);
+            line-height: 1.6;
+            padding-left: 24px;
+            text-indent: -24px;
+            margin-bottom: 8px;
+        }
+
+        .citation:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Leverage Table */
+        .lever-table td:first-child {
+            font-weight: 600;
+            color: var(--accent);
+            white-space: nowrap;
+        }
+
+        /* Word count */
+        .word-count {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--ink-faint);
+            text-align: right;
+            margin-top: 8px;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border);
+            padding-top: 32px;
+            margin-top: 64px;
+            font-size: 14px;
+            color: var(--ink-dim);
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Component cards */
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .component-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .component-card h4 {
+            font-size: 14px;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .component-card p {
+            font-size: 13px;
+            color: var(--ink-dim);
+            margin: 0;
+            text-align: left;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            body {
+                padding: 24px 16px;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            .toc-list {
+                grid-template-columns: 1fr;
+            }
+
+            .component-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="meta-tag">&lt;Academic Appendix&gt;</div>
+        <h1>ATG 3.0 / COURAGE: A Reflective Account</h1>
+        <p class="subtitle">
+            A trail-aware documentation and design toolkit for researcher-practitioners working at the intersection of
+            HCI, AI ethics, and design.
+        </p>
+    </header>
+
+    <nav class="toc">
+        <h2>Contents</h2>
+        <div class="toc-list">
+            <a href="#description"><span class="toc-num">01</span> Toolkit Description</a>
+            <a href="#issues"><span class="toc-num">02</span> Issues Addressed</a>
+            <a href="#audiences"><span class="toc-num">03</span> Audiences</a>
+            <a href="#context"><span class="toc-num">04</span> Context of Use</a>
+            <a href="#leverage"><span class="toc-num">05</span> Levers & Leverage Points</a>
+            <a href="#process"><span class="toc-num">06</span> Design Process</a>
+            <a href="#reflections"><span class="toc-num">07</span> Learnings & Reflections</a>
+            <a href="#future"><span class="toc-num">08</span> Future Directions</a>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Section 1: Description -->
+        <section id="description">
+            <h2><span class="section-num">01</span> Toolkit Description</h2>
+
+            <p>
+                <strong>ATG 3.0</strong> (also called <strong>COURAGE</strong>) is a trail-aware documentation and
+                design toolkit for researcher-practitioners working at the intersection of HCI, AI ethics, and design.
+                It addresses a core challenge in LLM-assisted research: the gap between what the human knows, what the
+                LLM knows, and what remains invisible to both—what we call <em>"void management."</em>
+            </p>
+
+            <p>
+                The toolkit consists of five interconnected components:
+            </p>
+
+            <div class="component-grid">
+                <div class="component-card">
+                    <h4>🗺️ Trail Olog Visualization</h4>
+                    <p>Renders repository evolution as navigable topographic terrain, making project structure spatially
+                        legible.</p>
+                </div>
+                <div class="component-card">
+                    <h4>📜 POML Prompt Library</h4>
+                    <p>18+ specialized prompts for grounding claims, scouting literature, and finding non-obvious
+                        leverage.</p>
+                </div>
+                <div class="component-card">
+                    <h4>⛏️ Rocky Forager</h4>
+                    <p>A transclusion and sintering engine for academic research collection with heatmap visualization.
+                    </p>
+                </div>
+                <div class="component-card">
+                    <h4>📘 Pattern Glossary</h4>
+                    <p>24 recurring design patterns encoded with academic grounding and morphism relationships.</p>
+                </div>
+                <div class="component-card">
+                    <h4>🧬 Genome Sequencer</h4>
+                    <p>Extracts "project DNA" from repositories using an 8-codon schema (C-T-A-M-D-S-P-I).</p>
+                </div>
+            </div>
+
+            <p>
+                Users interact via single-file HTML interfaces designed for <strong>local-first operation</strong>—no
+                server required, no dependencies beyond a browser. The toolkit transforms fragmented research artifacts
+                into structured, navigable knowledge landscapes.
+            </p>
+            <div class="word-count">~150 words</div>
+        </section>
+
+        <!-- Section 2: Issues -->
+        <section id="issues">
+            <h2><span class="section-num">02</span> Issues Addressed</h2>
+
+            <p>
+                The toolkit addresses three interrelated problems:
+            </p>
+
+            <table>
+                <tr>
+                    <th>Gap Type</th>
+                    <th>Problem</th>
+                    <th>Intervention</th>
+                </tr>
+                <tr>
+                    <td><strong>Visibility Gap</strong></td>
+                    <td>Creators leave behind trails of data that remain invisible and unintegrated</td>
+                    <td>Trail Olog makes project structure spatially visible</td>
+                </tr>
+                <tr>
+                    <td><strong>Reflection Gap</strong></td>
+                    <td>Design happens too fast for ethical or methodological review</td>
+                    <td>POML library enforces PLAN→THINK→SPEAK phases</td>
+                </tr>
+                <tr>
+                    <td><strong>Grounding Gap</strong></td>
+                    <td>Academic claims often float free of verifiable citations</td>
+                    <td>Void Guardian audits claims against real literature</td>
+                </tr>
+            </table>
+
+            <p>
+                By making trails visible, enforcing reflection phases, and auditing citations against actual literature,
+                the toolkit intervenes where design practice typically fails.
+            </p>
+            <div class="word-count">~100 words</div>
+        </section>
+
+        <!-- Section 3: Audiences -->
+        <section id="audiences">
+            <h2><span class="section-num">03</span> Audiences</h2>
+
+            <p>
+                <strong>Primary users</strong>: Graduate students and researcher-practitioners conducting design
+                research, particularly those managing complex, evolving projects with LLM assistance. The toolkit
+                assumes intermediate technical literacy (comfort with HTML, JSON, Git) but not programming expertise.
+            </p>
+
+            <p>
+                <strong>Secondary beneficiaries</strong>: Advisors and reviewers who receive better-structured,
+                better-cited research outputs. The Trail Olog provides at-a-glance project comprehension; the Pattern
+                Glossary provides shared vocabulary.
+            </p>
+
+            <p>
+                <strong>Tertiary stakeholders</strong>: Future researchers who may build on this documented trail. The
+                Genome Sequencer ensures projects leave behind legible records.
+            </p>
+            <div class="word-count">~100 words</div>
+        </section>
+
+        <!-- Section 4: Context -->
+        <section id="context">
+            <h2><span class="section-num">04</span> Context of Use</h2>
+
+            <p>
+                This toolkit is designed for use during the <strong>research and documentation phase</strong> of design
+                projects—after initial exploration but before final submission. It assumes researchers have access to
+                their own data trails (commit logs, file systems, notes) and produces structured outputs that feed into
+                academic writing.
+            </p>
+
+            <p>
+                The toolkit is explicitly <em>not</em> for real-time design sessions but for <strong>reflective
+                    pause</strong>. It operates in the gap between doing and documenting—the "cooling off" period where
+                raw work becomes legible artifact.
+            </p>
+
+            <table>
+                <tr>
+                    <th>Context</th>
+                    <th>Usage</th>
+                </tr>
+                <tr>
+                    <td>Education</td>
+                    <td>Teaching research methods and documentation practices</td>
+                </tr>
+                <tr>
+                    <td>Audit</td>
+                    <td>Post-hoc review of project evolution and decisions</td>
+                </tr>
+                <tr>
+                    <td>Documentation</td>
+                    <td>Generating structured appendices and reflection pieces</td>
+                </tr>
+            </table>
+            <div class="word-count">~100 words</div>
+        </section>
+
+        <!-- Section 5: Leverage -->
+        <section id="leverage">
+            <h2><span class="section-num">05</span> Levers & Leverage Points</h2>
+
+            <h3>Shilton's Values Levers (2013)</h3>
+            <p>
+                Following Shilton's framework for embedding ethics into design, the toolkit operates primarily through
+                <strong>reflection levers</strong>—the POML library's phase-sequencing (PLAN→THINK→SPEAK) forces
+                deliberation before action. The Void Guardian prompt embodies the <strong>anticipation lever</strong> by
+                demanding proof of claims before publication. The Pattern Glossary functions as an <strong>integration
+                    lever</strong>, embedding ethical vocabulary into technical artifacts.
+            </p>
+
+            <table class="lever-table">
+                <tr>
+                    <th>Lever</th>
+                    <th>Toolkit Manifestation</th>
+                </tr>
+                <tr>
+                    <td>Anticipation</td>
+                    <td>Void Guardian demands citations before claims</td>
+                </tr>
+                <tr>
+                    <td>Reflection</td>
+                    <td>POML phases force pause before action</td>
+                </tr>
+                <tr>
+                    <td>Integration</td>
+                    <td>Pattern Glossary links ethics to code</td>
+                </tr>
+                <tr>
+                    <td>Participation</td>
+                    <td>Genome lets others read project DNA</td>
+                </tr>
+            </table>
+
+            <h3>Meadows' Leverage Points (via Erlichman)</h3>
+            <p>
+                In Meadows' hierarchy of system intervention, the toolkit intervenes at <strong>Level 9 (Information
+                    Flows)</strong>—making previously hidden trails visible—and <strong>Level 4
+                    (Self-Organization)</strong>—enabling practitioners to create their own patterns and genomes rather
+                than consuming pre-made frameworks. The highest leverage aim is <strong>Level 2 (System Goals)</strong>:
+                shifting from "publish fast" to "publish grounded."
+            </p>
+
+            <h3>Lessig's Regulatory Modes (2006)</h3>
+            <p>
+                Using Lessig's four modalities of constraint, the toolkit operates primarily through
+                <strong>architecture</strong> (UI that requires loading data before visualization, phases that must
+                complete in sequence) and <strong>norms</strong> (making citation auditing a "normal" practice rather
+                than optional polish). It does not invoke law or market mechanisms directly.
+            </p>
+            <div class="word-count">~200 words</div>
+        </section>
+
+        <!-- Section 6: Process -->
+        <section id="process">
+            <h2><span class="section-num">06</span> Design Process</h2>
+
+            <p>
+                The toolkit emerged through <strong>autoethnographic design research</strong> over 16 weeks (Fall 2025).
+                The first artifact was documentation (README.md), followed by interactive prototypes, then integration
+                layers. This "documentation-first" approach meant the system's conceptual architecture was articulated
+                before its technical implementation.
+            </p>
+
+            <p>
+                Key influences included:
+            </p>
+            <ul>
+                <li><strong>Warburg's <em>Mnemosyne Atlas</em></strong> for spatial knowledge representation</li>
+                <li><strong>Nelson's transclusion</strong> for trail-aware citation</li>
+                <li><strong>McLuhan's Tetrad</strong> for multidirectional analysis</li>
+                <li><strong>Spivak's Ologs</strong> for categorical knowledge encoding</li>
+            </ul>
+
+            <p>
+                Building used <strong>single-file HTML architecture</strong> for maximum portability—each tool is a
+                self-contained document that works offline. Testing was primarily <em>eating one's own cooking</em>:
+                using the toolkit to document its own creation. The POML library emerged from repeated patterns in
+                prompt crafting across 70+ HTML interfaces.
+            </p>
+            <div class="word-count">~150 words</div>
+        </section>
+
+        <!-- Section 7: Reflections -->
+        <section id="reflections">
+            <h2><span class="section-num">07</span> Learnings & Reflections</h2>
+
+            <p>
+                Building this toolkit revealed that <strong>constraints are not obstacles but infrastructure</strong>.
+                The "void"—what the LLM cannot see, what remains uncited, what the user hasn't loaded—shapes the system
+                as much as content does. This insight reframed the entire project: instead of minimizing constraints,
+                the toolkit <em>makes constraints legible</em>.
+            </p>
+
+            <blockquote>
+                "I initially assumed the LLM should manage the scene; I discovered it should manage the void."
+            </blockquote>
+
+            <p>
+                The hardest part was maintaining <strong>coherence across 18+ POML files and 70+ HTML
+                    interfaces</strong>. The Genome Sequencer emerged precisely from this challenge—a need to see the
+                whole while working on parts. If I started over, I would establish the Genome schema earlier and build
+                outward from it.
+            </p>
+
+            <p>
+                Unexpected discovery: the <strong>POML library became the most valuable component</strong>, not the
+                visualizations. The prompts encode tacit methodological knowledge in reusable form—a kind of "research
+                method in a file."
+            </p>
+            <div class="word-count">~150 words</div>
+        </section>
+
+        <!-- Section 8: Future -->
+        <section id="future">
+            <h2><span class="section-num">08</span> Future Directions</h2>
+
+            <p>
+                Future work includes:
+            </p>
+            <ul>
+                <li><strong>Validation</strong>: User studies with other researcher-practitioners beyond self-use</li>
+                <li><strong>Generalization</strong>: Abstracting the POML library for domains beyond HCI</li>
+                <li><strong>Community</strong>: Open-sourcing with workshop materials for adoption</li>
+                <li><strong>Integration</strong>: Connecting Trail Olog to actual Git history for automated genome
+                    extraction</li>
+                <li><strong>Cross-Linking</strong>: Enabling genome comparison across sibling projects</li>
+            </ul>
+
+            <p>
+                The ultimate vision is a research practice where <strong>trails are first-class citizens</strong>, not
+                afterthoughts—where the void is mapped, not ignored.
+            </p>
+            <div class="word-count">~100 words</div>
+        </section>
+
+        <!-- Citations -->
+        <section id="citations">
+            <h2><span class="section-num">∴</span> Works Cited</h2>
+
+            <div class="citation-block">
+                <p class="citation">
+                    Erlichman, D. (2021). <em>Impact Networks: Create Connection, Spark Collaboration, and Catalyze
+                        Systemic Change</em>. Berrett-Koehler Publishers. [Citing Meadows]
+                </p>
+                <p class="citation">
+                    Lessig, L. (2006). <em>Code: And Other Laws of Cyberspace, Version 2.0</em>. Basic Books.
+                </p>
+                <p class="citation">
+                    Meadows, D. (1999). Leverage Points: Places to Intervene in a System. <em>Sustainability
+                        Institute</em>.
+                </p>
+                <p class="citation">
+                    McLuhan, M. & McLuhan, E. (1988). <em>Laws of Media: The New Science</em>. University of Toronto
+                    Press.
+                </p>
+                <p class="citation">
+                    Nelson, T. (1965). Complex Information Processing: A File Structure for the Complex, the Changing
+                    and the Indeterminate. <em>ACM '65</em>.
+                </p>
+                <p class="citation">
+                    Shilton, K. (2013). Values Levers: Building Ethics Into Design. <em>Science, Technology, & Human
+                        Values</em>, 38(3), 374-397.
+                </p>
+                <p class="citation">
+                    Spivak, D. (2012). Ologs: A Categorical Framework for Knowledge Representation. <em>PLoS ONE</em>,
+                    7(1).
+                </p>
+                <p class="citation">
+                    Warburg, A. (1929). <em>Mnemosyne Atlas</em>. [Unpublished image atlas]
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>
+            <strong>ATG 3.0 / COURAGE</strong> · Toolkit Reflection Appendix<br>
+            December 2025 · ~1,050 words<br>
+            <a href="index.html">← Return to Terminal</a> · <a href="courage-trail-olog.html">View Trail Map →</a>
+        </p>
+    </footer>
+</body>
+
+</html>
