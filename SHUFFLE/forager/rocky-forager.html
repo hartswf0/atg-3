@@ -1281,7 +1281,34 @@
             .resizer {
                 display: none;
             }
-        }
+
+            @media (max-width: 600px) {
+                .brand {
+                    display: none !important;
+                }
+
+                /* Hide Title on Mobile */
+                .header-controls {
+                    justify-content: space-between;
+                    width: 100%;
+                }
+
+                .resizer {
+                    width: 14px;
+                    opacity: 0.8 !important;
+                    background: var(--border);
+                }
+
+                /* Bigger Touch Target */
+                #tts-controls-wrapper {
+                    display: none;
+                }
+
+                /* Hide TTS on mobile to save space */
+                #fullscreen-btn {
+                    display: inline-flex !important;
+                }
+            }
     </style>
 </head>
 
@@ -1291,7 +1318,7 @@
         <div class="header-controls">
             <button class="btn tray-btn" onclick="toggleTray()">TRAY <span id="tray-badge">0</span></button>
             <!-- TTS Controls in Header -->
-            <div
+            <div id="tts-controls-wrapper"
                 style="display:flex;align-items:center;gap:3px;border:1px solid var(--border);border-radius:4px;padding:2px 4px;">
                 <button class="btn" id="tts-play-header" onclick="toggleTTS()" style="padding:2px 6px;">▶</button>
                 <button class="btn" id="tts-catchup" onclick="ttsCatchUp()" style="padding:2px 6px;display:none;"
@@ -1303,6 +1330,8 @@
             </div>
             <button class="btn" onclick="exportTray()">Export</button>
             <button class="btn primary" onclick="downloadBib()">Bib</button>
+            <button class="btn" id="fullscreen-btn" onclick="toggleFullScreen()" style="display:none;"
+                title="Fullscreen">⛶</button>
             <div style="position:relative">
                 <button class="settings-btn" onclick="toggleSettings()">=</button>
                 <div class="settings-dropdown" id="settings-dropdown">
@@ -1662,16 +1691,44 @@
         // Resizers
         const resizer = document.getElementById('resizer');
         const gridPanel = document.getElementById('grid-panel');
+        const textPanel = document.getElementById('text-panel'); // Assuming text-panel exists
         let isResizing = false;
 
         resizer.addEventListener('mousedown', () => { isResizing = true; document.body.style.cursor = 'col-resize'; document.body.style.userSelect = 'none'; });
         document.addEventListener('mousemove', (e) => {
             if (!isResizing) return;
-            const rect = document.querySelector('.main-container').getBoundingClientRect();
-            const pct = ((e.clientX - rect.left) / rect.width) * 100;
-            if (pct > 15 && pct < 55) gridPanel.style.width = pct + '%';
+            const containerWidth = document.body.clientWidth;
+            const newFlex = (e.clientX / containerWidth);
+            if (newFlex > 0.1 && newFlex < 0.9) {
+                gridPanel.style.flex = newFlex;
+                textPanel.style.flex = 1 - newFlex;
+            }
         });
         document.addEventListener('mouseup', () => { isResizing = false; document.body.style.cursor = ''; document.body.style.userSelect = ''; });
+
+        // Touch Support for Resizer
+        resizer.addEventListener('touchstart', (e) => { isResizing = true; document.body.style.userSelect = 'none'; });
+        document.addEventListener('touchmove', (e) => {
+            if (!isResizing) return;
+            const x = e.touches[0].clientX;
+            const containerWidth = document.body.clientWidth;
+            const newFlex = (x / containerWidth);
+            if (newFlex > 0.1 && newFlex < 0.9) {
+                gridPanel.style.flex = newFlex;
+                textPanel.style.flex = 1 - newFlex;
+            }
+        });
+        document.addEventListener('touchend', () => { isResizing = false; document.body.style.userSelect = ''; });
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
 
         const trayResize = document.getElementById('tray-resize');
         let isTrayResizing = false;
