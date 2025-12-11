@@ -1,0 +1,1006 @@
+\section{Context as Material: A Theoretical and Computational Framework
+for Large Language Model
+Systems}\label{context-as-material-a-theoretical-and-computational-framework-for-large-language-model-systems}
+
+\subsection{Abstract}\label{abstract}
+
+The paradigm shift in software engineering precipitated by Large
+Language Models (LLMs)---often characterized as "Software
+3.0"---necessitates a fundamental ontological re-evaluation of the
+medium in which computation occurs. No longer defined by deterministic
+logic gates or explicit instruction sets, the primary unit of
+computation has shifted to the "token," and the primary workspace to the
+"context window." This report proposes the "Context as Material"
+framework, which posits that the context window must be treated not as
+an abstract, infinite canvas for text, but as a finite physical resource
+governed by distinct material properties, thermodynamic-like laws of
+entropy, and rigorous economic constraints. By synthesizing foundational
+anthropological theories---specifically Clifford Geertz's "thick
+description," Lucy Suchman's "situated actions," and Bruno Latour's
+"Actor-Network Theory"---with contemporary empirical research on
+"context rot," "lost-in-the-middle" phenomena, and "agentic context
+engineering," we establish a hierarchical taxonomy of context
+management. This hierarchy, conceptualized as the \textbf{Material
+Pyramid}, spans five distinct strata: \textbf{Foundations},
+\textbf{Material}, \textbf{Physics}, \textbf{Architecture}, and
+\textbf{Economics}. Through this lens, we argue that the efficacy of
+autonomous agents is bounded by the physical dynamics of their context,
+requiring a transition from the linguistic art of "prompt engineering"
+to the material science of "context engineering."
+
+\subsection{I. Introduction}\label{i.-introduction}
+
+The history of computer science is largely a history of abstraction.
+From vacuum tubes to transistors, from assembly language to
+object-oriented programming, the trajectory has been one of distancing
+the developer from the physical constraints of the hardware. However,
+the advent of Large Language Models (LLMs) and the subsequent rise of
+Generative AI have reversed this trend, reintroducing a form of stubborn
+materiality to the forefront of software development. In this new era,
+often termed "Software 3.0" by Andrej Karpathy, the neural network acts
+as the central processing unit, but the "code" is no longer a static
+binary; it is a fluid, probabilistic stream of natural language tokens
+fed into a context window.\textsuperscript{1}
+
+This report argues that the "context window" is not merely a data
+buffer. It is a material substance that underpins the cognitive
+capabilities of the artificial agent. Like any material, it occupies
+space (VRAM), possesses mass (latency), generates friction (inference
+cost), and is subject to degradation (context rot).\textsuperscript{3}
+The prevailing view of context as an ephemeral, abstract "prompt" is
+insufficient for building robust, autonomous systems. As agents are
+tasked with increasingly complex, long-horizon workflows---debugging
+codebases, managing financial portfolios, or navigating legal
+precedents---the management of this material becomes the defining
+engineering challenge.
+
+We introduce the "Context as Material" framework to formalize this
+challenge. Structured as a pyramid, this framework grounds the ephemeral
+nature of language in the concrete realities of computation. At the
+base, we find the \textbf{Foundations}, borrowing from anthropology and
+sociology to define what constitutes "meaningful" context in a
+socio-technical system. Above this lies the \textbf{Material}, the raw
+technical substrate of tokens and Key-Value (KV) caches that physically
+embody memory.\textsuperscript{5} This material is governed by the
+\textbf{Physics} of the transformer architecture, which dictates how
+attention flows, accumulates, or dissipates across the sequence
+length.\textsuperscript{6} The \textbf{Architecture} layer describes the
+systems---such as Agentic Context Engineering (ACE) and Dynamic
+Cheatsheets---designed to structure and refine this
+material.\textsuperscript{7} Finally, the \textbf{Economics} layer
+analyzes the cost-value optimization of context as a scarce, tradable
+asset.\textsuperscript{8}
+
+This report provides an exhaustive analysis of each layer, weaving
+together theoretical insights with empirical data to offer a
+comprehensive guide for the design of next-generation AI systems.
+
+\subsection{II. Foundations: The Anthropological
+Substrate}\label{ii.-foundations-the-anthropological-substrate}
+
+To engineer context effectively, one must first understand what context
+\emph{is}. In computer science, context is often reduced to
+"state"---the values of variables at a given time. However, for an LLM
+effectively simulating human reasoning, "state" is insufficient. We must
+turn to the "Foundations" layer of the Material Pyramid, which draws
+upon the rich traditions of anthropology, ethnography, and Science and
+Technology Studies (STS) to define the semiotic density required for
+intelligence.
+
+\subsubsection{A. Thick Description and Semiotic
+Density}\label{a.-thick-description-and-semiotic-density}
+
+The challenge of prompting an LLM to perform a complex task is
+structurally identical to the challenge of an ethnographer attempting to
+understand a foreign culture. In his 1973 seminal work, \emph{The
+Interpretation of Cultures}, Clifford Geertz introduced the distinction
+between "thin description" and "thick description".\textsuperscript{9}
+Geertz used the example of a wink: physically, it is merely a
+contraction of the eyelid (thin description). However, as a social act,
+it could be a conspiratorial signal, a mockery, a twitch, or a practice
+run. To understand the wink, one must describe the "web of
+significance"---the complex, layered hierarchies of meaning---that
+surround the physical action.\textsuperscript{11}
+
+In the domain of LLMs, a "thin description" corresponds to a naive,
+zero-shot prompt: "Translate this text" or "Fix this bug." Such prompts
+provide the model with the raw signal but lack the semiotic scaffolding
+necessary to disambiguate intent. The model, trained on the vast,
+contradictory "culture" of the internet, requires "thick description" to
+narrow its probabilistic output space to a desired
+behavior.\textsuperscript{12} Thick description in context engineering
+involves layering the prompt not just with instructions, but with
+provenance, constraints, emotional tone, relational history, and "emic"
+(insider) perspectives.\textsuperscript{9}
+
+The "Context as Material" framework posits that this "thickness" is a
+quantifiable property of the context material. Just as a physical
+material must have sufficient density to support a load, the context
+must have sufficient "semiotic density" to support complex
+reasoning.\textsuperscript{13} Geertz's assertion that culture is
+"semiotic" implies that the context window is a space where signs
+(tokens) interact to produce meaning.\textsuperscript{9} If the context
+is too "thin," the semiotic reactions fail to ignite, leading to generic
+or hallucinated outputs---the AI equivalent of mistaking a wink for a
+twitch.
+
+\subsubsection{B. Situated Actions and the Failure of
+Planning}\label{b.-situated-actions-and-the-failure-of-planning}
+
+The necessity of dynamic context is further illuminated by Lucy
+Suchman's theory of "situated actions," presented in \emph{Plans and
+Situated Actions} (1987).\textsuperscript{14} Suchman critiqued the
+classical AI view that intelligent behavior results from the execution
+of a pre-formulated plan. Instead, she argued that plans are merely
+resources for action, but the action itself is "situated"---it emerges
+from the immediate, improvised interaction between the actor and their
+environment.\textsuperscript{14}
+
+This distinction is critical for the design of autonomous agents. A
+rigid "System Prompt" acts as a plan---a static prescription of
+behavior. However, as the agent interacts with a user or a tool, the
+"situation" evolves. If the agent relies solely on the static plan (the
+system prompt), it fails to adapt to the contingencies of the
+moment.\textsuperscript{16} Suchman's work suggests that context is not
+a static background but an active, fluid constituent of intelligence.
+The "material" of context must be plastic; it must be capable of being
+reshaped in real-time by the "situatedness" of the
+interaction.\textsuperscript{17}
+
+This theoretical stance underpins modern architectures like "Dynamic
+Cheatsheets" and "Agentic Context Engineering" (ACE), which reject
+static documentation in favor of context that updates based on the
+program state.\textsuperscript{18} These systems acknowledge that
+intelligence is not "inside the skull" (or the weights) but emerges from
+the "intra-action" of the agent and its context.\textsuperscript{17}
+
+\subsubsection{C. Actor-Network Theory and Material
+Semiotics}\label{c.-actor-network-theory-and-material-semiotics}
+
+The agency of the context window itself is best understood through the
+lens of Bruno Latour's Actor-Network Theory (ANT).\textsuperscript{20}
+ANT posits that agency is not a unique property of humans but is
+distributed across a heterogeneous network of human and non-human
+"actants." In an LLM system, the non-human actants---the specific tokens
+in the prompt, the retrieval algorithm, the KV cache, the GPU
+memory---are not passive tools. They actively mediate the interaction,
+enabling or constraining specific outcomes.\textsuperscript{22}
+
+Latour argues that we must treat these non-human actors with "analytical
+equality".\textsuperscript{22} In the context of "Context Rot"
+(discussed in the Physics layer), a "distractor" token is a hostile
+actant; it actively works to disrupt the network of
+meaning.\textsuperscript{3} Conversely, a well-engineered "few-shot
+example" is an ally, stabilizing the network. The act of context
+engineering is thus a political act of "parliamentary" assembly:
+deciding which actants (information chunks) are allowed representation
+in the "parliament of things" (the context window).\textsuperscript{21}
+
+Furthermore, the concept of "material-semiotics," developed by Donna
+Haraway and Karen Barad, bridges the gap between the physical and the
+conceptual.\textsuperscript{23} Barad's notion of "intra-action" posits
+that distinct entities do not precede their interaction; rather, they
+emerge \emph{through} their entanglement.\textsuperscript{25} Applied to
+LLMs, this implies that the "knowledge" of the model is not a static
+retrieval from a database. It is intra-actively produced at the moment
+of inference by the entanglement of the model's weights (past) and the
+context window (present). The engineer, by defining the "agential cut"
+(what is included or excluded from context), literally constructs the
+reality in which the agent exists.\textsuperscript{27}
+
+\subsection{III. Material: The Substance of
+Computation}\label{iii.-material-the-substance-of-computation}
+
+Having established the theoretical necessity of context, we descend the
+pyramid to the "Material" layer. Here, we strip away the metaphors of
+"mind" and "language" to examine the raw, physical substance that
+enables LLM cognition. In the "Context as Material" framework, context
+is a tangible resource stored in High-Bandwidth Memory (HBM), occupying
+physical space and consuming physical energy.
+
+\subsubsection{A. The Materiality of Tokens and the KV
+Cache}\label{a.-the-materiality-of-tokens-and-the-kv-cache}
+
+The atomic unit of this material is the "token"---a discrete chunk of
+information that serves as the fundamental currency of the LLM economy.
+However, during the inference process, tokens are transmuted into a much
+heavier, more cumbersome substance: the Key-Value (KV)
+cache.\textsuperscript{5}
+
+In the Transformer architecture, the attention mechanism calculates the
+relationship between the current token and every previous token in the
+sequence. To generate the \$N+1\$ token, the model needs the Key (K) and
+Value (V) matrices for tokens \$1\$ through \$N\$. Without caching, the
+model would be forced to recompute these matrices from scratch at every
+single step, leading to a quadratic increase in computational cost
+(\$O(N\^{}2)\$) and making real-time generation
+impossible.\textsuperscript{29}
+
+The KV cache serves as the "physical memory" of the LLM. It is a
+dedicated allocation of VRAM (Video RAM) on the GPU where these
+intermediate representations are stored.\textsuperscript{5} This cache
+is the material embodiment of the "context window." It has a definite
+mass, measured in gigabytes. For example, a 175-billion parameter model
+with a long context window (e.g., 128k tokens) can generate a KV cache
+so massive that it exceeds the memory capacity of a single A100
+GPU.\textsuperscript{28}
+
+This materiality introduces the "Memory Wall"---a bottleneck where the
+speed of inference is limited not by the speed of computation (FLOPS)
+but by the bandwidth available to move this massive KV material between
+memory and the compute cores.\textsuperscript{28} We observe here a
+direct physical manifestation of Haraway's material-semiotics: the
+"meaning" (semiotics) the model can generate is strictly bounded by the
+physical "matter" (VRAM) available to store its
+history.\textsuperscript{23} If the material storage runs out, the
+context is truncated, and the "web of significance" is severed.
+
+\subsubsection{B. The Context Window as RAM: The LLM
+OS}\label{b.-the-context-window-as-ram-the-llm-os}
+
+Andrej Karpathy crystallizes this material view by analogizing the LLM
+to a Central Processing Unit (CPU) and the context window to Random
+Access Memory (RAM).\textsuperscript{1} In this "LLM OS" paradigm, the
+Large Language Model is the kernel---the core processing engine. The
+context window is the working memory where the active state of the
+application is loaded.\textsuperscript{1}
+
+Just as a traditional Operating System (OS) manages RAM to allow
+multiple applications to run without crashing, an "LLM OS" must manage
+the context window. It must decide what data to "page in" (retrieve from
+long-term storage/RAG), what to "page out" (summarize or discard), and
+how to organize the memory space to prevent "segmentation faults"
+(hallucinations or context overflow).\textsuperscript{1}
+
+This analogy elevates "Context Engineering" from a linguistic art to a
+systems engineering discipline. It is akin to memory management in
+classical computing. The context engineer is responsible for "malloc"
+(memory allocation) and "garbage collection" (pruning irrelevant
+tokens). The finite size of the context window (e.g., 8k, 32k, 128k
+tokens) acts as the physical constraint of the RAM stick. If the
+engineer fills the RAM with "bloatware" (verbose, irrelevant text), the
+system thrashes; it spends all its compute cycles processing noise
+rather than generating signal.\textsuperscript{31}
+
+\subsubsection{C. Software 3.0: Vibe Coding and Natural Language
+Programming}\label{c.-software-3.0-vibe-coding-and-natural-language-programming}
+
+This material shift marks the transition to "Software 3.0." Software 1.0
+was explicit code (C++, Python) written by humans. Software 2.0 was
+neural networks (weights) learned from data, opaque to human inspection.
+Software 3.0, as defined by Karpathy, is the programming of these neural
+networks using natural language prompts.\textsuperscript{1}
+
+In Software 3.0, the prompt \emph{is} the code. However, unlike the
+rigid syntax of C++, this code is "soft" and probabilistic. Karpathy
+refers to this as "vibe coding"---programming through intent and persona
+rather than explicit logic.\textsuperscript{1} But this softness does
+not imply a lack of structure. The "Context as Material" framework
+argues that Software 3.0 requires even \emph{more} rigorous structural
+engineering because the material (language) is inherently unstable. The
+engineer must build "containment structures" within the
+prompt---schemas, delimiters, and few-shot examples---to constrain the
+probabilistic "fluid" of the model into reliable execution
+paths.\textsuperscript{31}
+
+\subsection{IV. Physics: The Dynamics of
+Context}\label{iv.-physics-the-dynamics-of-context}
+
+If context is a material, it follows that it must be subject to physical
+laws. It does not behave uniformly; it exhibits varying density, decay,
+interference patterns, and gravitational pulls. Recent empirical
+research has uncovered specific "physics" governing how LLMs interact
+with information distributed across this material substrate.
+
+\subsubsection{A. The "Lost in the Middle"
+Phenomenon}\label{a.-the-lost-in-the-middle-phenomenon}
+
+One of the most significant discoveries in the physics of context is the
+"U-shaped" performance curve, widely known as the "Lost in the Middle"
+phenomenon.\textsuperscript{6} Research by Liu et al. (2023)
+demonstrates that LLMs are not isotropic in their attention
+capabilities. When presented with a long sequence of information (e.g.,
+a "haystack" of documents), the model\textquotesingle s ability to
+retrieve a specific fact (the "needle") depends heavily on its
+position.\textsuperscript{6}
+
+\begin{itemize}
+\item
+  \textbf{Primacy Bias:} Information placed at the very beginning of the
+  context window is retrieved with high accuracy. The model's attention
+  mechanism seems to "anchor" on the initial tokens, treating them as
+  foundational instructions.
+\item
+  \textbf{Recency Bias:} Information at the very end of the
+  context---closest to the generation point---is also highly salient.
+  These tokens are "fresh" in the recurrence of the autoregressive
+  process.
+\item
+  \textbf{The Trough of Ignorance:} However, information buried in the
+  middle of a long context sequence suffers from significant retrieval
+  degradation. The performance curve dips dramatically in the center,
+  forming a "U" shape.
+\end{itemize}
+
+This phenomenon suggests that the "material" of context has variable
+density. The edges are dense and solid, providing reliable support for
+reasoning, while the center is porous and unstable.\textsuperscript{32}
+This finding challenges the naive assumption that "more context is
+better." Simply extending the context window (e.g., to 1 million tokens)
+does not guarantee that the model can effectively utilize that
+space.\textsuperscript{33} The physics of the attention
+mechanism---specifically the accumulation of attention scores and the
+limitations of Rotary Positional Embeddings (RoPE)---creates a "fog of
+war" in the middle of the sequence, where the signal-to-noise ratio
+drops precipitously.\textsuperscript{34}
+
+\subsubsection{B. Context Rot and
+Entropy}\label{b.-context-rot-and-entropy}
+
+Complementing the positional bias is the concept of "Context Rot," a
+term coined to describe the degradation of model performance as the
+volume of irrelevant information increases.\textsuperscript{3} Just as
+physical materials degrade due to entropy, the semantic integrity of the
+context window degrades as "noise" accumulates.
+
+Experiments by Chroma Research (2025) reveal that this rot is not
+linear. They evaluated 18 state-of-the-art LLMs using a "Needle in a
+Haystack" (NIAH) setup with varying degrees of
+complexity.\textsuperscript{3} The findings were stark:
+
+\begin{itemize}
+\item
+  \textbf{Distractor Interference:} Adding "distractors"---related but
+  irrelevant information---disproportionately impairs the
+  model\textquotesingle s ability to retrieve the target information.
+  The presence of distractors doesn\textquotesingle t just dilute the
+  signal; it actively confuses the attention heads, leading to
+  "hallucinations" (confident errors) or "refusals" (conservative
+  abstentions).\textsuperscript{3}
+\item
+  \textbf{Semantic Rot:} The rot is most severe when the distractors are
+  semantically similar to the needle. This suggests an interference
+  pattern where the vector representations of similar concepts overlap,
+  making it difficult for the model to resolve the correct
+  entity.\textsuperscript{4}
+\item
+  \textbf{Shuffled vs. Ordered:} Surprisingly, in some cases,
+  \emph{shuffled} (incoherent) contexts performed better than logically
+  ordered ones.\textsuperscript{35} This counter-intuitive finding
+  suggests that models may over-attend to the "narrative flow" of
+  ordered text, getting lost in the story, whereas shuffled text forces
+  a more mechanical, keyword-based retrieval.
+\end{itemize}
+
+The physics of context rot implies a \textbf{Second Law of Context
+Dynamics}: in a closed context window (like a long conversation), the
+ratio of useful information (signal) to useless information (noise)
+tends to decrease over time. Without active external work (energy input
+in the form of curation and pruning), the system will inevitably devolve
+into a state of maximum entropy, characterized by hallucinations and
+incoherence.\textsuperscript{3}
+
+\subsubsection{C. The Non-Uniformity of
+Attention}\label{c.-the-non-uniformity-of-attention}
+
+The underlying mechanism driving these phenomena is the non-uniformity
+of the attention mechanism. While theoretically, the Transformer
+architecture allows every token to attend to every other token
+(\$O(N\^{}2)\$ complexity), in practice, the learned attention weights
+are not distributed evenly.\textsuperscript{29} The model learns
+heuristics during pre-training that prioritize certain positions and
+token types.
+
+This creates "gravity wells" in the context window. The system prompt
+(start) and the user query (end) act as massive bodies that warp the
+attention field, pulling the model\textquotesingle s focus. The "middle"
+tokens, lacking this gravitational pull, drift in a low-attention void.
+Understanding these physics is crucial for the "Architecture" layer.
+Engineers cannot simply dump data into the context window; they must
+structure it to exploit the gravitational pull of the start and end
+tokens, placing critical instructions and schemas where the physics of
+the model will naturally highlight them.\textsuperscript{32}
+
+\subsection{V. Architecture: Structuring the
+Material}\label{v.-architecture-structuring-the-material}
+
+Recognizing the material properties and physical constraints of context,
+we move to the \textbf{Architecture} layer. This layer deals with the
+design of systems that can engineer context to maximize utility and
+minimize rot. The transition here is from the static art of "prompt
+engineering" to the dynamic systems engineering of "Agentic Context
+Engineering."
+
+\subsubsection{A. From Prompting to Agentic Context Engineering
+(ACE)}\label{a.-from-prompting-to-agentic-context-engineering-ace}
+
+Traditional prompt engineering treats the prompt as a static
+artifact---a "spell" cast once to invoke a result. However, for
+autonomous agents operating over long time horizons, static prompts fail
+due to the "situated" nature of the task and the inevitable accumulation
+of entropy.\textsuperscript{36} The \textbf{Agentic Context Engineering
+(ACE)} framework, introduced by Zhang et al. (2025), represents the
+architectural response to these challenges.\textsuperscript{7}
+
+ACE treats context not as a static text but as an evolving "playbook."
+It identifies two primary failure modes in traditional context
+management:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Brevity Bias:} When context is summarized to save space, the
+  model tends to discard nuanced, domain-specific details in favor of
+  generic abstractions. This "thinning" of the description leads to a
+  loss of competence.\textsuperscript{19}
+\item
+  \textbf{Context Collapse:} Repeatedly rewriting or summarizing the
+  context history leads to a degradation of information fidelity,
+  similar to the generation loss in repeatedly copying a JPEG image.
+  Over time, the context "collapses" into a noisy, low-fidelity
+  state.\textsuperscript{19}
+\end{enumerate}
+
+\subsubsection{B. The Generator-Reflector-Curator
+Triad}\label{b.-the-generator-reflector-curator-triad}
+
+To solve these problems, ACE introduces a modular architecture that
+separates the cognitive functions of the agent into three distinct
+roles, creating a "self-improving loop".\textsuperscript{7}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{The Generator:} This module is responsible for producing
+  candidate strategies and reasoning paths based on the current context.
+  It generates the "forward pass" of action, proposing how to handle a
+  new query or task.\textsuperscript{38}
+\item
+  \textbf{The Reflector:} This module acts as the "critic." It analyzes
+  the outcomes of the Generator\textquotesingle s actions,
+  distinguishing between success and failure. The Reflector applies a
+  critical gaze to the agent\textquotesingle s own history, extracting
+  "lessons learned." This is a computational implementation of Donald
+  Schön's concept of "reflection-in-action"---the ability of a
+  practitioner to think about what they are doing while doing
+  it.\textsuperscript{37}
+\item
+  \textbf{The Curator:} This is the memory manager. It integrates the
+  lessons extracted by the Reflector into the persistent context store
+  (the playbook). Crucially, the Curator uses "delta
+  updates"---incremental additions of specific insights---rather than
+  wholesale rewrites of the context. This "append-only" or "patch-based"
+  strategy prevents Context Collapse and ensures that the context grows
+  denser and more refined over time.\textsuperscript{37}
+\end{enumerate}
+
+\subsubsection{C. Dynamic Cheatsheets and Focused
+Retrieval}\label{c.-dynamic-cheatsheets-and-focused-retrieval}
+
+The ACE framework aligns with the concept of \textbf{Dynamic
+Cheatsheets}.\textsuperscript{18} Instead of providing the agent with a
+massive, static manual (which would suffer from Lost-in-the-Middle
+effects), the system maintains a "cheatsheet" of relevant strategies,
+code snippets, and heuristics that updates in real-time.
+
+To combat "Context Rot," architectures are also moving away from
+brute-force RAG (Retrieval-Augmented Generation) toward
+\textbf{Graph-Based Focused Retrieval}.\textsuperscript{4} In standard
+RAG, retrieving a chunk of text often brings along
+"distractors"---irrelevant surrounding sentences that rot the context.
+In Graph-Based retrieval, the system models the knowledge base as a
+graph of nodes (concepts) and edges (relations). When the agent needs
+information, it traverses the graph to retrieve only the specific nodes
+and edges required, assembling a "pure signal" context with minimal
+noise.\textsuperscript{4}
+
+This approach allows for "Context-Bench" style evaluations, where agents
+are tested not just on their ability to answer questions, but on their
+ability to "engineer" their own context---deciding what to retrieve,
+what to keep, and what to discard.\textsuperscript{36} The agent becomes
+an active curator of its own material reality.
+
+\subsection{VI. Economics: The Value of
+Context}\label{vi.-economics-the-value-of-context}
+
+The final layer of the pyramid is \textbf{Economics}. The manipulation
+of context material is not free; it consumes computational energy and
+financial capital. The "Context as Material" framework allows us to
+quantify the value of context and optimize its usage in a market-driven
+environment.
+
+\subsubsection{A. Token Economics: Cache Write vs. Cache
+Read}\label{a.-token-economics-cache-write-vs.-cache-read}
+
+The primary cost driver in LLM systems is the processing of tokens.
+However, the pricing models of major providers like Anthropic reveal a
+crucial distinction that reflects the underlying materiality of the KV
+cache.\textsuperscript{8}
+
+\begin{itemize}
+\item
+  \textbf{Cache Write Cost:} Processing \emph{new} tokens is expensive
+  because the model must perform the full matrix calculations to
+  generate the KV states. For Claude 3.5 Sonnet, this costs
+  \textbf{\$3.75 per million tokens}.\textsuperscript{8}
+\item
+  \textbf{Cache Read Cost:} Reusing \emph{existing} context (cached KV
+  states) is significantly cheaper because the heavy computation is
+  already done. Accessing cached tokens costs only \textbf{\$0.30 per
+  million tokens}---a \textbf{90\% reduction} in
+  cost.\textsuperscript{8}
+\end{itemize}
+
+This pricing structure fundamentally alters the economics of context. It
+transforms context from a "disposable good" (computed once and
+discarded) into a "durable asset" (computed once and reused). The
+initial processing of a prompt is a \textbf{Capital Expenditure
+(CapEx)}---an investment in building a material state. Subsequent uses
+of that prompt are \textbf{Operational Expenditures (OpEx)}.
+
+\subsubsection{B. The Attention Budget and
+Latency}\label{b.-the-attention-budget-and-latency}
+
+Beyond monetary cost, there is the cost of time (latency). The "mass" of
+the context window creates inertia. Processing a 100k token context for
+every turn induces unacceptable latency, often measured in tens of
+seconds.\textsuperscript{8}
+
+We can conceptualize this as an \textbf{"Attention Budget."} An agent
+has a finite amount of "attention seconds" it can spend per interaction.
+If the context is too "heavy" (too many tokens), the agent spends its
+entire budget just "loading" the context, leaving no time for "thinking"
+(generation).
+
+The use of "Prompt Caching" significantly impacts this budget. By
+pre-loading heavy context materials (e.g., a codebase, a legal library)
+into the cache, the "Time to First Token" (TTFT) can be reduced by up to
+\textbf{85\%}.\textsuperscript{8} This allows for "thicker" descriptions
+(more context) without the latency penalty.
+
+\subsubsection{C. Return on Context
+(RoC)}\label{c.-return-on-context-roc}
+
+The ultimate economic metric for the context engineer is the
+\textbf{Return on Context (RoC)}. This metric asks: "Does the addition
+of these 1,000 tokens of history improve the outcome sufficiently to
+justify the incremental cost and latency?"
+
+Empirical results from the ACE framework demonstrate a high RoC. By
+using dynamic, curated context playbooks, agents achieved:
+
+\begin{itemize}
+\item
+  \textbf{+10.6\% performance gain} on general agent
+  benchmarks.\textsuperscript{7}
+\item
+  \textbf{+8.6\% performance gain} on finance-specific reasoning
+  tasks.\textsuperscript{7}
+\item
+  \textbf{-86.9\% reduction in adaptation latency}.\textsuperscript{41}
+\item
+  \textbf{-75\% reduction in rollout costs}.\textsuperscript{38}
+\end{itemize}
+
+These figures prove that treating context as a scarce resource that must
+be engineered---rather than an infinite bucket to be filled---maximizes
+the efficient conversion of tokens into intelligence.
+
+\subsection{VII. Conclusion}\label{vii.-conclusion}
+
+The "Context as Material" framework offers a unified, multi-layered
+ontology for understanding and engineering Large Language Model systems.
+It moves the discourse beyond the superficial "tips and tricks" of
+prompt engineering to a rigorous science of material management.
+
+By traversing the \textbf{Material Pyramid}, we see that effective AI
+systems are built on:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Foundations:} A deep understanding of semiotics and situated
+  action (Geertz, Suchman, Latour) that defines \emph{meaning}.
+\item
+  \textbf{Material:} A mastery of the physical substrate (KV Cache,
+  VRAM) that defines \emph{capacity}.
+\item
+  \textbf{Physics:} A respect for the thermodynamic laws (Entropy,
+  Gravity) that define \emph{dynamics}.
+\item
+  \textbf{Architecture:} The implementation of modular systems (ACE,
+  Generator-Reflector-Curator) that define \emph{structure}.
+\item
+  \textbf{Economics:} An optimization of the cost-value function (Cache
+  Pricing, RoC) that defines \emph{viability}.
+\end{enumerate}
+
+As we enter the era of Software 3.0, the primary skill of the AI
+engineer evolves. It is no longer about writing the perfect line of
+code; it is about curating the perfect window of context. It is a shift
+from the digital to the material, from the abstract to the situated, and
+from the static to the evolving. The context window is the new silicon;
+how we refine, structure, and utilize this material will determine the
+intelligence of the systems we build.
+
+\subsubsection{Table 1: The Material Pyramid of
+Context}\label{table-1-the-material-pyramid-of-context}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Level}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Core Concept}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Key Theoretical/Technical Pillars}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Primary Challenge}
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{I. Foundations}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Semiotics \& Agency
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Thick Description \textsuperscript{9}, Situated Action
+\textsuperscript{14}, ANT \textsuperscript{21}, Intra-action
+\textsuperscript{23}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Defining "meaning" and "agency" in non-human systems.
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{II. Material}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+The Token \& Cache
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+KV Cache \textsuperscript{29}, Context Window as RAM
+\textsuperscript{1}, Memory Wall \textsuperscript{28}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+VRAM limitations, HBM bandwidth bottlenecks.
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{III. Physics}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Dynamics of Attention
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Lost in the Middle \textsuperscript{6}, Context Rot \textsuperscript{3},
+U-Shaped Curve \textsuperscript{32}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Non-uniform attention, entropy of information, distractor interference.
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{IV. Architecture}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Structured Management
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+ACE \textsuperscript{7}, Dynamic Cheatsheets \textsuperscript{39},
+Generator-Reflector-Curator \textsuperscript{38}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Context Collapse, Brevity Bias, Signal-to-Noise maintenance.
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{V. Economics}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Cost-Value Optimization
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Prompt Caching \textsuperscript{8}, Return on Context (RoC), Latency
+Budget
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Balancing "Thick Description" (quality) with inference costs (price).
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\end{longtable}
+
+\subsubsection{Table 2: Comparative Analysis of Context
+Paradigms}\label{table-2-comparative-analysis-of-context-paradigms}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Feature}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Prompt Engineering (Software 2.0)}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Context Engineering (Software 3.0)}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Agentic Context Engineering (ACE)}
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Metaphor}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Casting a Spell (Incantation).
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Managing RAM (OS Kernel).
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Evolving a Playbook (Scientific Method).
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Temporal State}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Static / Stateless.
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Persistent / Stateful.
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Dynamic / Self-Improving.\textsuperscript{7}
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Structure}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Text block.
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Hierarchical / Graph.
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Modular (Generator-Reflector-Curator).\textsuperscript{38}
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Handling Noise}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Ignore / Hope.
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Pruning / Garbage Collection.
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Active Curation / Delta Updates.\textsuperscript{37}
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Failure Mode}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Hallucination.
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Context Rot / Lost in Middle.
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Context Collapse.\textsuperscript{19}
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Theoretical Basis}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Linguistics / NLP.
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Systems Engineering.
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Situated Action / Material Semiotics.\textsuperscript{23}
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\end{longtable}
+
+\subsubsection{Table 3: Economic Impact of Context Caching (Claude 3.5
+Sonnet)}\label{table-3-economic-impact-of-context-caching-claude-3.5-sonnet}
+
+\textsuperscript{8}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Operation}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Cost (per Million Tokens)}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Latency Impact}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Economic Classification}
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Standard Input}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\$3.00
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+High (Linear growth)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+OpEx (Recurring)
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Cache Write}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\$3.75 (+25\%)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+High (Initial Load)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+CapEx (Investment)
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Cache Read}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\$0.30 (-90\%)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Low (-85\% TTFT)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+OpEx (Optimized)
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\end{longtable}
+
+Note: Data derived from Anthropic pricing models.\textsuperscript{8}
+TTFT = Time To First Token.
+
+\paragraph{Works cited}\label{works-cited}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Software 3.0: Software is Changing Again and Again - Superagentic AI,
+  accessed December 10, 2025,
+  \href{https://super-agentic.ai/resources/super-posts/software-3-0-software-is-changing-again-and-again}{\ul{https://super-agentic.ai/resources/super-posts/software-3-0-software-is-changing-again-and-again}}
+\item
+  Software 3.0: Karpathy\textquotesingle s AI Vision Reshaping
+  Development - WillDom, accessed December 10, 2025,
+  \href{https://willdom.com/blog/software-3-0-ai-reshaping-development-future/}{\ul{https://willdom.com/blog/software-3-0-ai-reshaping-development-future/}}
+\item
+  Papers Explained 445: Context Rot \textbar{} by Ritvik Rastogi -
+  Medium, accessed December 10, 2025,
+  \href{https://ritvik19.medium.com/papers-explained-443-context-rot-4bbd72d77631}{\ul{https://ritvik19.medium.com/papers-explained-443-context-rot-4bbd72d77631}}
+\item
+  Context Rot is a Big Problem, and Graphs Are the Promising Fix for
+  Coding Agents - Medium, accessed December 10, 2025,
+  \href{https://medium.com/@animesh1997/context-rot-is-a-big-problem-and-graphs-are-the-promising-fix-for-coding-agents-30be152c49c6}{\ul{https://medium.com/@animesh1997/context-rot-is-a-big-problem-and-graphs-are-the-promising-fix-for-coding-agents-30be152c49c6}}
+\item
+  From Theory to Practice: Demystifying the Key-Value Cache in Modern
+  LLMs, accessed December 10, 2025,
+  \href{https://alain-airom.medium.com/from-theory-to-practice-demystifying-the-key-value-cache-in-modern-llms-9674e9f904a5}{\ul{https://alain-airom.medium.com/from-theory-to-practice-demystifying-the-key-value-cache-in-modern-llms-9674e9f904a5}}
+\item
+  Lost in the Middle: How Language Models Use Long Contexts -
+  ResearchGate, accessed December 10, 2025,
+  \href{https://www.researchgate.net/publication/378284067_Lost_in_the_Middle_How_Language_Models_Use_Long_Contexts}{\ul{https://www.researchgate.net/publication/378284067\_Lost\_in\_the\_Middle\_How\_Language\_Models\_Use\_Long\_Contexts}}
+\item
+  Agentic Context Engineering: Evolving Contexts for Self-Improving
+  Language Models - arXiv, accessed December 10, 2025,
+  \href{https://arxiv.org/html/2510.04618v1}{\ul{https://arxiv.org/html/2510.04618v1}}
+\item
+  Prompt caching with Claude \textbar{} Claude, accessed December 10,
+  2025,
+  \href{https://www.anthropic.com/news/prompt-caching}{\ul{https://www.anthropic.com/news/prompt-caching}}
+\item
+  A Summary of Thick Description The Interpretation of Cultures -
+  Scribd, accessed December 10, 2025,
+  \href{https://www.scribd.com/document/168611383/A-Summary-of-Thick-Description}{\ul{https://www.scribd.com/document/168611383/A-Summary-of-Thick-Description}}
+\item
+  accessed December 10, 2025,
+  \href{https://www.scirp.org/reference/ReferencesPapers?ReferenceID=2132836\#:~:text=Article\%20citationsMore\%3E\%3E-,Geertz\%2C\%20C.,York\%2C\%20NY\%3A\%20Basic\%20Books.}{\ul{https://www.scirp.org/reference/ReferencesPapers?ReferenceID=2132836\#:\textasciitilde:text=Article\%20citationsMore\%3E\%3E-,Geertz\%2C\%20C.,York\%2C\%20NY\%3A\%20Basic\%20Books.}}
+\item
+  Thick description \textbar{} Literary Theory and Criticism Class Notes
+  - Fiveable, accessed December 10, 2025,
+  \href{https://fiveable.me/literary-theory-criticism/unit-8/thick-description/study-guide/9FRywJGWCH1SlgzL}{\ul{https://fiveable.me/literary-theory-criticism/unit-8/thick-description/study-guide/9FRywJGWCH1SlgzL}}
+\item
+  Thick Description - Google Docs, accessed December 10, 2025,
+  \href{https://docs.google.com/document/d/1bMbIEc8MjErUYW8S4socA8O7QgNZ-sBd3fRXHetQnMw/preview?hgd=1}{\ul{https://docs.google.com/document/d/1bMbIEc8MjErUYW8S4socA8O7QgNZ-sBd3fRXHetQnMw/preview?hgd=1}}
+\item
+  Thick description - Wikipedia, accessed December 10, 2025,
+  \href{https://en.wikipedia.org/wiki/Thick_description}{\ul{https://en.wikipedia.org/wiki/Thick\_description}}
+\item
+  Human-Machine Reconfigurations: Plans and Situated Actions: 2nd
+  Edition - ResearchGate, accessed December 10, 2025,
+  \href{https://www.researchgate.net/publication/265092509_Human-Machine_Reconfigurations_Plans_and_Situated_Actions_2nd_Edition}{\ul{https://www.researchgate.net/publication/265092509\_Human-Machine\_Reconfigurations\_Plans\_and\_Situated\_Actions\_2nd\_Edition}}
+\item
+  accessed December 10, 2025,
+  \href{https://www.biblio.com/9780521337397\#:~:text=Plans\%20and\%20Situated\%20Actions\%3A\%20The,Press\%202nd\%20Edition\%20\%7C\%209780521337397\%20\%7C\%20Biblio}{\ul{https://www.biblio.com/9780521337397\#:\textasciitilde:text=Plans\%20and\%20Situated\%20Actions\%3A\%20The,Press\%202nd\%20Edition\%20\%7C\%209780521337397\%20\%7C\%20Biblio}}
+\item
+  {[}PDF{]} Plans and Situated Actions: The Problem of Human-Machine
+  Communication (Learning in Doing: Social, \textbar{} Semantic Scholar,
+  accessed December 10, 2025,
+  \href{https://www.semanticscholar.org/paper/Plans-and-Situated-Actions\%3A-The-Problem-of-in-Suchman/5416463537f8c6be1199951b4fd6f8d5dae14920}{\ul{https://www.semanticscholar.org/paper/Plans-and-Situated-Actions\%3A-The-Problem-of-in-Suchman/5416463537f8c6be1199951b4fd6f8d5dae14920}}
+\item
+  Social Situatedness of Natural and Artificial Intelligence - DiVA
+  portal, accessed December 10, 2025,
+  \href{http://www.diva-portal.org/smash/get/diva2:3017/FULLTEXT02}{\ul{http://www.diva-portal.org/smash/get/diva2:3017/FULLTEXT02}}
+\item
+  Dynamic Cheatsheet: Adaptive Reference - Emergent Mind, accessed
+  December 10, 2025,
+  \href{https://www.emergentmind.com/topics/dynamic-cheatsheet}{\ul{https://www.emergentmind.com/topics/dynamic-cheatsheet}}
+\item
+  Agentic Context Engineering: Learning Comprehensive Contexts for
+  Self-Improving Language Models \textbar{} OpenReview, accessed
+  December 10, 2025,
+  \href{https://openreview.net/forum?id=eC4ygDs02R}{\ul{https://openreview.net/forum?id=eC4ygDs02R}}
+\item
+  Video: Actor Network Theory \textbar{} Diagram, Critiques \& Examples
+  - Study.com, accessed December 10, 2025,
+  \href{https://study.com/academy/lesson/video/latours-actor-network-theory.html}{\ul{https://study.com/academy/lesson/video/latours-actor-network-theory.html}}
+\item
+  Actor--network theory - Wikipedia, accessed December 10, 2025,
+  \href{https://en.wikipedia.org/wiki/Actor\%E2\%80\%93network_theory}{\ul{https://en.wikipedia.org/wiki/Actor\%E2\%80\%93network\_theory}}
+\item
+  Latour\textquotesingle s Actor Network Theory - Simply Psychology,
+  accessed December 10, 2025,
+  \href{https://www.simplypsychology.org/actor-network-theory.html}{\ul{https://www.simplypsychology.org/actor-network-theory.html}}
+\item
+  towards-posthumanist-design - Wild Pear CIC, accessed December 10,
+  2025,
+  \href{https://wildpearcic.co.uk/towards-posthumanist-design}{\ul{https://wildpearcic.co.uk/towards-posthumanist-design}}
+\item
+  Situated Knowledges: The Science Question in Feminism and the
+  Privilege of Partial Perspective, accessed December 10, 2025,
+  \href{https://commons.princeton.edu/hum583-f21/wp-content/uploads/sites/283/2021/08/Haraway-Situated-Knowledges.pdf}{\ul{https://commons.princeton.edu/hum583-f21/wp-content/uploads/sites/283/2021/08/Haraway-Situated-Knowledges.pdf}}
+\item
+  Meeting the Universe Halfway: Quantum Physics and the Entanglement of
+  Matter and Meaning. By Karen Barad. Durham, N.C., accessed December
+  10, 2025,
+  \href{https://www.cambridge.org/core/journals/hypatia/article/meeting-the-universe-halfway-quantum-physics-and-the-entanglement-of-matter-and-meaning-by-karen-barad-durham-nc-duke-university-press-2007/5717D38D111DF2ED914359CDCBE6E1E0}{\ul{https://www.cambridge.org/core/journals/hypatia/article/meeting-the-universe-halfway-quantum-physics-and-the-entanglement-of-matter-and-meaning-by-karen-barad-durham-nc-duke-university-press-2007/5717D38D111DF2ED914359CDCBE6E1E0}}
+\item
+  Methodologies in New Materialism and Discourse Analysis, accessed
+  December 10, 2025,
+  \href{https://discourseanalyzer.com/methodologies-in-new-materialism-and-discourse-analysis/}{\ul{https://discourseanalyzer.com/methodologies-in-new-materialism-and-discourse-analysis/}}
+\item
+  Abstract What constitutes \textquotesingle knowledge\textquotesingle{}
+  that we acquire, and how do we acquire it? Through Donna
+  Haraway\textquotesingle s theoretical recon - IDA, accessed December
+  10, 2025,
+  \href{https://ida.mtholyoke.edu/server/api/core/bitstreams/473399db-eaaa-42ee-bf98-5e7b50d9aa73/content}{\ul{https://ida.mtholyoke.edu/server/api/core/bitstreams/473399db-eaaa-42ee-bf98-5e7b50d9aa73/content}}
+\item
+  Scalable Inference with RDMA and Tiered KV Caching \textbar{} by
+  Nadeem Khan(NK) \textbar{} LearnWithNK \textbar{} Nov, 2025, accessed
+  December 10, 2025,
+  \href{https://medium.com/learnwithnk/scalable-inference-with-rdma-and-tiered-kv-caching-9d7e494a863b}{\ul{https://medium.com/learnwithnk/scalable-inference-with-rdma-and-tiered-kv-caching-9d7e494a863b}}
+\item
+  The Secret Behind Fast LLM Inference: Unlocking the KV Cache - Towards
+  AI, accessed December 10, 2025,
+  \href{https://pub.towardsai.net/the-secret-behind-fast-llm-inference-unlocking-the-kv-cache-9c13140b632d}{\ul{https://pub.towardsai.net/the-secret-behind-fast-llm-inference-unlocking-the-kv-cache-9c13140b632d}}
+\item
+  Andrej Karpathy, accessed December 10, 2025,
+  \href{https://karpathy.ai/}{\ul{https://karpathy.ai/}}
+\item
+  Andrej Karpathy on Software 3.0: Software in the Age of AI \textbar{}
+  by Ben Pouladian \textbar{} Medium, accessed December 10, 2025,
+  \href{https://medium.com/@ben_pouladian/andrej-karpathy-on-software-3-0-software-in-the-age-of-ai-b25533da93b6}{\ul{https://medium.com/@ben\_pouladian/andrej-karpathy-on-software-3-0-software-in-the-age-of-ai-b25533da93b6}}
+\item
+  Why Language Models Are ``Lost in the Middle'' - Towards AI, accessed
+  December 10, 2025,
+  \href{https://pub.towardsai.net/why-language-models-are-lost-in-the-middle-629b20d86152}{\ul{https://pub.towardsai.net/why-language-models-are-lost-in-the-middle-629b20d86152}}
+\item
+  Found in the Middle: How Language Models Use Long Contexts Better via
+  Plug-and-Play Positional Encoding - arXiv, accessed December 10, 2025,
+  \href{https://arxiv.org/html/2403.04797v1}{\ul{https://arxiv.org/html/2403.04797v1}}
+\item
+  Never Lost in the Middle: Mastering Long-Context Question Answering
+  with Position-Agnostic Decompositional Training - arXiv, accessed
+  December 10, 2025,
+  \href{https://arxiv.org/html/2311.09198v2}{\ul{https://arxiv.org/html/2311.09198v2}}
+\item
+  P6: Context Rot -- Hamel\textquotesingle s Blog, accessed December 10,
+  2025,
+  \href{https://hamel.dev/notes/llm/rag/p6-context_rot.html}{\ul{https://hamel.dev/notes/llm/rag/p6-context\_rot.html}}
+\item
+  Context-Bench: Benchmarking LLMs on Agentic Context Engineering
+  \textbar{} Letta, accessed December 10, 2025,
+  \href{https://www.letta.com/blog/context-bench}{\ul{https://www.letta.com/blog/context-bench}}
+\item
+  Agentic Context Engineering - Sundeep Teki, accessed December 10,
+  2025,
+  \href{https://www.sundeepteki.org/blog/agentic-context-engineering}{\ul{https://www.sundeepteki.org/blog/agentic-context-engineering}}
+\item
+  Agentic Context Engineering (ACE) - Emergent Mind, accessed December
+  10, 2025,
+  \href{https://www.emergentmind.com/topics/agentic-context-engineering-ace}{\ul{https://www.emergentmind.com/topics/agentic-context-engineering-ace}}
+\item
+  Paper page - Agentic Context Engineering: Evolving Contexts for
+  Self-Improving Language Models - Hugging Face, accessed December 10,
+  2025,
+  \href{https://huggingface.co/papers/2510.04618}{\ul{https://huggingface.co/papers/2510.04618}}
+\item
+  The Complexity Trap: Simple Observation Masking Is as Efficient as LLM
+  Summarization for Agent Context Management - arXiv, accessed December
+  10, 2025,
+  \href{https://arxiv.org/html/2508.21433v1}{\ul{https://arxiv.org/html/2508.21433v1}}
+\item
+  {[}2510.04618{]} Agentic Context Engineering: Evolving Contexts for
+  Self-Improving Language Models - arXiv, accessed December 10, 2025,
+  \href{https://arxiv.org/abs/2510.04618}{\ul{https://arxiv.org/abs/2510.04618}}
+\end{enumerate}

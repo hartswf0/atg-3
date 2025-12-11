@@ -1,0 +1,980 @@
+\section{A Research Architecture for the Digital LEGO Ecosystem
+(1990s--Present): Mapping Knowledge Gaps Through Source Triage,
+Linguistic Analysis, and Visual Corpus
+Reconstruction}\label{a-research-architecture-for-the-digital-lego-ecosystem-1990spresent-mapping-knowledge-gaps-through-source-triage-linguistic-analysis-and-visual-corpus-reconstruction}
+
+\subsection{1. Introduction: The Material-Digital Dialectic of the
+Brick}\label{introduction-the-material-digital-dialectic-of-the-brick}
+
+The transformation of the LEGO brick from a tangible artifact of
+injection-molded acrylonitrile butadiene styrene (ABS) into a purely
+digital asset represents one of the most complex case studies in the
+history of industrial design, ludology, and digital humanities. This
+evolution was not a linear progression from physical to virtual; rather,
+it was a fractured, multi-linear dialectic between corporate control and
+community anarchy, between the precise engineering of Computer-Aided
+Design (CAD) and the chaotic creativity of play. This report establishes
+a comprehensive research architecture for the Digital LEGO Ecosystem,
+spanning from the nascent, closed-source experiments of the LEGO Group
+(TLG) in the mid-1980s to the contemporary era of AI-driven Gaussian
+Splatting and generative design. By triangulating data from obsolete
+software repositories, mailing list archives, patent filings, and recent
+academic literature in computer graphics and human-computer interaction
+(HCI), we reconstruct a timeline that is not merely chronological but
+structural---revealing how file formats, rendering algorithms, and
+community governance models reshaped the ontology of the "brick."
+
+The central thesis of this architectural mapping is that the "digital
+brick" is a contested object. To the LEGO Group, the digital brick began
+as a marketing tool and an industrial necessity for generating
+instruction manuals, eventually evolving into a controlled consumer
+product through initiatives like \emph{LEGO Digital Designer}
+(LDD).\textsuperscript{1} To the fan community, however, the digital
+brick was a liberation from the scarcity of physical matter. Through the
+\emph{LDraw} standard established by James Jessiman, the digital brick
+became a linguistic construct---a line of text defining vector
+geometry---that allowed for infinite reproduction and
+preservation.\textsuperscript{3} The tension between these two
+ontologies---the proprietary, physics-constrained brick of the
+corporation and the open, infinite brick of the community---drove three
+decades of software innovation.
+
+Furthermore, this analysis exposes significant knowledge gaps in the
+historical record. While the history of physical sets is
+well-documented, the "Dark Age" of internal digital tools---specifically
+the \emph{Panter} system (1986) and the \emph{L3D} database of SPU
+Darwin (1996)---remains obscured by corporate secrecy and technological
+obsolescence.\textsuperscript{4} Simultaneously, the sociological
+dimensions of these tools reveal deeply entrenched biases. The
+architecture of digital building software often codified gendered
+marketing strategies and professional stigmas, creating a "digital
+divide" where the "engineering" aesthetic of LDraw alienated casual
+users while the "toy" aesthetic of LDD alienated professional
+architects.\textsuperscript{6} As we move into an era of neural radiance
+fields and generative AI, understanding this history is critical for
+preserving the digital heritage of play.
+
+\subsection{2. The Genesis of Digital Ontology: Primitive Accumulation
+(1980s--1999)}\label{the-genesis-of-digital-ontology-primitive-accumulation-1980s1999}
+
+The digitization of the LEGO system required a fundamental translation
+of physical properties---clutch power, tolerance, and geometry---into
+digital data. This process, described by media scholars as the
+"primitive accumulation" of digital assets, occurred simultaneously
+within the LEGO Group and among independent hobbyists, often with vastly
+different philosophies regarding precision, utility, and visual
+fidelity.
+
+\subsubsection{2.1 The "Panter" Era and the Prehistory of Internal
+CAD}\label{the-panter-era-and-the-prehistory-of-internal-cad}
+
+While popular history locates the start of digital LEGO in the mid-1990s
+with the advent of consumer CD-ROMs, evidence points to significantly
+earlier internal efforts. The LEGO Group utilized a DOS-based program
+known as \emph{Panter} as early as 1986 to generate building
+instructions.\textsuperscript{4} This tool functioned as a primitive CAD
+system, specifically designed to handle the isometric projection
+required for the visual language of LEGO instructions. The existence of
+\emph{Panter} challenges the narrative that LEGO was a "late adopter" of
+digital technology; rather, it suggests that TLG recognized the
+limitations of hand-drawn technical illustration well before the
+consumer internet era.
+
+However, these early internal tools were strictly functional. They
+operated on an industrial logic: they were designed for optimization,
+printing, and molding, not for creative exploration or consumer
+interaction. \emph{Panter} and its successors were "closed" systems,
+inaccessible to the public and likely reliant on hard-coded geometry
+that did not account for the "play" element of the system. This
+distinction is crucial because it left a vacuum for consumer-facing
+digital building tools---a vacuum that would eventually be filled by the
+community-driven \emph{LDraw} system. The lack of preserved code or
+screenshots of \emph{Panter} represents a primary knowledge gap in the
+history of LEGO\textquotesingle s digital infrastructure, a "lost
+species" of software that defined the visual language of instructions
+for a generation of builders.\textsuperscript{4}
+
+\subsubsection{2.2 The Darwin Project: Ambition, Hubris, and
+"L3D"}\label{the-darwin-project-ambition-hubris-and-l3d}
+
+In the mid-1990s, the LEGO Group embarked on a secretive and highly
+ambitious initiative known as Strategic Product Unit (SPU) Darwin. This
+project represented the company\textquotesingle s first attempt to
+create a unified digital theory of the brick. Initiated by the visionary
+artist Dent-De-Lion Du Midi (Dandi), the project began with a
+proof-of-concept video titled \emph{The LEGO Movie} (produced circa
+1993/1994), which aimed to convince CEO Kjeld Kirk Kristiansen that
+digital bricks could look and behave like their physical
+counterparts.\textsuperscript{5} The "epiphany" for Du Midi occurred
+when he realized that early 3D computer graphics naturally looked like
+plastic---a limitation for realistic film, but a perfect affordance for
+LEGO bricks.\textsuperscript{5}
+
+The Darwin team, operating out of a reclaimed fishnet factory and
+utilizing Silicon Graphics (SGI) supercomputers---then one of the most
+powerful computing installations in Northern Europe---sought to create a
+comprehensive database known as "L3D" (LEGO 3D).\textsuperscript{5} The
+objective of L3D was not merely visual; it was to create a
+"physics-aware" brick that understood connectivity, gravity, and
+material properties. This was a radical departure from the static
+geometry of \emph{Panter}.
+
+However, the failure of SPU Darwin was multidimensional and instructive:
+
+\begin{itemize}
+\item
+  \textbf{Technological Overreach:} The SGI infrastructure required to
+  run the L3D simulations was prohibitively expensive and fundamentally
+  inaccessible to the consumer market. The gap between the SGI
+  workstations used by the developers and the Pentium-based PCs used by
+  consumers was unbridgeable in 1996, making the technology viable only
+  for high-end production (movies/commercials) rather than home
+  play.\textsuperscript{5}
+\item
+  \textbf{Organizational Disconnect:} The SPU Darwin unit operated in
+  isolation from the core product design teams in Billund. This created
+  a "silo" effect where the digital innovations could not easily
+  propagate back into the physical product development cycle. The
+  traditional toy designers viewed the digital team with skepticism, and
+  the digital team viewed the brick as merely data.\textsuperscript{10}
+\item
+  \textbf{The Uncanny Valley of Plastic:} As noted by early team
+  members, while the SGI machines could render plastic, the
+  computational cost to render this "plastic realism" in real-time was
+  insurmountable. The result was often a disconnect between the vision
+  of a "Living LEGO" world and the jagged, low-resolution reality of
+  1990s consumer hardware.\textsuperscript{5}
+\end{itemize}
+
+The dissolution of the Darwin group dispersed talent and ideas that
+would later re-emerge in \emph{LEGO Creator} and eventually \emph{LEGO
+Digital Designer}, but it marked the end of the LEGO
+Group\textquotesingle s first, failed attempt at a unified digital
+ecosystem.
+
+\subsubsection{2.3 The LDraw Revolution: James Jessiman and the Open
+Standard}\label{the-ldraw-revolution-james-jessiman-and-the-open-standard}
+
+In stark contrast to the closed, high-capital Darwin project, the
+\emph{LDraw} standard emerged from the grassroots efforts of James
+Jessiman in 1995. Jessiman\textquotesingle s contribution was not just
+software but a \textbf{linguistic definition} of the brick. He
+established a file format that used a plain-text coordinate system to
+define the geometry of LEGO parts, relying on a library of primitives
+(studs, tubes, boxes) to construct complex shapes.\textsuperscript{3}
+
+The specific architecture of the LDraw format (.dat, .ldr, .mpd) was
+revolutionary because of its modularity and readability. It treated the
+brick not as a proprietary mesh, but as code.
+
+\begin{itemize}
+\item
+  \textbf{Line Type 1 (The Reference):} This command referenced other
+  files, allowing for a hierarchical library structure. A single "stud"
+  file (stud.dat) could be referenced thousands of times within a model
+  without duplicating the geometry data. This mimicked the physical
+  reality of injection molding, where a single mold design is reused
+  across millions of bricks.\textsuperscript{3}
+\item
+  \textbf{The LDraw Unit (LDU):} Jessiman established the LDraw Unit
+  (LDU) as the de facto standard for digital LEGO measurement, where 1
+  brick height equals 24 LDU and a stud diameter is 12 LDU. This
+  coordinate system provided a mathematical perfection that allowed
+  parts from different authors to interlock
+  seamlessly.\textsuperscript{3}
+\end{itemize}
+
+Jessiman\textquotesingle s untimely death in 1997 created a "martyrdom
+effect" that solidified the community\textquotesingle s resolve to
+maintain the standard.\textsuperscript{12} The community organized
+quickly, establishing the "LDraw.org Steering Committee" (SteerCo) and
+the "LDraw Standards Board" (LSB) to govern the library. This turned
+part authoring into a democratic, peer-reviewed process, where new parts
+had to be "certified" by reviewers before entering the official
+library.\textsuperscript{12} This governance structure allowed the LDraw
+library to outpace LEGO\textquotesingle s own official digital libraries
+in terms of part diversity, update speed, and accuracy for nearly two
+decades.
+
+\subsubsection{2.4 Comparative Analysis of Early Digital
+Morphologies}\label{comparative-analysis-of-early-digital-morphologies}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Feature}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{LDraw System}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{SPU Darwin (L3D)}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{LEGO Creator (Game)}
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Origin}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Community (James Jessiman)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Corporate (Internal R\&D)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Corporate (Superscape)
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Data Structure}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Text-based, procedural geometry, Primitives
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+High-fidelity SGI models, NURBS
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Voxel / Simplified Mesh
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Accessibility}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Free, Open Source, DOS/Win
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Internal / Proprietary
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Consumer CD-ROM
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Philosophy}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+"Digital CAD" (Precision)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+"Digital Replica" (Physics)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+"Digital Toy" (Play)
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Legacy}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Foundation of Studio/Mecabricks
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Influenced LDD/Movies
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Early gaming experiments
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\end{longtable}
+
+\subsection{3. The Divergence of Tools: Engineering vs. Play
+(2000--2015)}\label{the-divergence-of-tools-engineering-vs.-play-20002015}
+
+Following the turn of the millennium, the digital LEGO ecosystem
+bifurcated into two distinct cultures. The AFOL (Adult Fan of LEGO)
+community pursued precision, documentation, and rendering quality
+through LDraw-based tools, while the LEGO Group pursued accessibility
+and "fluid play" through strictly controlled, user-friendly software
+environments.
+
+\subsubsection{3.1 The "MLCad" Era and the European
+Influence}\label{the-mlcad-era-and-the-european-influence}
+
+While LDraw provided the file format, editing LDraw files in a text
+editor was impractical for complex models. \emph{MLCad}
+(Mike\textquotesingle s Lego CAD), developed by Michael Lachman, became
+the dominant editor for the sophisticated user base.\textsuperscript{16}
+The development and adoption of MLCad revealed a strong European,
+particularly Germanic, center of gravity in the digital LEGO community.
+Extensive manuals, tutorials, and support forums were authored in German
+and Italian, reflecting a culture that valued precision engineering and
+complex instruction design.\textsuperscript{16}
+
+MLCad introduced advanced features that professionalized digital
+building, effectively turning the hobbyist into a digital draftsman:
+
+\begin{itemize}
+\item
+  \textbf{Step Management:} MLCad allowed users to define building steps
+  and sub-models (using the .mpd Multipart Document extension). This
+  enabled users to author professional-grade building instructions, a
+  capability that LEGO\textquotesingle s own consumer tools
+  lacked.\textsuperscript{16}
+\item
+  \textbf{Buffer Exchange:} To handle large models on the limited
+  hardware of the early 2000s, MLCad utilized "buffer exchange"
+  techniques, optimizing memory usage---a direct response to the "bloat"
+  of visual CAD systems.
+\item
+  \textbf{Flexible Parts Synthesis:} Integration with \emph{LSynth}
+  allowed users to generate flexible elements like hoses, pneumatic
+  tubes, and rubber bands. These elements are mathematically complex to
+  model because their shape depends on their connection points and path.
+  LSynth utilized a "synthesizing" approach, generating the geometry
+  procedurally based on control points, a level of sophistication that
+  mimicked professional engineering CAD tools.\textsuperscript{16}
+\end{itemize}
+
+The "MLCad" ecosystem represented a "high-technical" culture within the
+LEGO community. Users were expected to understand file paths, library
+structures, and coordinate geometry. This created a high barrier to
+entry but resulted in models of professional CAD quality, often
+exceeding the fidelity of LEGO\textquotesingle s own promotional
+materials.
+
+\subsubsection{3.2 L3P and the Pursuit of
+Photorealism}\label{l3p-and-the-pursuit-of-photorealism}
+
+The LDraw community\textquotesingle s obsession with fidelity extended
+to visualization. The tool \emph{L3P}, developed by Lars C. Hassing in
+1998, acted as a bridge between the mathematical precision of LDraw and
+the ray-tracing capabilities of \emph{POV-Ray} (Persistence of Vision
+Raytracer).\textsuperscript{19}
+
+L3P was not a renderer itself; it was a \emph{compiler} that translated
+the LDraw geometry into the POV-Ray scene description language.
+
+\begin{itemize}
+\item
+  \textbf{The LGEO Library:} A significant limitation of LDraw was its
+  mathematical perfection; LDraw definitions had infinitely sharp edges,
+  which looked fake when rendered. To solve this, the community
+  developed the \emph{LGEO} library. LGEO replaced standard LDraw
+  primitives with POV-Ray definitions that included "fillets" (rounded
+  edges) and realistic refraction indices for transparent ABS
+  plastic.\textsuperscript{20}
+\item
+  \textbf{L3PAO:} To manage the complex command-line switches required
+  by L3P, the community developed \emph{L3PAO} (L3P Add-On), a graphical
+  interface that democratized high-end rendering. This allowed
+  non-programmers to control lighting, camera angles, and background
+  settings.\textsuperscript{20}
+\end{itemize}
+
+The visuals produced by this pipeline---characterized by reflective
+studs, subsurface scattering on trans-neon parts, and soft shadows---set
+a visual benchmark. For nearly a decade, fan-rendered images using
+L3P/POV-Ray were often superior to the official renders produced by the
+LEGO Group, which were constrained by the need for fast, real-time web
+graphics.
+
+\subsubsection{3.3 LEGO Digital Designer (LDD): The Corporate
+Response}\label{lego-digital-designer-ldd-the-corporate-response}
+
+In 2004, the LEGO Group released \emph{LEGO Digital Designer} (LDD),
+built on the "Project Arena" code which itself was a descendant of the
+\emph{LEGO Creator} game engine.\textsuperscript{23} LDD was designed
+with a fundamentally different epistemology than LDraw: it was a toy
+first, and a tool second.
+
+\begin{itemize}
+\item
+  \textbf{The Interface:} LDD utilized a "click-and-snap" interface with
+  a heuristic connectivity engine. The software "knew" where a brick
+  could connect, preventing illegal connections. In contrast, LDraw
+  editors allowed parts to intersect or float, prioritizing user freedom
+  over physical constraints.\textsuperscript{1}
+\item
+  \textbf{Design byME:} LDD was initially inextricably linked to a
+  physical fulfillment service, \emph{LEGO Design byME} (formerly LEGO
+  Factory). This service allowed users to order their custom digital
+  creations as boxed sets. This ambitious integration of digital design
+  and physical logistics failed due to the high cost of manual picking,
+  quality control issues, and the sheer complexity of managing millions
+  of individual elements. The service was cancelled in 2012, severing
+  the link between the digital and physical products.\textsuperscript{1}
+\item
+  \textbf{The LXF Format:} LDD used a proprietary .lxf (LEGO Exchange
+  Format) based on XML. Unlike LDraw, the part geometry was encrypted or
+  compressed within the application assets (db.lif), making it difficult
+  for the community to modify or expand the library. This "black box"
+  approach limited the tool\textquotesingle s utility for advanced users
+  who needed parts that LEGO had not yet officially
+  digitized.\textsuperscript{24}
+\end{itemize}
+
+LDD suffered from "technical debt" and a lack of sustained investment.
+As internal teams at LEGO moved to more advanced tools (like \emph{LDD
+Pro} and eventual integrations with Maya/Unity), the public version of
+LDD stagnated. It was officially "defunded" in 2016, leaving the
+community in a state of limbo until the acquisition of
+BrickLink.\textsuperscript{28}
+
+\subsection{4. The Sociological Architecture: Communities, Gender, and
+Knowledge}\label{the-sociological-architecture-communities-gender-and-knowledge}
+
+The digital ecosystem was not merely a repository of parts; it was a
+repository of culture. The architecture of these platforms shaped who
+participated, how knowledge was transferred, and how the value of the
+"digital brick" was perceived by different demographics.
+
+\subsubsection{4.1 The "Japanese Anomaly": CUUSOO and the Origins of
+LEGO
+Ideas}\label{the-japanese-anomaly-cuusoo-and-the-origins-of-lego-ideas}
+
+While the Western narrative focuses on LDraw, LUGNET, and Eurobricks, a
+parallel digital innovation occurred in Japan through the \emph{CUUSOO}
+platform. Launched in 2008 as a partnership with a Japanese open
+innovation company, \emph{LEGO CUUSOO} (meaning "daydream" or "fantasy"
+in Japanese) established the mechanism for crowdsourcing product
+development.\textsuperscript{25}
+
+The architecture of CUUSOO was distinct:
+
+\begin{itemize}
+\item
+  \textbf{Beta Phase:} Initially restricted to Japan with a threshold of
+  1,000 votes, the platform tapped into a unique Japanese fan culture
+  that revered "mecha" and detailed miniaturization. The first success,
+  the \emph{Shinkai 6500} submersible, was a hyper-realistic scientific
+  model, setting a tone of serious "adult" building.\textsuperscript{25}
+\item
+  \textbf{Global Expansion:} The platform went global in 2011, raising
+  the threshold to 10,000 votes and rebranding as \emph{LEGO Ideas} in
+  2014. This shift represented a critical architectural change: the
+  digital model (often built in LDD or LDraw) became a \emph{currency}
+  of social capital. The ability to render a persuasive, photorealistic
+  image (using tools like POV-Ray or later Blender) became a
+  prerequisite for commercial success. The digital file was no longer
+  just a blueprint; it was a marketing asset.\textsuperscript{31}
+\end{itemize}
+
+\subsubsection{4.2 Gendered Technicity and "Brooms and
+Bonnets"}\label{gendered-technicity-and-brooms-and-bonnets}
+
+Research into the sociology of the digital LEGO ecosystem reveals deeply
+entrenched gender biases that were codified into the software tools
+themselves. The "LEGOfied" media studies analysis highlights how the
+technical language of LDraw---with its emphasis on coordinates,
+"primitive substitution," and CAD-like interfaces---historically
+codified the digital ecosystem as a male-dominated engineering
+domain.\textsuperscript{32}
+
+\begin{itemize}
+\item
+  \textbf{Marketing Bias:} Analysis of marketing imagery shows a
+  persistent bias where "City" and "Technic" themes heavily feature male
+  representation, while "Friends" (and its specific color palette) is
+  segregated. This segregation seeped into the digital
+  tools.\textsuperscript{34}
+\item
+  \textbf{The "Pink Brick" Problem:} In digital tools like LDD and
+  LDraw, the "Friends" color palette (pastels, vibrant pinks/purples)
+  and specific mini-doll parts were often added later or segregated in
+  the user interface. This reinforced the "othering" of feminine-coded
+  play. The default palettes and "starter sets" in LDD often prioritized
+  standard "boy" colors (red, blue, yellow, grey), implicitly guiding
+  the user toward specific types of construction.\textsuperscript{32}
+\item
+  \textbf{Professional Stigma:} Within professional architecture, the
+  use of LEGO (physical or digital) is often stigmatized as "childish."
+  Despite the modular utility of the brick, Reddit threads from
+  architecture students and professionals reveal a strong bias against
+  using LEGO for serious modeling in university settings. The "toy"
+  connotation overrides the "tool" utility, preventing LDD or Studio
+  from being adopted as a sketch tool alongside SketchUp or
+  Rhino.\textsuperscript{6}
+\end{itemize}
+
+\subsubsection{4.3 The Mindstorms Discontinuation and the "Black Box" of
+Education}\label{the-mindstorms-discontinuation-and-the-black-box-of-education}
+
+The trajectory of \emph{LEGO Mindstorms} (1998--2022) traces a shift
+from "hacker-friendly" openness to "classroom-safe" closure.
+
+\begin{itemize}
+\item
+  \textbf{The Hacker Era:} The original RCX and NXT bricks were cracked
+  by the community almost immediately. Tools like \emph{BricxCC}
+  (developed by John Hansen) and languages like \emph{NQC} (Not Quite C)
+  allowed users to bypass the limitations of the official graphical
+  software. This era fostered a generation of engineers who learned
+  low-level programming through reverse-engineering the
+  brick.\textsuperscript{36}
+\item
+  \textbf{The Closure:} The discontinuation of Mindstorms in 2022 in
+  favor of \emph{SPIKE Prime} signals a strategic pivot. \emph{SPIKE} is
+  strictly educational, Python-based (official), and lacks the rugged
+  "hacker" ethos of the EV3 era.\textsuperscript{39} The "Robot
+  Inventor" app will eventually cease to function, rendering the
+  hardware potentially obsolete---a form of digital obsolescence that
+  creates a massive knowledge gap for future robotics preservation. The
+  "Black Box" has closed; the user is now a student following a
+  curriculum, not a hacker exploring a system.\textsuperscript{41}
+\end{itemize}
+
+\subsection{5. Convergence and the Modern Synthesis
+(2016--Present)}\label{convergence-and-the-modern-synthesis-2016present}
+
+The fragmentation of the 2000s has resolved into a consolidated,
+corporate-owned ecosystem, primarily through the LEGO
+Group\textquotesingle s strategic acquisition of \emph{BrickLink} in
+2019. This acquisition brought the community\textquotesingle s premier
+marketplace and its emerging software standard under the corporate
+umbrella.
+
+\subsubsection{5.1 BrickLink Studio: The Unification
+Tool}\label{bricklink-studio-the-unification-tool}
+
+\emph{BrickLink Studio} (often referred to simply as Studio) emerged as
+a third-party competitor to LDD but was integrated into the official
+LEGO ecosystem following the acquisition. It successfully synthesized
+the two historical tracks that had been divergent for twenty years:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{LDraw DNA:} Studio utilizes a part library architecture that
+  is fundamentally compatible with LDraw. It allows for the import of
+  .ldr and .mpd files, satisfying the AFOL demand for legacy
+  compatibility and precision.\textsuperscript{42}
+\item
+  \textbf{LDD Usability:} It incorporates the "snap" connectivity and
+  stability checking of LDD, satisfying the casual user who requires
+  heuristic guidance.
+\item
+  \textbf{Commercial Integration:} Crucially, Studio is directly linked
+  to the BrickLink marketplace. It allows users to "price out" their
+  digital designs and generate "Wanted Lists" for purchase. This finally
+  realizes the failed promise of \emph{Design byME}---integration of
+  design and logistics---but it achieves it by offloading the logistics
+  to the decentralized network of BrickLink sellers rather than a
+  centralized LEGO factory.\textsuperscript{43}
+\end{enumerate}
+
+The official retirement of LDD in 2022 marked the formal end of
+LEGO\textquotesingle s internal consumer CAD development. The LEGO Group
+effectively outsourced the maintenance of the digital building
+experience to the (now owned) community platform, acknowledging that the
+community tool had surpassed the corporate tool.\textsuperscript{2}
+
+\subsubsection{5.2 Technical Debt and the "Missing Parts"
+Crisis}\label{technical-debt-and-the-missing-parts-crisis}
+
+Despite this unification, significant architectural gaps remain. The
+digital library is never complete. Snippet analysis reveals a constant
+struggle with "missing parts," particularly complex new molds,
+dual-molded elements, or licensed parts with unique
+prints.\textsuperscript{27}
+
+\begin{itemize}
+\item
+  \textbf{The Lag:} The LDraw library (which feeds Studio) often lags
+  behind new part releases. The \emph{LDraw Parts Tracker} operates on a
+  volunteer basis, and the backlog of "uncertified" parts creates a
+  versioning crisis. A model built today using an uncertified part might
+  not open correctly in five years if the part number changes or the
+  reference is lost.
+\item
+  \textbf{Licensing Restructuring:} The transition to \textbf{CC-BY 4.0}
+  licensing for LDraw parts in 2023 represents a major legal
+  restructuring. This move attempts to secure the
+  library\textquotesingle s future usage in open-source projects while
+  navigating the complex trademark waters of the LEGO Group, ensuring
+  that the "digital brick" remains a commons rather than a purely
+  corporate asset.\textsuperscript{44}
+\end{itemize}
+
+\subsection{6. Future Horizons: AI, Generative Design, and Gaussian
+Splatting}\label{future-horizons-ai-generative-design-and-gaussian-splatting}
+
+The frontier of the digital LEGO ecosystem is moving beyond manual CAD
+into the realm of Artificial Intelligence and Machine Learning (ML). The
+static mesh is giving way to the dynamic field.
+
+\subsubsection{6.1 Generative LEGO Design}\label{generative-lego-design}
+
+Recent research from the University of Guelph \textsuperscript{46}
+explores the use of Deep Generative Models to automate the construction
+of LEGO structures. By representing bricks as nodes in a graph and
+connections as edges, ML models can "learn" to build. This fundamentally
+shifts the user\textquotesingle s role from "builder" to "curator,"
+where the software suggests structural completions or optimizations.
+This parallels the "Auto-Complete" functionality in text, suggesting a
+future where digital building tools assist in the creative process by
+predicting the next brick.
+
+\subsubsection{6.2 Gaussian Splatting and the End of
+Geometry}\label{gaussian-splatting-and-the-end-of-geometry}
+
+The paper \emph{GaussianUpdate: Continual 3D Gaussian Splatting Update
+for Changing Environments} \textsuperscript{47} introduces a paradigm
+shift in visualization that renders the debate between LDraw and LDD
+moot. Unlike traditional rendering (POV-Ray/L3P) which relies on defined
+polygon geometry, Gaussian Splatting represents scenes as a cloud of 3D
+Gaussians (volumetric blobs) that can be updated in real-time.
+
+\begin{itemize}
+\item
+  \textbf{Implication:} This technology allows for the capture and
+  rendering of \emph{dynamic} LEGO scenes (including lighting changes
+  and object removal) without the computationally expensive ray-tracing
+  of the past. It does not require a mesh; it requires a neural
+  representation of the light field.
+\item
+  \textbf{Application:} This could enable "Mixed Reality" play where
+  physical LEGO builds are scanned and augmented with digital effects in
+  real-time, fulfilling the "Fluid Play" promise that LEGO has chased
+  since the \emph{Darwin} era. It suggests a future where the "digital
+  brick" is not a CAD file, but a learned neural
+  feature.\textsuperscript{49}
+\end{itemize}
+
+\subsubsection{6.3 Table: The Evolution of LEGO Rendering
+Technologies}\label{table-the-evolution-of-lego-rendering-technologies}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Era}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Technology}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Mechanism}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Key Advantage}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Key Limitation}
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{1995}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Wireframe/Flat}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Vector lines (LEdit)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Fast on 486 PCs
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+No depth, abstract
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{1998}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{L3P + POV-Ray}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Ray-tracing scripts
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Photorealism, reflections
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Slow render times, static
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{2004}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{LDD (Real-time)}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+OpenGL/DirectX
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Instant feedback
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+"Video game" look, low fidelity
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{2014}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Eyesight (Studio)}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Photorealistic rendering
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Integrated, easy to use
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+High GPU cost
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{2025+}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Gaussian Splatting}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Radiance Fields
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Real-time dynamic updates
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+High memory usage, new tech
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\end{longtable}
+
+\subsection{7. Conclusion: The Knowledge Gaps and Preservation
+Risks}\label{conclusion-the-knowledge-gaps-and-preservation-risks}
+
+The architecture of the Digital LEGO Ecosystem is characterized by a
+"Dual-Core" processor history: the Community Core (LDraw) and the
+Corporate Core (Darwin/LDD). While these cores have recently merged via
+BrickLink Studio, significant risks and gaps remain in the historical
+and technical record.
+
+\textbf{Identified Knowledge Gaps:}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{The "Dark Age" of Internal Tools:} There is almost no public
+  documentation, code preservation, or visual record of the
+  \emph{Panter} (1986) or \emph{L3D} (1996) database structures. These
+  represent "lost species" in the digital evolution of the brick.
+  Without oral histories or archival recovery, the origins of
+  LEGO\textquotesingle s digital syntax remain obscure.
+\item
+  \textbf{Robotics Firmware Preservation:} With the shutdown of the
+  \emph{Mindstorms} servers and apps, the specific "handshake" protocols
+  and firmware versions required to run NXT/EV3 robots are at risk of
+  becoming abandonware. The ecosystem relies entirely on aging
+  third-party tools like \emph{BricxCC}, which may not function on
+  future operating systems.
+\item
+  \textbf{Algorithmic Bias:} The "Pink Brick" phenomenon suggests that
+  the very tools used to design LEGO sets may encode gender biases
+  (e.g., categorizing certain colors or parts as "decorative" vs.
+  "structural"). Further research is needed to deconstruct the "default"
+  settings of these CAD tools.
+\item
+  \textbf{Legal Fragility:} The reliance on the LDraw library---which
+  exists in a legal grey area of trademark tolerance---poses a long-term
+  risk. If the LEGO Group were to enforce strict IP control on the
+  digital representation of its patented stud-and-tube coupling, the
+  entire open ecosystem could collapse.
+\end{enumerate}
+
+Final Assessment:
+
+The Digital LEGO Ecosystem is a triumph of participatory culture over
+corporate secrecy. It proved that a community of volunteers could
+maintain a more accurate, diverse, and functional digital library than
+the manufacturer itself. However, as the ecosystem moves toward
+AI-driven generation and cloud-based platforms, the
+user\textquotesingle s ability to "own" the digital brick---to see the
+text file behind the render---is diminishing. The future challenge lies
+not in rendering the brick more realistically, but in preserving the
+open standards that allow it to be virtually interlocked by anyone,
+anywhere. The digital brick must remain a language, not just an image.
+
+\subsubsection{Source Data Integration}\label{source-data-integration}
+
+\begin{itemize}
+\item
+  \textbf{LDraw Policies \& Standards:} \textsuperscript{12}
+\item
+  \textbf{Internal History (Darwin/Panter):} \textsuperscript{4}
+\item
+  \textbf{Rendering Tech (L3P/Gaussian):} \textsuperscript{19}
+\item
+  \textbf{Discontinuation \& Corporate Strategy:} \textsuperscript{28}
+\item
+  \textbf{Sociological \& Gender Analysis:} \textsuperscript{6}
+\item
+  \textbf{Japanese Ecosystem (CUUSOO):} \textsuperscript{25}
+\end{itemize}
+
+\paragraph{Works cited}\label{works-cited}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Lego Digital Designer - Wikipedia, accessed December 10, 2025,
+  \href{https://en.wikipedia.org/wiki/Lego_Digital_Designer}{\ul{https://en.wikipedia.org/wiki/Lego\_Digital\_Designer}}
+\item
+  RIP LEGO Digital Designer - True North Bricks, accessed December 10,
+  2025,
+  \href{https://truenorthbricks.com/2022/01/13/rip-lego-digital-designer/}{\ul{https://truenorthbricks.com/2022/01/13/rip-lego-digital-designer/}}
+\item
+  LDraw - Wikipedia, accessed December 10, 2025,
+  \href{https://en.wikipedia.org/wiki/LDraw}{\ul{https://en.wikipedia.org/wiki/LDraw}}
+\item
+  The meaning or story behind the ``reversed'' Octan logo - lego -
+  Reddit, accessed December 10, 2025,
+  \href{https://www.reddit.com/r/lego/comments/1o23c6g/the_meaning_or_story_behind_the_reversed_octan/}{\ul{https://www.reddit.com/r/lego/comments/1o23c6g/the\_meaning\_or\_story\_behind\_the\_reversed\_octan/}}
+\item
+  Inside the LEGO Group\textquotesingle s Secretive Strategic Product
+  Unit Darwin, accessed December 10, 2025,
+  \href{https://www.lego.com/cdn/cs/set/assets/blt4212e2be20008c99/bits_n_bricks_s01e16_darwin_feature_and_transcript.pdf}{\ul{https://www.lego.com/cdn/cs/set/assets/blt4212e2be20008c99/bits\_n\_bricks\_s01e16\_darwin\_feature\_and\_transcript.pdf}}
+\item
+  Is it acceptable to use Legos to make models? : r/architecture -
+  Reddit, accessed December 10, 2025,
+  \href{https://www.reddit.com/r/architecture/comments/vozoip/is_it_acceptable_to_use_legos_to_make_models/}{\ul{https://www.reddit.com/r/architecture/comments/vozoip/is\_it\_acceptable\_to\_use\_legos\_to\_make\_models/}}
+\item
+  Can i make my uni architect models with lego? : r/architecture -
+  Reddit, accessed December 10, 2025,
+  \href{https://www.reddit.com/r/architecture/comments/uq8bim/can_i_make_my_uni_architect_models_with_lego/}{\ul{https://www.reddit.com/r/architecture/comments/uq8bim/can\_i\_make\_my\_uni\_architect\_models\_with\_lego/}}
+\item
+  software angle tool: Topics by Science.gov, accessed December 10,
+  2025,
+  \href{https://www.science.gov/topicpages/s/software+angle+tool.html}{\ul{https://www.science.gov/topicpages/s/software+angle+tool.html}}
+\item
+  Bits N\textquotesingle{} Bricks Season 5 Episode 47: The Rise of
+  BrickLink Feature and Transcript - LEGO, accessed December 10, 2025,
+  \href{https://www.lego.com/cdn/cs/set/assets/bltf643219fa5bd3d27/bits_n_bricks_s05e47_feature_and_transcript.pdf}{\ul{https://www.lego.com/cdn/cs/set/assets/bltf643219fa5bd3d27/bits\_n\_bricks\_s05e47\_feature\_and\_transcript.pdf}}
+\item
+  How Lego Became The Apple Of Toys \textbar{} Flip Consulting, accessed
+  December 10, 2025,
+  \href{https://flipconsulting.studio/wp-content/uploads/2020/02/How-Lego-Became-The-Apple-Of-Toys.pdf}{\ul{https://flipconsulting.studio/wp-content/uploads/2020/02/How-Lego-Became-The-Apple-Of-Toys.pdf}}
+\item
+  LEGO in a Digital World - Technology and Operations Management,
+  accessed December 10, 2025,
+  \href{https://d3.harvard.edu/platform-rctom/submission/lego-in-a-digital-world/}{\ul{https://d3.harvard.edu/platform-rctom/submission/lego-in-a-digital-world/}}
+\item
+  About Us - LDraw.org, accessed December 10, 2025,
+  \href{https://www.ldraw.org/help/about-us}{\ul{https://www.ldraw.org/help/about-us}}
+\item
+  Community: James Jessiman Memorial - LDraw, accessed December 10,
+  2025,
+  \href{https://www.ldraw.org/community/james-jessiman-memorial.html}{\ul{https://www.ldraw.org/community/james-jessiman-memorial.html}}
+\item
+  Just James - LDraw.org, accessed December 10, 2025,
+  \href{https://www.ldraw.org/community/just-james.html}{\ul{https://www.ldraw.org/community/just-james.html}}
+\item
+  Community: LDraw.org Standards Board Charter, accessed December 10,
+  2025,
+  \href{https://www.ldraw.org/article/382.html}{\ul{https://www.ldraw.org/article/382.html}}
+\item
+  Holly-Wood.it \textgreater{} MLCad, accessed December 10, 2025,
+  \href{https://www.holly-wood.it/mlcad-en.html}{\ul{https://www.holly-wood.it/mlcad-en.html}}
+\item
+  MLCAD: A Survey of Research in Machine Learning for CAD Keynote Paper,
+  accessed December 10, 2025,
+  \href{https://www.researchgate.net/publication/355870373_MLCAD_A_Survey_of_Research_in_Machine_Learning_for_CAD_Keynote_Paper}{\ul{https://www.researchgate.net/publication/355870373\_MLCAD\_A\_Survey\_of\_Research\_in\_Machine\_Learning\_for\_CAD\_Keynote\_Paper}}
+\item
+  TobyLobster/ImportLDraw: A Blender plug-in for importing LDraw file
+  format Lego models and parts. - GitHub, accessed December 10, 2025,
+  \href{https://github.com/TobyLobster/ImportLDraw}{\ul{https://github.com/TobyLobster/ImportLDraw}}
+\item
+  L3P - render any LDRAW model in POV-Ray - Google Groups, accessed
+  December 10, 2025,
+  \href{https://groups.google.com/g/rec.toys.lego/c/mSZ-SgwL9-g}{\ul{https://groups.google.com/g/rec.toys.lego/c/mSZ-SgwL9-g}}
+\item
+  Conversion 101 - LDraw.org Wiki, accessed December 10, 2025,
+  \href{https://wiki.ldraw.org/wiki/Conversion_101}{\ul{https://wiki.ldraw.org/wiki/Conversion\_101}}
+\item
+  POV-Ray - Studio Help Center, accessed December 10, 2025,
+  \href{https://studiohelp.bricklink.com/hc/en-us/articles/6506022103447-POV-Ray}{\ul{https://studiohelp.bricklink.com/hc/en-us/articles/6506022103447-POV-Ray}}
+\item
+  The NXT STEP in LEGO® Robotics - RSSing.com, accessed December 10,
+  2025,
+  \href{https://mindstorms82.rssing.com/chan-37719032/all_p4.html}{\ul{https://mindstorms82.rssing.com/chan-37719032/all\_p4.html}}
+\item
+  Inside one of the most important LEGO® games ever made, accessed
+  December 10, 2025,
+  \href{https://www.lego.com/cdn/cs/set/assets/blte53dbf634332aa73/bits_n_bricks_s04e43_feature_and_transcript.pdf}{\ul{https://www.lego.com/cdn/cs/set/assets/blte53dbf634332aa73/bits\_n\_bricks\_s04e43\_feature\_and\_transcript.pdf}}
+\item
+  lego digital designer - dkor, accessed December 10, 2025,
+  \href{https://dkor.wordpress.com/tag/lego-digital-designer/}{\ul{https://dkor.wordpress.com/tag/lego-digital-designer/}}
+\item
+  LEGO® Ideas \textbar{} LEGO® History \textbar{} LEGO.com US, accessed
+  December 10, 2025,
+  \href{https://www.lego.com/en-us/history/articles/j-lego-ideas}{\ul{https://www.lego.com/en-us/history/articles/j-lego-ideas}}
+\item
+  Category:LEGO Digital Designer - LDraw.org Wiki, accessed December 10,
+  2025,
+  \href{https://wiki.ldraw.org/wiki/Category:LEGO_Digital_Designer}{\ul{https://wiki.ldraw.org/wiki/Category:LEGO\_Digital\_Designer}}
+\item
+  LDraw to LDD conversion, accessed December 10, 2025,
+  \href{https://wiki.ldraw.org/wiki/LDraw_to_LDD_conversion}{\ul{https://wiki.ldraw.org/wiki/LDraw\_to\_LDD\_conversion}}
+\item
+  LEGO Digital Designer officially defunded and unsupported {[}News{]} -
+  The Brothers Brick, accessed December 10, 2025,
+  \href{https://www.brothers-brick.com/2016/01/21/lego-digital-designer-officially-defunded-and-unsupported-news/}{\ul{https://www.brothers-brick.com/2016/01/21/lego-digital-designer-officially-defunded-and-unsupported-news/}}
+\item
+  The LEGO Group will focus on BrickLink Studio and pull back support
+  for LEGO® Digital Designer. - LEGO Ambassador Network, accessed
+  December 10, 2025,
+  \href{https://lan.lego.com/news/overview/the-lego-group-will-focus-on-bricklink-studio-and-pull-back-support-for-lego\%C2\%AE-digital-designer-r301/}{\ul{https://lan.lego.com/news/overview/the-lego-group-will-focus-on-bricklink-studio-and-pull-back-support-for-lego\%C2\%AE-digital-designer-r301/}}
+\item
+  From Tokyo Dream to Global Playground: The Story of LEGO® Cuusoo, the
+  Fan-Powered Dream Machine - Brick Legions, accessed December 10, 2025,
+  \href{https://www.bricklegions.com/2024/01/02/from-tokyo-dream-to-global-playground-the-story-of-lego-cuusoo-the-fan-powered-dream-machine/}{\ul{https://www.bricklegions.com/2024/01/02/from-tokyo-dream-to-global-playground-the-story-of-lego-cuusoo-the-fan-powered-dream-machine/}}
+\item
+  LEGO Ideas Sets: From Fan Creation to Valuable Collection - BlockApps
+  Inc., accessed December 10, 2025,
+  \href{https://blockapps.net/blog/lego-ideas-sets-from-fan-creation-to-valuable-collection/}{\ul{https://blockapps.net/blog/lego-ideas-sets-from-fan-creation-to-valuable-collection/}}
+\item
+  LEGOfied: Building Blocks as Media: Nicholas Taylor - Bloomsbury
+  Publishing, accessed December 10, 2025,
+  \href{https://www.bloomsbury.com/us/legofied-9781501354052/}{\ul{https://www.bloomsbury.com/us/legofied-9781501354052/}}
+\item
+  LEGOfied: building blocks as media, edited by Nicholas Taylor \& Chris
+  Ingraham New York: Bloomsbury Academic 2020 FOREWORD - Microethology,
+  accessed December 10, 2025,
+  \href{https://www.microethology.net/wp-content/uploads/2020/03/LEGOfied-foreword.pdf}{\ul{https://www.microethology.net/wp-content/uploads/2020/03/LEGOfied-foreword.pdf}}
+\item
+  The Faces of LEGO 2021: Setting A Baseline For Gender Representation
+  In Marketing \textquotesingle Hero Shots\textquotesingle{} \textbar{}
+  The Rambling Brick, accessed December 10, 2025,
+  \href{https://ramblingbrick.com/2021/10/15/the-faces-of-lego-2021-setting-a-baseline-for-gender-representation-in-marketing-hero-shots/}{\ul{https://ramblingbrick.com/2021/10/15/the-faces-of-lego-2021-setting-a-baseline-for-gender-representation-in-marketing-hero-shots/}}
+\item
+  LEGOfied: Building Blocks as Media 9781501354045, 9781501354076,
+  9781501354069 - DOKUMEN.PUB, accessed December 10, 2025,
+  \href{https://dokumen.pub/legofied-building-blocks-as-media-9781501354045-9781501354076-9781501354069.html}{\ul{https://dokumen.pub/legofied-building-blocks-as-media-9781501354045-9781501354076-9781501354069.html}}
+\item
+  Bricx Command Center - Wikipedia, accessed December 10, 2025,
+  \href{https://en.wikipedia.org/wiki/Bricx_Command_Center}{\ul{https://en.wikipedia.org/wiki/Bricx\_Command\_Center}}
+\item
+  Bricx Command Center, accessed December 10, 2025,
+  \href{https://bricxcc.sourceforge.net/}{\ul{https://bricxcc.sourceforge.net/}}
+\item
+  Bricx Command Center 3.3 History, accessed December 10, 2025,
+  \href{https://bricxcc.sourceforge.net/bricxcc_history.htm}{\ul{https://bricxcc.sourceforge.net/bricxcc\_history.htm}}
+\item
+  LEGO discontinuing Mindstorms brand, retiring 51515 Robot Inventor at
+  end of 2022 {[}News{]}, accessed December 10, 2025,
+  \href{https://robot-academy.com/lego-discontinuing-mindstorms-brand-retiring-51515-robot-inventor-at-end-of-2022-news/}{\ul{https://robot-academy.com/lego-discontinuing-mindstorms-brand-retiring-51515-robot-inventor-at-end-of-2022-news/}}
+\item
+  Lego Mindstorms Robotics Kits Are Being Discontinued - PCMag, accessed
+  December 10, 2025,
+  \href{https://www.pcmag.com/news/lego-mindstorms-robotics-kits-are-being-discontinued}{\ul{https://www.pcmag.com/news/lego-mindstorms-robotics-kits-are-being-discontinued}}
+\item
+  The future of LEGO Education amidst the greatest turnaround in history
+  TEACHING NOTE, accessed December 10, 2025,
+  \href{https://lup.lub.lu.se/student-papers/record/9150944/file/9150946.pdf}{\ul{https://lup.lub.lu.se/student-papers/record/9150944/file/9150946.pdf}}
+\item
+  BrickLink Studio Replaces LEGO Digital Designer - theBrickBlogger.com,
+  accessed December 10, 2025,
+  \href{https://thebrickblogger.com/2022/01/bricklink-studio-replaces-lego-digital-designer/}{\ul{https://thebrickblogger.com/2022/01/bricklink-studio-replaces-lego-digital-designer/}}
+\item
+  What software do you use to plan/design your LEGO builds? - Reddit,
+  accessed December 10, 2025,
+  \href{https://www.reddit.com/r/lego/comments/1n7l10z/what_software_do_you_use_to_plandesign_your_lego/}{\ul{https://www.reddit.com/r/lego/comments/1n7l10z/what\_software\_do\_you\_use\_to\_plandesign\_your\_lego/}}
+\item
+  LDraw.org 2023-03 Parts Update Now Available, accessed December 10,
+  2025,
+  \href{https://forums.ldraw.org/thread-27515.html}{\ul{https://forums.ldraw.org/thread-27515.html}}
+\item
+  How to import an unofficial parts archive into LDraw? - Bricks
+  Stackexchange, accessed December 10, 2025,
+  \href{https://bricks.stackexchange.com/questions/6220/how-to-import-an-unofficial-parts-archive-into-ldraw}{\ul{https://bricks.stackexchange.com/questions/6220/how-to-import-an-unofficial-parts-archive-into-ldraw}}
+\item
+  LEGO Advances Automated Physical Design - University of Guelph,
+  accessed December 10, 2025,
+  \href{https://www.uoguelph.ca/ccmps/news/2020/12/lego-advances-automated-physical-design}{\ul{https://www.uoguelph.ca/ccmps/news/2020/12/lego-advances-automated-physical-design}}
+\item
+  GaussianUpdate: Continual 3D Gaussian Splatting Update for Changing
+  Environments - arXiv, accessed December 10, 2025,
+  \href{https://arxiv.org/html/2508.08867v1}{\ul{https://arxiv.org/html/2508.08867v1}}
+\item
+  (PDF) GaussianUpdate: Continual 3D Gaussian Splatting Update for
+  Changing Environments - ResearchGate, accessed December 10, 2025,
+  \href{https://www.researchgate.net/publication/394458431_GaussianUpdate_Continual_3D_Gaussian_Splatting_Update_for_Changing_Environments}{\ul{https://www.researchgate.net/publication/394458431\_GaussianUpdate\_Continual\_3D\_Gaussian\_Splatting\_Update\_for\_Changing\_Environments}}
+\item
+  How the LEGO Group Blends the Physical and Digital to Create New Forms
+  of Play, accessed December 10, 2025,
+  \href{https://www.lego.com/cdn/cs/set/assets/bltfb18e128b11cda97/bits_n_bricks_s01e02_fluid_play_feature_and_transcript.pdf}{\ul{https://www.lego.com/cdn/cs/set/assets/bltfb18e128b11cda97/bits\_n\_bricks\_s01e02\_fluid\_play\_feature\_and\_transcript.pdf}}
+\item
+  LDraw.org Library Policies and FAQ, accessed December 10, 2025,
+  \href{https://www.ldraw.org/pt-policies.html}{\ul{https://www.ldraw.org/pt-policies.html}}
+\item
+  GoldieBlox™ in the 2nd and 3rd Grade: Final Report, accessed December
+  10, 2025,
+  \href{http://girlsschools.org/wp-content/uploads/2017/11/GoldieBlox-in-the-2nd-and-3rd-Grade-Final-Report.pdf}{\ul{http://girlsschools.org/wp-content/uploads/2017/11/GoldieBlox-in-the-2nd-and-3rd-Grade-Final-Report.pdf}}
+\item
+  Japanese LEGO.... - General LEGO Discussion - Eurobricks Forums,
+  accessed December 10, 2025,
+  \href{https://www.eurobricks.com/forum/forums/topic/81168-japanese-lego/}{\ul{https://www.eurobricks.com/forum/forums/topic/81168-japanese-lego/}}
+\item
+  Brickipedia:LEGO Wikis in Other Languages - Fandom, accessed December
+  10, 2025,
+  \href{https://brickipedia.fandom.com/wiki/Brickipedia:LEGO_Wikis_in_Other_Languages}{\ul{https://brickipedia.fandom.com/wiki/Brickipedia:LEGO\_Wikis\_in\_Other\_Languages}}
+\end{enumerate}

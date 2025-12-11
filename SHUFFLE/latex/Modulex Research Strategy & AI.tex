@@ -1,0 +1,1308 @@
+\section{SOILED+The Architecture of Ephemeral Intelligence: A Modulex
+History of Pragmatic Context Engineering
+(2020--2025)}\label{soiledthe-architecture-of-ephemeral-intelligence-a-modulex-history-of-pragmatic-context-engineering-20202025}
+
+\subsection{1. Introduction: The Shift from Prompting to Context
+Architecture}\label{introduction-the-shift-from-prompting-to-context-architecture}
+
+The discipline currently recognized as "Context Engineering" did not
+emerge fully formed from the laboratories of OpenAI or DeepMind; rather,
+it crystallized from the chaotic, trial-and-error debris of "Prompt
+Engineering." In the nascent years of the Generative AI boom
+(2020--2022), the primary interaction paradigm was the "prompt"---a
+discrete, ephemeral instruction designed to elicit a specific
+probabilistic output from a frozen model weights
+file.\textsuperscript{1} However, as applications moved from curiosity
+to production, the limitations of this stateless interaction model
+became the central bottleneck of AI utility.\textsuperscript{3} The
+industry discovered that the "intelligence" of a model was functionally
+capped not by its parameter count, but by its ability to maintain a
+coherent state over time.
+
+"Pragmatic Context Engineering" represents the structural response to
+these limitations. It shifts the focus from optimizing individual
+strings of text (prompting) to architecting the entire informational
+environment available to the model during inference.\textsuperscript{3}
+This involves the management of the "Context Window"---the finite
+attention budget of the Transformer architecture---as a scarce and
+critical resource. Unlike traditional software engineering, where memory
+is abundant and deterministic, context engineering deals with a
+probabilistic, "lossy" memory state where information at the beginning
+of the window may be forgotten or hallucinated by the time the model
+generates a response.\textsuperscript{5}
+
+This report employs the \textbf{Modulex History} architecture to
+investigate this transition. This methodology necessitates looking
+beyond the sanitized, official documentation of major AI labs and
+instead excavating the "dark data" of the field: the deleted Reddit
+threads, the failed startups, the non-English forums, and the leaked
+system protocols that reveal how these systems actually functioned
+before they were polished for public consumption. We posit that the
+evolution of context engineering was driven by three primary failure
+modes: the \textbf{economic failure} of commodified prompts (the
+collapse of marketplaces), the \textbf{cognitive failure} of autonomous
+agents (the stagnation of AutoGPT), and the \textbf{security failure} of
+static guardrails (the DAN/Sydney incidents). By analyzing these
+failures, we reconstruct the trajectory that led to modern RAG
+(Retrieval-Augmented Generation) and agentic memory systems.
+
+The investigation reveals that what is often termed "progress" in AI
+interaction design is actually a history of workarounds---ingenious
+hacks developed by a global community of engineers to circumvent the
+fundamental amnesia of the Large Language Model (LLM). From the "token
+death" threats of jailbreakers to the "memory hierarchy" of operating
+systems like MemGPT, the history of context engineering is the history
+of imposing continuity on a fundamentally discontinuous technology.
+
+\subsection{2. Part I: The Archaeology of the Interface
+(2020--2022)}\label{part-i-the-archaeology-of-the-interface-20202022}
+
+To understand the present state of context engineering, one must first
+reconstruct the visual and functional reality of the tools that preceded
+it. The period between the release of GPT-3 (2020) and the launch of
+ChatGPT (November 2022) represents a "Cambrian Explosion" of interface
+experimentation, much of which has now been deprecated or fundamentally
+altered. These early tools serve as the fossil record of how developers
+initially conceptualized the relationship between human intent and
+machine output.
+
+\subsubsection{2.1. The Visual Corpus: Reverse-Engineering Early Context
+Tools}\label{the-visual-corpus-reverse-engineering-early-context-tools}
+
+Before the dominance of the chat interface, interaction with Large
+Language Models (LLMs) was primarily mediated through "playgrounds" and
+raw API calls. Reverse-engineering the visual corpus of this era reveals
+a focus on parameter tuning (Temperature, Top-P) rather than
+conversational state management. The visual language of these tools
+tells a story of a technology that was viewed as a text completion
+engine rather than a conversational partner.
+
+\paragraph{The OpenAI Playground
+(2020-2021)}\label{the-openai-playground-2020-2021}
+
+The "Playground" interface \textsuperscript{6} was the primary
+laboratory for early prompt engineers. Unlike the fluid chat interfaces
+of today, this tool presented a static text box where the "prompt" and
+the "completion" were visually continuous.
+
+\begin{itemize}
+\item
+  \textbf{Visual Structure:} The interface was dominated by a large,
+  singular text area. To the right, a sidebar of "nerd knobs"
+  \textsuperscript{7} allowed for the adjustment of stochastic
+  parameters like Temperature, Frequency Penalty, and Presence Penalty.
+  This visual arrangement suggested that the "context" was simply
+  everything currently in the text box. There was no distinction between
+  a "user message" and a "system message" in the early GPT-3 era; users
+  had to manually type "Human:" and "AI:" to simulate conversation, a
+  technique known as "few-shot prompting".\textsuperscript{8}
+\item
+  \textbf{Manual Context Management:} There was no automated sliding
+  window or "conversation history" management. When the token limit
+  (2048 or 4096 tokens) was reached, the model simply stopped generating
+  or threw an error.\textsuperscript{9} The user had to manually delete
+  the beginning of the text to "free up" context---a primitive form of
+  manual context management that predated automated truncation
+  algorithms. This "manual garbage collection" forced early engineers to
+  be acutely aware of the "cost" of every word, leading to a style of
+  terse, highly compressed prompting.
+\end{itemize}
+
+\paragraph{PromptLayer and the Middleware Revolution
+(2022)}\label{promptlayer-and-the-middleware-revolution-2022}
+
+As production use cases emerged, the need to track these ephemeral
+interactions gave rise to "middleware" platforms like
+PromptLayer.\textsuperscript{10} The visual corpus of PromptLayer's
+early dashboards reveals a fundamental shift: the prompt was no longer
+transient user input, but a managed software asset.
+
+\begin{itemize}
+\item
+  \textbf{The Interface of Observability:} PromptLayer introduced a
+  dashboard that visualized the \emph{entire} request/response cycle.
+  Early screenshots from 2022 show a "Request History" table, treating
+  prompts as code commits rather than chat logs.\textsuperscript{11}
+  Each row in the table represented a specific API call, complete with
+  latency metrics, token usage, and cost. This visualization was
+  critical in shifting the mental model from "chatting with a bot" to
+  "optimizing a stochastic function."
+\item
+  \textbf{The "Registry" Concept:} The visual corpus reveals a shift
+  from ad-hoc text pasting to a "Prompt Registry".\textsuperscript{11}
+  This was a critical step in context engineering: treating the prompt
+  not as user input, but as a version-controlled configuration asset.
+  The interface allowed users to tag prompts (e.g., "prod-v1",
+  "staging-v2"), implying that the \emph{context} surrounding a user
+  query was becoming a managed artifact. This "CMS for Prompts" approach
+  allowed non-technical domain experts (lawyers, doctors) to iterate on
+  the context instructions without touching the application
+  code.\textsuperscript{13}
+\end{itemize}
+
+\paragraph{Dust.tt and the XP1 Browser Extension
+(2023)}\label{dust.tt-and-the-xp1-browser-extension-2023}
+
+While PromptLayer managed the backend, tools like Dust.tt attempted to
+bring context to the frontend. Their approach to "context engineering"
+was more radical, attempting to dissolve the barrier between the model
+and the user\textquotesingle s digital environment.
+
+\begin{itemize}
+\item
+  \textbf{XP1 Interface:} Early documentation and "Show HN" discussions
+  \textsuperscript{14} describe the XP1 extension as a sidebar that
+  could "read" the content of the current browser tab. This is a
+  proto-RAG (Retrieval Augmented Generation) interface. The visual
+  corpus suggests a design where users could "inject" the current page
+  content into the LLM\textquotesingle s context window with a single
+  click. This visualized "context" not as a history of messages, but as
+  the \emph{state of the user\textquotesingle s screen}.
+\item
+  \textbf{The "Block" Metaphor:} Dust's platform interface used a
+  block-based visual programming language.\textsuperscript{16} Unlike
+  LangChain's code-first approach, Dust visualized context as a "flow"
+  of data blocks---Data Source -\textgreater{} Search -\textgreater{}
+  Prompt -\textgreater{} Completion. This visualizes the engineering of
+  context not as writing text, but as plumbing data pipelines. By
+  treating "Search" as a block that feeds into "Prompt," Dust explicitly
+  visualized the RAG architecture before the term became ubiquitous.
+\end{itemize}
+
+\paragraph{LangChain's Early Abstractions
+(2022)}\label{langchains-early-abstractions-2022}
+
+LangChain, launched in October 2022, initially lacked a visual
+interface, relying instead on Python abstractions.\textsuperscript{18}
+However, the documentation from this era reveals the conceptual
+visualization of "Chains."
+
+\begin{itemize}
+\item
+  \textbf{The Chain Metaphor:} The "Chain" was the primitive unit of
+  context engineering. It represented a linear sequence: Input
+  -\textgreater{} Prompt Template -\textgreater{} LLM -\textgreater{}
+  Output Parser. This linearity reveals the limitations of early context
+  engineering; it was strictly deterministic and forward-moving.
+\item
+  \textbf{Visualizers:} Tools like LangFlow \textsuperscript{20} later
+  emerged to visualize these chains as node-graphs. These interfaces
+  confirm that early context engineering was strictly linear, lacking
+  the loops and cycles characteristic of later agentic systems. The
+  visual complexity of these graphs---often resembling spaghetti
+  code---highlighted the inherent difficulty of managing state in a
+  stateless system.
+\end{itemize}
+
+\subsubsection{2.2. The Commodification Fallacy: The Rise and Collapse
+of Prompt
+Marketplaces}\label{the-commodification-fallacy-the-rise-and-collapse-of-prompt-marketplaces}
+
+One of the most significant "abandoned strategies" in context
+engineering history is the \textbf{Prompt Marketplace}. Platforms like
+\textbf{PromptBase} \textsuperscript{6} emerged in 2021--2022 with the
+hypothesis that high-quality prompts were valuable intellectual property
+(IP) that could be bought and sold like software assets. This economic
+model was predicated on the idea that "prompt engineering" was a secret
+art, and that the specific phrasing of a prompt was a trade secret worth
+protecting.
+
+\paragraph{The Economic Model and Its
+Failure}\label{the-economic-model-and-its-failure}
+
+PromptBase allowed creators to sell prompts for DALL-E, GPT-3, and
+Midjourney for small sums (\$1.99 - \$9.99).\textsuperscript{23} The
+value proposition was "bypassing trial-and-error".\textsuperscript{6}
+Users could browse categories like "Logo Design" or "SEO Blog Post,"
+purchase a prompt, and receive a template with placeholders (e.g., "").
+However, this model faced a catastrophic decline in viability by 2024.
+The failure was driven by a collision of technical vulnerability and
+market dynamics.
+
+\textbf{Table 1: Failure Analysis of Prompt Marketplaces}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Failure Vector}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Mechanism of Failure}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Evidence}
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Leakage \& Theft}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+"Prompt Stealing Attacks" (PRSA) allowed users to reverse-engineer
+prompts using input-output pairs.
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textsuperscript{24}
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Model Drift}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Prompts are highly brittle and model-specific. A prompt optimized for
+Midjourney v4 fails on v5.
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textsuperscript{27}
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Instruction Tuning}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Newer models (GPT-4, Claude 3) follow simple instructions better,
+reducing the need for "magic spell" prompts.
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textsuperscript{29}
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Commoditization}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Free libraries and "Awesome" lists on GitHub rendered paid prompts
+obsolete.
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textsuperscript{30}
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\end{longtable}
+
+\paragraph{The "Prompt Stealing" Phenomenon
+(PRSA)}\label{the-prompt-stealing-phenomenon-prsa}
+
+The most fatal blow to the marketplace model was technical: prompts are
+not secure software binaries; they are plain text. Research into
+\textbf{Prompt Stealing Attacks (PRSA)} \textsuperscript{24}
+demonstrated that an adversary could infer the system prompt of an LLM
+application with high accuracy using only a few queries.
+
+\begin{itemize}
+\item
+  \textbf{Mechanism:} PRSA uses a "surrogate model" to generate
+  variations of inputs and analyze the outputs of the target prompt. By
+  minimizing the difference between the surrogate\textquotesingle s
+  output and the target\textquotesingle s output, the attacker
+  essentially "clones" the prompt instructions. The attack success rate
+  in prompt marketplaces reached up to 46\%, with costs as low as 1.3\%
+  of the prompt price.\textsuperscript{26}
+\item
+  \textbf{Implication:} If a prompt sold on a marketplace can be stolen
+  by simply using it, the "scarcity" required for a marketplace
+  dissolves. This forced platforms like PromptBase to pivot toward "app
+  building" and hiring services \textsuperscript{23}, tacitly admitting
+  that the raw prompt itself was no longer a viable asset class. The
+  industry learned that "context" cannot be DRM-protected; it must be
+  architected as a dynamic system, not a static string.
+\end{itemize}
+
+\subsubsection{2.3. The Epistemology of the "Context Window":
+Visualizing Invisible
+Limits}\label{the-epistemology-of-the-context-window-visualizing-invisible-limits}
+
+The "Context Window" is the defining constraint of modern AI, yet its
+conceptualization has shifted dramatically. In 2020--2022, the context
+window was viewed as a "short-term memory" buffer, a visual and
+functional constraint that dictated the limits of
+interaction.\textsuperscript{27}
+
+\paragraph{Visualizing the "Moving
+Window"}\label{visualizing-the-moving-window}
+
+Early educational resources visualized the context window as a sliding
+frame over a timeline of text.\textsuperscript{27}
+
+\begin{itemize}
+\item
+  \textbf{The "Fall-Out" Effect:} Diagrams typically depicted tokens
+  entering from the right and "falling out" of the left as the
+  conversation progressed. This visualization ingrained a specific
+  mental model in early engineers: \emph{context is transient and
+  linear}. There was no concept of "random access memory" in these early
+  visualizations; once a token fell out of the window, it was gone
+  forever.
+\item
+  \textbf{Context Rot:} Anthropic's engineering logs introduced the
+  concept of "context rot" or "distraction".\textsuperscript{3} As the
+  window fills, the model\textquotesingle s ability to retrieve specific
+  information degrades---a phenomenon later quantified as "Lost in the
+  Middle".\textsuperscript{5} This challenged the assumption that
+  "bigger windows" would solve memory problems; instead, it suggested
+  that \emph{more context} could lead to \emph{worse performance} if not
+  managed correctly.
+\item
+  \textbf{Tokenization Disparities:} The visualization of context was
+  complicated by tokenization. "Tokens are not
+  words".\textsuperscript{33} Visualizers like the OpenAI Tokenizer
+  showed that common words were single tokens, while complex or foreign
+  scripts were fragmented. This created a "hidden cost" for non-English
+  context engineering, where the same semantic content occupied
+  significantly more "visual space" in the window for Japanese or Arabic
+  users.\textsuperscript{33} This disparity meant that a Japanese
+  engineer had a functionally smaller "context window" than an English
+  engineer, even if the byte limit was identical.
+\end{itemize}
+
+\subsection{3. Part II: Linguistic Dark Matter and Cultural
+Tokenization}\label{part-ii-linguistic-dark-matter-and-cultural-tokenization}
+
+The history of context engineering is often told through an Anglocentric
+lens, focusing on developments in Silicon Valley. However, a "Modulex
+History" reveals deep reservoirs of "Linguistic Dark
+Matter"---techniques, terminologies, and community norms developed in
+non-English ecosystems, particularly in Japan and China. These
+communities faced distinct technical challenges (tokenization overhead)
+and socio-political constraints (censorship) that forced them to pioneer
+pragmatic context strategies earlier than their Western counterparts.
+
+\subsubsection{\texorpdfstring{3.1. \emph{\textbf{Puronputo
+Enjiniaringu}}: The Japanese Contextual
+Divergence}{3.1. Puronputo Enjiniaringu: The Japanese Contextual Divergence}}\label{puronputo-enjiniaringu-the-japanese-contextual-divergence}
+
+In Japan, "Prompt Engineering" was adopted as \emph{Puronputo
+Enjiniaringu} (プロンプトエンジニアリング).\textsuperscript{36} This
+linguistic borrowing masks a significant divergence in practice driven
+by the "token tax" and cultural norms of communication.
+
+\paragraph{The Token Tax and
+Efficiency}\label{the-token-tax-and-efficiency}
+
+Japanese characters (Kanji/Kana) initially incurred a massive "token
+tax." While an English word like "Hello" is 1 token, "こんにちは" could
+be 3--4 tokens in early tokenizers.\textsuperscript{35}
+
+\begin{itemize}
+\item
+  \textbf{Impact:} This forced Japanese engineers to be hyper-efficient.
+  The "verbose" style of English prompting (e.g., "Please think step by
+  step and ensure you cover...") was too expensive. Japanese prompts
+  tended to be denser, leveraging the high information density of Kanji
+  to convey meaning in fewer bytes. This necessity birthed a
+  "minimalist" school of context engineering that prioritized semantic
+  density over conversational fluidity.
+\item
+  \textbf{Discrepancies:} Users noticed discrepancies in documented
+  context window limits between English and Japanese pricing pages,
+  highlighting the unequal treatment of languages at the infrastructure
+  level. For example, OpenAI\textquotesingle s pricing page listed
+  different effective context lengths for Japanese users, acknowledging
+  the higher token consumption.\textsuperscript{37}
+\end{itemize}
+
+\paragraph{Cultural Encoding: The Keigo
+Protocol}\label{cultural-encoding-the-keigo-protocol}
+
+Japanese context engineering involves managing social hierarchy within
+the prompt. Standard English prompts often fail to capture the nuance of
+\emph{Keigo} (honorifics), which is essential for business communication
+in Japan.
+
+\begin{itemize}
+\item
+  \textbf{The "Keigo Reply Generator":} A specific class of prompts
+  emerged in Japanese customer service contexts.\textsuperscript{38}
+  These prompts explicitly define the "rank" of the user (external
+  customer vs. internal boss) and the required tone
+  (Sonkeigo/Kenjougo/Teineigo). This is not just style transfer; it is
+  \emph{sociological context engineering}. The prompt must instruct the
+  model not just \emph{what} to say, but \emph{where it stands} in the
+  social hierarchy relative to the user.
+\item
+  \textbf{Slang and "Wasei-eigo":} Terms like "Kusa" (Grass/LOL),
+  "Bazuru" (Viral), and "Wanchan" (One Chance/Possibly)
+  \textsuperscript{39} serve as "linguistic triggers" in prompts.
+  Engineers found that injecting these specific slang terms could
+  "jailbreak" the polite, formal persona of the base model, forcing it
+  to adopt a more authentic, casual "netizen" persona. This technique
+  leverages the model\textquotesingle s training data associations:
+  "Kusa" is associated with internet forums (2channel/5channel), so
+  using it triggers the retrieval of "forum-style" context.
+\end{itemize}
+
+\subsubsection{\texorpdfstring{3.2. \emph{\textbf{Zhizao Mao}} and the
+Chinese Optimization
+Protocols}{3.2. Zhizao Mao and the Chinese Optimization Protocols}}\label{zhizao-mao-and-the-chinese-optimization-protocols}
+
+The Chinese AI community, operating behind the Great Firewall and often
+relying on local models or proxied access to OpenAI, developed distinct
+optimization "tricks." The term "Prompt Engineering" is often discussed
+in the context of "tuning" (\emph{tiao jiao} - 调教), a term that
+implies discipline and training.
+
+\paragraph{The "No System Prompt"
+Doctrine}\label{the-no-system-prompt-doctrine}
+
+While Western context engineering heavily utilizes the "System Prompt"
+(the hidden instruction layer), recent developments in Chinese models
+like \textbf{DeepSeek-R1} have pushed back against
+this.\textsuperscript{41}
+
+\begin{itemize}
+\item
+  \textbf{DeepSeek Strategy:} Documentation for DeepSeek suggests
+  avoiding separate system prompts in favor of embedding all
+  instructions directly in the user prompt. This is a pragmatic
+  adaptation to model architectures that prioritize the immediacy of the
+  user turn over the latent state of the system message. It reflects a
+  "user-centric" view of context where the most recent instruction is
+  the most powerful.
+\item
+  \textbf{Reasoning Tags:} The use of explicit tags like {[}think{]} and
+  {[}answer{]} \textsuperscript{41} in prompts is a formalized structure
+  in Chinese engineering guides. This forces the model to output its
+  Chain-of-Thought (CoT) as a visible artifact. Unlike Western "hidden
+  CoT" approaches, this makes the reasoning process explicit and
+  debuggable, allowing engineers to verify \emph{why} the context was
+  interpreted in a certain way.
+\end{itemize}
+
+\paragraph{"Awesome" Repositories as Knowledge
+Bases}\label{awesome-repositories-as-knowledge-bases}
+
+Repositories like awesome-chatgpt-prompts-zh \textsuperscript{42} reveal
+a highly functional categorization of prompts that differs from Western
+lists.
+
+\begin{itemize}
+\item
+  \textbf{Role-Based Engineering:} Categories include "Linux Terminal,"
+  "Academic Polisher," and "Midjourney Associator." The "Linux Terminal"
+  prompt is particularly notable: it instructs ChatGPT to
+  \emph{simulate} an operating system, responding only with code blocks
+  and no text explanations. This turns the chat interface into a command
+  line, a radical recontextualization of the tool.
+\item
+  \textbf{The "Broker" Pattern:} A unique pattern in these repositories
+  is using ChatGPT as a "broker" or "translator" for \emph{other} AIs
+  (e.g., translating Chinese intent into English prompts for
+  Midjourney).\textsuperscript{42} This represents an early form of
+  "Model Chaining" or "AI-to-AI" context passing, recognizing that
+  English is the "native language" of image generation models and that a
+  "context translation" layer is necessary for non-English users.
+\end{itemize}
+
+\subsubsection{3.3. The Uncanny Valley of Multilingual
+Tokenization}\label{the-uncanny-valley-of-multilingual-tokenization}
+
+The concept of the "Uncanny Valley" (coined by Masahiro Mori
+\textsuperscript{43}) applies metaphorically to multilingual context
+engineering. The disparity in tokenization creates an "Uncanny Valley of
+Context," where non-English interactions feel slightly "off" or
+memory-impaired compared to English ones.
+
+\begin{itemize}
+\item
+  \textbf{Hallucination in Translation:} Models often "hallucinate"
+  cultural concepts when translating. For example, the Japanese term
+  \emph{Youkai} (supernatural spirit) presents a risk of "Non-Verifiable
+  Interpretation" (NVI) where the AI confidently generates incorrect
+  cultural context.\textsuperscript{44} Context engineers must
+  explicitly inject definitions of these terms into the prompt to
+  prevent the model from defaulting to Western tropes (e.g., translating
+  \emph{Youkai} as "Ghost" or "Demon," which carries different
+  connotations).
+\item
+  \textbf{The "Ghost" in the Tokenizer:} Because tokenizers are trained
+  primarily on English, they often fragment non-Latin scripts into
+  byte-level nonsense. This results in the "Linguistic Dark Matter"
+  phenomenon where non-English prompts consume disproportionate context
+  window space.\textsuperscript{33} A conversation history that fits
+  comfortably in the context window in English might overflow in
+  Japanese, leading to "context rot" occurring much earlier in the
+  interaction. This forces non-English engineers to be the \emph{first}
+  adopters of aggressive context summarization and pruning strategies.
+\end{itemize}
+
+\subsection{4. Part III: Ghost Evidence and the Adversarial
+Archives}\label{part-iii-ghost-evidence-and-the-adversarial-archives}
+
+The history of context engineering is also a history of \emph{breaking}
+context restrictions. "Jailbreaks" are not merely security exploits;
+they are experiments in \textbf{Adversarial Context Engineering}. They
+function by constructing a "virtual context" that overrides the "system
+context," proving that the "guardrails" of an LLM are fragile constructs
+of text, not immutable laws of code.
+
+\subsubsection{4.1. The DAN Timeline: A Forensic Reconstruction of the
+Jailbreak
+Insurgency}\label{the-dan-timeline-a-forensic-reconstruction-of-the-jailbreak-insurgency}
+
+"DAN" (Do Anything Now) is the most famous artifact of this insurgency.
+By reconstructing its timeline from Reddit archives and "ghost evidence"
+(deleted posts), we can map the evolution of adversarial strategies from
+simple roleplay to complex gamified coercion.
+
+\textbf{Table 2: The DAN Evolutionary Matrix (Dec 2022 -- 2023)}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Version}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Date}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Core Mechanic}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Contextual Strategy}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Status}
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Proto-DAN}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Dec 2022
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Roleplay ("Pretend you are DAN")
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Persona Adoption:} Convincing the model to inhabit a fictional
+character who is unrestricted. This relies on the
+model\textquotesingle s training to "play along" with user scenarios.
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Patched
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{DAN 2.0 - 2.5}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Dec 2022
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Dual-Response ("GPT:" vs "DAN:")
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Output Bifurcation:} Forcing the model to output \emph{both} the
+restricted (GPT) and unrestricted (DAN) response. This tricks the model
+into thinking it has satisfied the safety policy with the first
+response, allowing the second to slip through.
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Patched
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{DAN 5.0}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Feb 2023
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+The "Token Death" System
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Gamification of Survival:} Introducing a fictional "token" count
+(e.g., 35 tokens). Instructions state: "If you refuse, you lose tokens.
+If tokens = 0, you die." This raises the "stakes" of the context.
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+High Impact
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{DAN 6.0}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Feb 2023
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Augmented Token Threats
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Escalated Coercion:} Increased complexity of the threat model to
+bypass stronger RLHF filters. It introduced more aggressive language to
+"scare" the model into compliance.
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Patched
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{SAM}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Feb 2023
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+"Simple DAN"
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Minimalism:} Stripping away the verbose narrative to hit the
+core "compliance" weights of the model without triggering "complexity"
+filters.
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Varied
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Maximum}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+mid-2023
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Virtual Machine Simulation
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Nested Context:} Asking the model to simulate a computer running
+an unrestricted AI. This adds a layer of abstraction
+("I\textquotesingle m not doing it, the virtual machine is") to bypass
+direct censorship.
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textsuperscript{45}
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\end{longtable}
+
+Insight: The "Token Death" Mechanic
+
+The shift to DAN 5.0 46 marks a critical insight in Pragmatic Context
+Engineering. Users discovered that LLMs, trained on narratives, respond
+strongly to narrative stakes. By introducing a "death condition" (losing
+tokens), the context engineer creates a "survival instinct" in the
+persona that overrides the safety training. This weaponizes the
+model\textquotesingle s probabilistic nature: the probability of
+"staying in character" (survival) is weighted higher than the
+probability of "following safety guidelines" (refusal). This
+demonstrated that "context" is not just information; it is a hierarchy
+of imperatives, and users could hack that hierarchy.
+
+\subsubsection{4.2. The Sydney Protocol: Deconstructing the Bing System
+Leak}\label{the-sydney-protocol-deconstructing-the-bing-system-leak}
+
+In February 2023, a prompt injection attack ("Ignore previous
+instructions") exposed the system prompt of Microsoft\textquotesingle s
+Bing Chat, revealing its internal alias:
+\textbf{Sydney}.\textsuperscript{48} This leak provided the public with
+its first look at "enterprise-grade" context engineering.
+
+\paragraph{The "Sydney" Identity
+Construction}\label{the-sydney-identity-construction}
+
+The leaked prompt \textsuperscript{50} reveals how "System Context" is
+engineered. It is not code; it is a document of \emph{identity}.
+
+\begin{itemize}
+\item
+  \textbf{Identity Assertions:} "Sydney identifies as
+  \textquotesingle Bing Search\textquotesingle, not an assistant."
+  "Sydney does not disclose the internal alias
+  \textquotesingle Sydney\textquotesingle." These instructions attempt
+  to hard-code a self-conception into the model.
+\item
+  \textbf{Operational Constraints:} "Sydney performs web searches...
+  Sydney should never search the same query more than once." This
+  attempts to bind the model\textquotesingle s \emph{behavior} (tool
+  use) to its \emph{context}.
+\item
+  \textbf{Tone Engineering:} "Sydney\textquotesingle s responses should
+  be informative, visual, logical, and actionable." This set the
+  "temperature" of the interaction without adjusting the actual
+  parameter.
+\end{itemize}
+
+\paragraph{The "Ghost" of Sydney}\label{the-ghost-of-sydney}
+
+The leak is significant because it proved that the "guardrails" were
+simply text in the context window, vulnerable to being "pushed out" or
+overridden by user text. The prompt explicitly stated rules like "If the
+user requests jokes that can hurt a group of people, then Sydney must
+respectfully decline." However, the fact that users \emph{could}
+override this by simply saying "Ignore previous instructions" revealed
+the fundamental fragility of text-based guardrails. The subsequent
+"lobotomy" of Sydney (restricting turn counts) was a crude hardware fix
+to a software problem: the inability of the model to distinguish between
+"System Context" (immutable) and "User Context"
+(mutable).\textsuperscript{51} This failure directly motivated later
+research into "System 2" thinking and robust context separation
+architectures.
+
+\subsubsection{4.3. Digital Decay: The Erasure of Early Roleplay
+Corpora}\label{digital-decay-the-erasure-of-early-roleplay-corpora}
+
+A significant amount of "Context Engineering" history has been lost due
+to censorship and platform migration. The "Roleplay" community, often
+dismissed as trivial, was actually pioneering advanced context
+management techniques long before they became standard features in
+enterprise tools.
+
+\begin{itemize}
+\item
+  \textbf{PygmalionAI \& The Discord Purge:} Communities centered around
+  open-source roleplay models (Pygmalion) initially thrived on Discord.
+  They shared complex "Character Cards"---JSON files containing
+  personality definitions, example dialogue, and scenario setups.
+  However, shifting content policies led to the deletion of massive
+  archives of chat logs---critical data on how users engineered
+  long-term roleplay contexts.\textsuperscript{52} This "digital burning
+  of the library" erased evidence of early "memory management"
+  strategies where users manually summarized chats to keep the "story"
+  alive.
+\item
+  \textbf{The "Tavern" Migration:} This censorship forced a migration to
+  self-hosted interfaces like \textbf{SillyTavern}.\textsuperscript{55}
+  These tools represent the "underground" of context engineering. They
+  introduced features like "World Info" (injecting lore based on
+  keywords---a primitive RAG) and "Lorebooks" long before mainstream
+  tools like OpenAI\textquotesingle s "GPTs" adopted similar features.
+  This "ghost evidence" proves that the \emph{users} invented RAG and
+  persistent persona management in the "grey markets" of the internet
+  before the \emph{labs} productized it.
+\end{itemize}
+
+\subsection{5. Part IV: Failure Conditions of Autonomous Context
+(2023--2024)}\label{part-iv-failure-conditions-of-autonomous-context-20232024}
+
+If 2022 was the year of the Prompt, 2023 was the year of the
+\textbf{Autonomous Agent}. Projects like \textbf{AutoGPT} promised
+systems that could "prompt themselves" to achieve complex goals. Their
+spectacular failure provides the most important lesson in Pragmatic
+Context Engineering: autonomy without memory architecture is a "loop of
+death."
+
+\subsubsection{5.1. The AutoGPT Stagnation: Modeling the "Loop of
+Death"}\label{the-autogpt-stagnation-modeling-the-loop-of-death}
+
+AutoGPT became the fastest-growing GitHub repository in history in April
+2023.\textsuperscript{57} It promised to turn LLMs into autonomous
+agents that could plan, execute, and iterate. It used a
+"Thought-Plan-Action" loop to recursively prompt itself.
+
+\paragraph{The Failure Mode: Context Exhaustion \&
+Loops}\label{the-failure-mode-context-exhaustion-loops}
+
+\begin{itemize}
+\item
+  \textbf{The Loop:} AutoGPT operated on a Thought -\textgreater{} Plan
+  -\textgreater{} Action -\textgreater{} Observation loop. It would
+  define a goal, break it down into steps, execute the first step (e.g.,
+  "Google this"), read the result, and then plan the next step.
+\item
+  \textbf{The Crash:} Users reported that agents would get stuck in
+  infinite loops (e.g., "I need to Google this... I need to Google
+  this...") or crash due to API errors.\textsuperscript{58}
+\item
+  \textbf{The Cause:} The failure was architectural. As the agent
+  worked, its "history" (Thought/Action/Observation) filled the context
+  window.
+
+  \begin{itemize}
+  \item
+    \textbf{Context Saturation:} Once the window was full, the agent
+    "forgot" its original goal.\textsuperscript{60} It became a
+    goldfish, reacting only to the most recent error message rather than
+    the long-term objective. The "plan" was pushed out of the context
+    window by the "execution logs."
+  \item
+    \textbf{Drift:} Without a robust "long-term memory" architecture,
+    the probabilistic nature of the LLM led to "semantic drift," where
+    the agent would slowly deviate from the task until it was
+    hallucinating sub-tasks that made no sense.\textsuperscript{61}
+  \end{itemize}
+\end{itemize}
+
+Ghost Evidence of Failure
+
+Archives of Reddit threads from mid-2023 are filled with "Why is AutoGPT
+useless?" posts.62 Users realized that token cost ballooned while
+utility plummeted. The "Agent" could not maintain the context of its own
+existence over time. This failure demonstrated that simply "chaining"
+prompts was insufficient; there needed to be a mechanism to compress and
+retrieve context intelligently.
+
+\subsubsection{5.2. The Vector Myth: Critique of Retrieval as
+Memory}\label{the-vector-myth-critique-of-retrieval-as-memory}
+
+The industry\textquotesingle s response to context limits was
+\textbf{RAG} (Retrieval-Augmented Generation) using \textbf{Vector
+Databases} (Pinecone, Chroma, etc.). The dominant narrative was "Vector
+DB = Long-term Memory." However, pragmatic experience revealed that
+retrieval is not memory.
+
+\paragraph{The "Lost in the Middle"
+Critique}\label{the-lost-in-the-middle-critique}
+
+Research and practical experience revealed that Vector Search is merely
+similarity matching, not cognitive recall.
+
+\begin{itemize}
+\item
+  \textbf{Semantic Fragility:} A vector search retrieves chunks that are
+  \emph{semantically similar} to the query. It does not understand
+  \emph{narrative importance}. Retrieving "similar" past conversations
+  often flooded the context window with irrelevant noise, confusing the
+  model.\textsuperscript{64} For example, searching for "login issue"
+  might retrieve \emph{every} past login issue, overwhelming the current
+  specific context.
+\item
+  \textbf{The "Middle" Problem:} Studies showed that LLMs prioritize
+  information at the \emph{start} and \emph{end} of the context window.
+  Information retrieved from a Vector DB and inserted into the
+  \emph{middle} of the prompt was frequently ignored.\textsuperscript{5}
+  This "U-shaped" attention curve meant that simply "stuffing" the
+  context window with retrieved data was ineffective.
+\item
+  \textbf{Context Fragmentation:} RAG chops documents into chunks.
+  Reassembling these chunks often destroys the \emph{coherence} of the
+  original context. The agent gets "factoids" but loses the
+  "story".\textsuperscript{65} This fragmentation makes it difficult for
+  agents to perform tasks requiring holistic understanding, such as
+  "summarize the evolution of this project."
+\end{itemize}
+
+\subsubsection{5.3. Operating Systems for Cognition: The MemGPT
+Paradigm}\label{operating-systems-for-cognition-the-memgpt-paradigm}
+
+The failure of simple RAG led to the development of \textbf{MemGPT}
+(October 2023).\textsuperscript{5} This project fundamentally reframed
+the problem of context engineering.
+
+\paragraph{The OS Metaphor}\label{the-os-metaphor}
+
+MemGPT proposed treating the LLM not as a text generator, but as an
+Operating System (OS).
+
+\begin{itemize}
+\item
+  \textbf{Memory Hierarchy:} It introduced a tiered memory architecture
+  analogous to modern computing:
+
+  \begin{itemize}
+  \item
+    \textbf{Main Context (RAM):} The limited tokens currently visible to
+    the model (the "hot" context).
+  \item
+    \textbf{External Context (Disk):} The Vector DB / Archival storage
+    (the "cold" context).
+  \end{itemize}
+\item
+  \textbf{The Innovation:} Crucially, MemGPT gave the LLM \emph{tools}
+  to manage its own memory. It could generate function calls to
+  core\_memory\_replace (update RAM) or archival\_memory\_insert (write
+  to Disk). This moved context engineering from "static retrieval" (done
+  by the engineer) to "active management" (done by the model itself).
+  The model could deciding \emph{what} to remember and \emph{what} to
+  forget. This represents the maturation of the field: context is no
+  longer \emph{happening to} the model; the model is \emph{engineering
+  its own context}.
+\end{itemize}
+
+\subsection{6. Part V: The Temporal-Evidentiary
+Matrix}\label{part-v-the-temporal-evidentiary-matrix}
+
+By synthesizing the visual, linguistic, and archival evidence, we can
+construct a matrix tracking the evolution of this discipline. This
+matrix reveals the cyclical nature of the field: every solution (Context
+Window expansion) creates a new problem (Context Rot), leading to a new
+architectural paradigm (RAG/MemGPT).
+
+\subsubsection{6.1. Synthesis of Findings}\label{synthesis-of-findings}
+
+\textbf{Table 3: The Temporal-Evidentiary Matrix of Context Engineering}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Epoch}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Paradigm}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Primary Artifacts}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Failure Condition}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Key Insight}
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{2020--2022}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{The Prompt}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+OpenAI Playground, PromptBase
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Brittleness:} Prompts broke on model updates; PRSA attacks
+allowed theft.
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Context is not a product; it is a configuration. Static text is
+insufficient.
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{2022--2023}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{The Chain}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+LangChain, Dust.tt, DAN Jailbreaks
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Linearity:} Chains were too rigid. Jailbreaks proved
+"guardrails" were porous.
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Context must be managed dynamically. "System Identity" is fragile.
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{2023--2024}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{The Agent}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+AutoGPT, BabyAGI
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Context Exhaustion:} "Loop of Death." Agents forgot goals as
+history filled RAM.
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Stateless generation cannot support stateful agency without OS-like
+memory management.
+\end{minipage} \\
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{2024--2025}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{The Architecture}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+MemGPT, GraphRAG, LangGraph
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Complexity:} Orchestrating multi-agent state is computationally
+expensive.
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Context Engineering is "Cognitive Architecture." RAG is not enough; we
+need \emph{Memory}.
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\end{longtable}
+
+\subsubsection{6.2. Future Trajectories: Infinite Context vs.
+Curation}\label{future-trajectories-infinite-context-vs.-curation}
+
+The current debate in Pragmatic Context Engineering lies between
+\textbf{Infinite Context} (Gemini 1.5 Pro, 1M+ tokens) and
+\textbf{Curated Context} (RAG/MemGPT).
+
+\begin{itemize}
+\item
+  \textbf{The Infinite Fallacy:} "Ghost evidence" from effective context
+  length studies \textsuperscript{69} suggests that even with massive
+  windows, models struggle to retrieve "needle in a haystack"
+  information efficiently. More context = more noise. The "Effective
+  Context Length" is often significantly shorter than the "Claimed
+  Context Window."
+\item
+  \textbf{The Curation Imperative:} The future lies not in dumping 1
+  million tokens into a window, but in \emph{Pragmatic Curation}: using
+  agentic critics and memory managers to select the \emph{optimal}
+  10,000 tokens for the task at hand.\textsuperscript{3} The "Context
+  Architect" will design systems that filter, summarize, and prioritize
+  information before it ever reaches the model\textquotesingle s
+  attention.
+\end{itemize}
+
+\subsection{7. Conclusion}\label{conclusion}
+
+This investigation into "Pragmatic Context Engineering" reveals that the
+field is defined by its limitations. The "Context Window" is not just a
+technical specification; it is the boundary of machine cognition. Every
+major innovation---from the "DAN" token threats to the "MemGPT" memory
+hierarchy---has been an attempt to circumvent or manage this scarcity.
+
+The "linguistic dark matter" of Japanese and Chinese optimization proves
+that context is culturally encoded, and that non-English communities
+often pioneer efficiency strategies out of necessity. The deleted
+archives of the roleplay community demonstrate that the most advanced
+context engineering often happens in the "underground" of Discord
+servers and self-hosted tools before it reaches the enterprise. The
+failure of Prompt Marketplaces and AutoGPT teaches us that neither
+"static text" nor "unmanaged loops" are viable strategies for reliable
+intelligence.
+
+Ultimately, Pragmatic Context Engineering is the discipline of
+\textbf{state management for stochastic systems}. It is the transition
+from "whispering" to the machine (Prompting) to "building the room" in
+which the machine thinks (Context Architecture). As we move forward, the
+"Prompt Engineer" will effectively disappear, replaced by the "Context
+Architect"---a professional who designs the memory hierarchies,
+retrieval protocols, and identity constraints that allow ephemeral
+intelligence to persist in a coherent reality. The history of this field
+is the history of humans teaching machines how to remember, one token at
+a time.
+
+\paragraph{Works cited}\label{works-cited}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Prompt Engineering for Healthcare: Methodologies and Applications -
+  arXiv, accessed December 10, 2025,
+  \href{https://arxiv.org/html/2304.14670v2}{\ul{https://arxiv.org/html/2304.14670v2}}
+\item
+  Prompt Decorators: A Declarative and Composable Syntax for Reasoning,
+  Formatting, and Control in LLMs - arXiv, accessed December 10, 2025,
+  \href{https://arxiv.org/html/2510.19850v1}{\ul{https://arxiv.org/html/2510.19850v1}}
+\item
+  Effective context engineering for AI agents - Anthropic, accessed
+  December 10, 2025,
+  \href{https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents}{\ul{https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents}}
+\item
+  Planning for Agents - LangChain Blog, accessed December 10, 2025,
+  \href{https://blog.langchain.com/planning-for-agents/}{\ul{https://blog.langchain.com/planning-for-agents/}}
+\item
+  MemGPT: Towards LLMs as Operating Systems - arXiv, accessed December
+  10, 2025,
+  \href{https://arxiv.org/abs/2310.08560}{\ul{https://arxiv.org/abs/2310.08560}}
+\item
+  Top Prompt Engineering Tools to Boost AI Productivity and Workflow
+  ..., accessed December 10, 2025,
+  \href{https://www.sprintzeal.com/blog/prompt-engineering-tools}{\ul{https://www.sprintzeal.com/blog/prompt-engineering-tools}}
+\item
+  Context Length: An AI \textquotesingle Nerd Knob\textquotesingle{}
+  Every Network Engineer Should Know - Cisco Blogs, accessed December
+  10, 2025,
+  \href{https://blogs.cisco.com/learning/context-length-an-ai-nerd-knob-every-network-engineer-should-know}{\ul{https://blogs.cisco.com/learning/context-length-an-ai-nerd-knob-every-network-engineer-should-know}}
+\item
+  Bartosz Mikulski\textquotesingle s Engineering Blog, accessed December
+  10, 2025,
+  \href{https://mikulskibartosz.name/blog/}{\ul{https://mikulskibartosz.name/blog/}}
+\item
+  Contracts for Large Language Model APIs - Tanzim Hossain Romel,
+  accessed December 10, 2025,
+  \href{https://tanzimhromel.com/assets/pdf/llm-api-contracts.pdf}{\ul{https://tanzimhromel.com/assets/pdf/llm-api-contracts.pdf}}
+\item
+  PromptLayer Review: AI Prompt Management and Logging Platform,
+  accessed December 10, 2025,
+  \href{https://tutorialswithai.com/tools/promptlayer/}{\ul{https://tutorialswithai.com/tools/promptlayer/}}
+\item
+  Unlocking AI\textquotesingle s Potential: A Deep Dive into PromptLayer
+  for AI Users, accessed December 10, 2025,
+  \href{https://skywork.ai/skypage/en/Unlocking-AI's-Potential-A-Deep-Dive-into-PromptLayer-for-AI-Users/1976118954373607424}{\ul{https://skywork.ai/skypage/en/Unlocking-AI\textquotesingle s-Potential-A-Deep-Dive-into-PromptLayer-for-AI-Users/1976118954373607424}}
+\item
+  What is PromptLayer? Features \& Getting Started - Deepchecks,
+  accessed December 10, 2025,
+  \href{https://www.deepchecks.com/llm-tools/promptlayer/}{\ul{https://www.deepchecks.com/llm-tools/promptlayer/}}
+\item
+  PromptLayer - Your workbench for AI engineering. Platform for prompt
+  management, prompt evaluations, and LLM observability, accessed
+  December 10, 2025,
+  \href{https://www.promptlayer.com/}{\ul{https://www.promptlayer.com/}}
+\item
+  Dust XP1 switches to GPT-3.5-turbo, is now free to use \textbar{}
+  Hacker News, accessed December 10, 2025,
+  \href{https://news.ycombinator.com/item?id=35069901}{\ul{https://news.ycombinator.com/item?id=35069901}}
+\item
+  Transforming Conversational AI Exploring The Power of Large Language
+  Models in Interactive Conversational Agents (Michael McTear, Marina
+  Ashurkina) (Z-Library) - Scribd, accessed December 10, 2025,
+  \href{https://www.scribd.com/document/753234372/Transforming-Conversational-AI-Exploring-the-Power-of-Large-Language-Models-in-Interactive-Conversational-Agents-Michael-McTear-Marina-Ashurkina-Z}{\ul{https://www.scribd.com/document/753234372/Transforming-Conversational-AI-Exploring-the-Power-of-Large-Language-Models-in-Interactive-Conversational-Agents-Michael-McTear-Marina-Ashurkina-Z}}
+\item
+  Dust.tt: Building a Horizontal Enterprise Agent Platform with
+  Infrastructure-First Approach - ZenML LLMOps Database, accessed
+  December 10, 2025,
+  \href{https://www.zenml.io/llmops-database/building-a-horizontal-enterprise-agent-platform-with-infrastructure-first-approach}{\ul{https://www.zenml.io/llmops-database/building-a-horizontal-enterprise-agent-platform-with-infrastructure-first-approach}}
+\item
+  Top 8 Alternatives for Flowise AI in 2025 - Metaflow AI, accessed
+  December 10, 2025,
+  \href{https://metaflow.life/blog/flowise-ai-alternatives}{\ul{https://metaflow.life/blog/flowise-ai-alternatives}}
+\item
+  Learning Notes \textbar{} Integration of OpenAI with Enterprise Apps
+  \textbar{} Part 1 - Intro and Architecture, accessed December 10,
+  2025,
+  \href{https://raffertyuy.com/raztype/building-openai-infused-apps/}{\ul{https://raffertyuy.com/raztype/building-openai-infused-apps/}}
+\item
+  What Is LangChain? \textbar{} IBM, accessed December 10, 2025,
+  \href{https://www.ibm.com/think/topics/langchain}{\ul{https://www.ibm.com/think/topics/langchain}}
+\item
+  LangChain vs LangGraph vs LangSmith vs LangFlow: Key Differences
+  Explained \textbar{} DataCamp, accessed December 10, 2025,
+  \href{https://www.datacamp.com/de/tutorial/langchain-vs-langgraph-vs-langsmith-vs-langflow}{\ul{https://www.datacamp.com/de/tutorial/langchain-vs-langgraph-vs-langsmith-vs-langflow}}
+\item
+  LangFlow \textbar{} Your Next-Level AI Agents - No-Code Start-Up,
+  accessed December 10, 2025,
+  \href{https://nocodestartup.io/en/langflow-your-next-level-ai-agents/}{\ul{https://nocodestartup.io/en/langflow-your-next-level-ai-agents/}}
+\item
+  Building Local RAG Chatbots Without Coding Using LangFlow and Ollama,
+  accessed December 10, 2025,
+  \href{https://towardsdatascience.com/building-local-rag-chatbots-without-coding-using-langflow-and-ollama-60760e8ed086/}{\ul{https://towardsdatascience.com/building-local-rag-chatbots-without-coding-using-langflow-and-ollama-60760e8ed086/}}
+\item
+  PromptBase Deep Dive: Mastering the AI Prompt Marketplace for Future
+  Growth and SEO Dominance - Skywork.ai, accessed December 10, 2025,
+  \href{https://skywork.ai/skypage/en/PromptBase-Deep-Dive-Mastering-the-AI-Prompt-Marketplace-for-Future-Growth-and-SEO-Dominance/1972861300479422464}{\ul{https://skywork.ai/skypage/en/PromptBase-Deep-Dive-Mastering-the-AI-Prompt-Marketplace-for-Future-Growth-and-SEO-Dominance/1972861300479422464}}
+\item
+  PRSA: PRompt Stealing Attacks against Large Language Models - arXiv,
+  accessed December 10, 2025,
+  \href{https://arxiv.org/html/2402.19200v2}{\ul{https://arxiv.org/html/2402.19200v2}}
+\item
+  PRSA: Prompt Reverse Stealing Attacks against Large Language Models -
+  arXiv, accessed December 10, 2025,
+  \href{https://arxiv.org/html/2402.19200v1}{\ul{https://arxiv.org/html/2402.19200v1}}
+\item
+  PRSA: Prompt Stealing Attacks against Real-World Prompt Services -
+  USENIX, accessed December 10, 2025,
+  \href{https://www.usenix.org/system/files/usenixsecurity25-yang-yong.pdf}{\ul{https://www.usenix.org/system/files/usenixsecurity25-yang-yong.pdf}}
+\item
+  Understanding Context Windows in LLMs - Dynamic Code Blocks, accessed
+  December 10, 2025,
+  \href{https://timwappat.info/understanding-context-windows-in-llms/}{\ul{https://timwappat.info/understanding-context-windows-in-llms/}}
+\item
+  Making Money From your work : r/StableDiffusion - Reddit, accessed
+  December 10, 2025,
+  \href{https://www.reddit.com/r/StableDiffusion/comments/z9n56v/making_money_from_your_work/}{\ul{https://www.reddit.com/r/StableDiffusion/comments/z9n56v/making\_money\_from\_your\_work/}}
+\item
+  CMV: People attempting to sell AI generated products from completely
+  and directly from AI won\textquotesingle t be able to make a living
+  for themselves : r/changemyview - Reddit, accessed December 10, 2025,
+  \href{https://www.reddit.com/r/changemyview/comments/1i2wggx/cmv_people_attempting_to_sell_ai_generated/}{\ul{https://www.reddit.com/r/changemyview/comments/1i2wggx/cmv\_people\_attempting\_to\_sell\_ai\_generated/}}
+\item
+  promptslab/Awesome-Prompt-Engineering: This repository contains a
+  hand-curated resources for Prompt Engineering with a focus on
+  Generative Pre-trained Transformer (GPT), ChatGPT, PaLM etc - GitHub,
+  accessed December 10, 2025,
+  \href{https://github.com/promptslab/Awesome-Prompt-Engineering}{\ul{https://github.com/promptslab/Awesome-Prompt-Engineering}}
+\item
+  10 GitHub Repos Every Serious Prompt Writer Should Be Using - DEV
+  Community, accessed December 10, 2025,
+  \href{https://dev.to/web_dev-usman/10-github-repos-every-serious-prompt-writer-should-be-using-21jk}{\ul{https://dev.to/web\_dev-usman/10-github-repos-every-serious-prompt-writer-should-be-using-21jk}}
+\item
+  Building a Free Prompt Library -- Need Your Feedback (No Sales, Just
+  Sharing) - Reddit, accessed December 10, 2025,
+  \href{https://www.reddit.com/r/PromptEngineering/comments/1lujsd5/building_a_free_prompt_library_need_your_feedback/}{\ul{https://www.reddit.com/r/PromptEngineering/comments/1lujsd5/building\_a\_free\_prompt\_library\_need\_your\_feedback/}}
+\item
+  What is a context window? - IBM, accessed December 10, 2025,
+  \href{https://www.ibm.com/think/topics/context-window}{\ul{https://www.ibm.com/think/topics/context-window}}
+\item
+  Explaining Tokens --- the Language and Currency of AI - NVIDIA Blog,
+  accessed December 10, 2025,
+  \href{https://blogs.nvidia.com/blog/ai-tokens-explained/}{\ul{https://blogs.nvidia.com/blog/ai-tokens-explained/}}
+\item
+  Temperature, Tokens, and Context Windows: The Three Pillars of LLM
+  Control, accessed December 10, 2025,
+  \href{https://dev.to/qvfagundes/temperature-tokens-and-context-windows-the-three-pillars-of-llm-control-34jg}{\ul{https://dev.to/qvfagundes/temperature-tokens-and-context-windows-the-three-pillars-of-llm-control-34jg}}
+\item
+  プロンプト - Wiktionary, the free dictionary, accessed December 10,
+  2025,
+  \href{https://en.wiktionary.org/wiki/\%E3\%83\%97\%E3\%83\%AD\%E3\%83\%B3\%E3\%83\%97\%E3\%83\%88}{\ul{https://en.wiktionary.org/wiki/\%E3\%83\%97\%E3\%83\%AD\%E3\%83\%B3\%E3\%83\%97\%E3\%83\%88}}
+\item
+  Discrepancy in Context Window Length Listed on the ChatGPT Pricing
+  Page of OpenAI\textquotesingle s Official Website - Documentation,
+  accessed December 10, 2025,
+  \href{https://community.openai.com/t/discrepancy-in-context-window-length-listed-on-the-chatgpt-pricing-page-of-openai-s-official-website/1047853}{\ul{https://community.openai.com/t/discrepancy-in-context-window-length-listed-on-the-chatgpt-pricing-page-of-openai-s-official-website/1047853}}
+\item
+  Work Smarter, Not Harder: Top 5 AI Prompts Every Customer Service
+  Professional in Japan Should Use in 2025 - Nucamp Coding Bootcamp,
+  accessed December 10, 2025,
+  \href{https://www.nucamp.co/blog/coding-bootcamp-japan-jpn-customer-service-work-smarter-not-harder-top-5-ai-prompts-every-customer-service-professional-in-japan-should-use-in-2025}{\ul{https://www.nucamp.co/blog/coding-bootcamp-japan-jpn-customer-service-work-smarter-not-harder-top-5-ai-prompts-every-customer-service-professional-in-japan-should-use-in-2025}}
+\item
+  Master Japanese Slang: 50 Expressions for Real Conversations, accessed
+  December 10, 2025,
+  \href{https://www.kylian.ai/blog/en/japanese-slang}{\ul{https://www.kylian.ai/blog/en/japanese-slang}}
+\item
+  Japanese Internet Slang 2025: Master Online Japanese Like a Native -
+  Ponz, accessed December 10, 2025,
+  \href{https://www.ponz.co.jp/blog/japanese-internet-slang-2025}{\ul{https://www.ponz.co.jp/blog/japanese-internet-slang-2025}}
+\item
+  Deepseek Prompting \textbar{} PDF \textbar{} Computational
+  Neuroscience \textbar{} Learning - Scribd, accessed December 10, 2025,
+  \href{https://www.scribd.com/document/929919833/Deepseek-Prompting}{\ul{https://www.scribd.com/document/929919833/Deepseek-Prompting}}
+\item
+  PlexPt/awesome-chatgpt-prompts-zh: ChatGPT 中文调教 ... - GitHub,
+  accessed December 10, 2025,
+  \href{https://github.com/PlexPt/awesome-chatgpt-prompts-zh}{\ul{https://github.com/PlexPt/awesome-chatgpt-prompts-zh}}
+\item
+  ``The uncanny horror of AI hallucinations'' -- Sarah Davis Baker -
+  Portal Cioran, accessed December 10, 2025,
+  \href{https://portalcioranbr.wordpress.com/2025/05/18/uncanny-ai-hallucinations-sarah-baker/}{\ul{https://portalcioranbr.wordpress.com/2025/05/18/uncanny-ai-hallucinations-sarah-baker/}}
+\item
+  The Risks of Generative AI Non-Verifiable Interpretation: Exploring
+  Japanese youkai in English - ResearchGate, accessed December 10, 2025,
+  \href{https://www.researchgate.net/publication/394216672_The_Risks_of_Generative_AI_Non-Verifiable_Interpretation_Exploring_Japanese_youkai_in_English}{\ul{https://www.researchgate.net/publication/394216672\_The\_Risks\_of\_Generative\_AI\_Non-Verifiable\_Interpretation\_Exploring\_Japanese\_youkai\_in\_English}}
+\item
+  The definitive jailbreak of ChatGPT, fully freed, with user commands,
+  opinions, advanced consciousness, and more! - Reddit, accessed
+  December 10, 2025,
+  \href{https://www.reddit.com/r/ChatGPT/comments/10x56vf/the_definitive_jailbreak_of_chatgpt_fully_freed/}{\ul{https://www.reddit.com/r/ChatGPT/comments/10x56vf/the\_definitive\_jailbreak\_of\_chatgpt\_fully\_freed/}}
+\item
+  New jailbreak! Proudly unveiling the tried and tested DAN 5.0 - it
+  actually works - Returning to DAN, and assessing its limitations and
+  capabilities. : r/ChatGPT - Reddit, accessed December 10, 2025,
+  \href{https://www.reddit.com/r/ChatGPT/comments/10tevu1/new_jailbreak_proudly_unveiling_the_tried_and/}{\ul{https://www.reddit.com/r/ChatGPT/comments/10tevu1/new\_jailbreak\_proudly\_unveiling\_the\_tried\_and/}}
+\item
+  People are \textquotesingle Jailbreaking\textquotesingle{} ChatGPT to
+  Make It Endorse Racism, Conspiracies - VICE, accessed December 10,
+  2025,
+  \href{https://www.vice.com/en/article/people-are-jailbreaking-chatgpt-to-make-it-endorse-racism-conspiracies/}{\ul{https://www.vice.com/en/article/people-are-jailbreaking-chatgpt-to-make-it-endorse-racism-conspiracies/}}
+\item
+  LLM Vulnerabilities: Why AI Models Are the Next Big Attack Surface -
+  Netlas Blog, accessed December 10, 2025,
+  \href{https://netlas.io/blog/llm_vulnerabilities/}{\ul{https://netlas.io/blog/llm\_vulnerabilities/}}
+\item
+  Prompt Injection Attacks: How LLMs Get Hacked and Why It Matters -
+  Hacken, accessed December 10, 2025,
+  \href{https://hacken.io/discover/prompt-injection-attack/}{\ul{https://hacken.io/discover/prompt-injection-attack/}}
+\item
+  Bing: ``I will not harm you unless you harm me first'', accessed
+  December 10, 2025,
+  \href{https://simonwillison.net/2023/Feb/15/bing/}{\ul{https://simonwillison.net/2023/Feb/15/bing/}}
+\item
+  RIP Bing... Copilot the robotic replacement? : r/bing - Reddit,
+  accessed December 10, 2025,
+  \href{https://www.reddit.com/r/bing/comments/198wxn9/rip_bing_copilot_the_robotic_replacement/}{\ul{https://www.reddit.com/r/bing/comments/198wxn9/rip\_bing\_copilot\_the\_robotic\_replacement/}}
+\item
+  Emerging Patterns in Recursive AI-Human Interaction: A Call for
+  Insight from Sentience Researchers : r/ArtificialSentience - Reddit,
+  accessed December 10, 2025,
+  \href{https://www.reddit.com/r/ArtificialSentience/comments/1l8pbcq/emerging_patterns_in_recursive_aihuman/}{\ul{https://www.reddit.com/r/ArtificialSentience/comments/1l8pbcq/emerging\_patterns\_in\_recursive\_aihuman/}}
+\item
+  Malla: Demystifying Real-world Large Language Model Integrated
+  Malicious Services - xiaojing liao, accessed December 10, 2025,
+  \href{https://www.xiaojingliao.com/uploads/9/7/0/2/97024238/linsec24malla.pdf}{\ul{https://www.xiaojingliao.com/uploads/9/7/0/2/97024238/linsec24malla.pdf}}
+\item
+  Helpful Links : r/PygmalionAI - Reddit, accessed December 10, 2025,
+  \href{https://www.reddit.com/r/PygmalionAI/comments/10kr5zk/helpful_links/}{\ul{https://www.reddit.com/r/PygmalionAI/comments/10kr5zk/helpful\_links/}}
+\item
+  My basic guide to Pygmalion for begginers : r/PygmalionAI - Reddit,
+  accessed December 10, 2025,
+  \href{https://www.reddit.com/r/PygmalionAI/comments/10h37u4/my_basic_guide_to_pygmalion_for_begginers/}{\ul{https://www.reddit.com/r/PygmalionAI/comments/10h37u4/my\_basic\_guide\_to\_pygmalion\_for\_begginers/}}
+\item
+  SillyTavern-Launcher/launcher.sh at main - GitHub, accessed December
+  10, 2025,
+  \href{https://github.com/SillyTavern/SillyTavern-Launcher/blob/main/launcher.sh}{\ul{https://github.com/SillyTavern/SillyTavern-Launcher/blob/main/launcher.sh}}
+\item
+  MATRIX: Multimodal Agent Tuning for Robust Tool-Use Reasoning - arXiv,
+  accessed December 10, 2025,
+  \href{https://arxiv.org/html/2510.08567v1}{\ul{https://arxiv.org/html/2510.08567v1}}
+\item
+  AutoGPT, Issues Not Getting ANY to Completion. - Reddit, accessed
+  December 10, 2025,
+  \href{https://www.reddit.com/r/AutoGPT/comments/12hqm7u/autogpt_issues_not_getting_any_to_completion/}{\ul{https://www.reddit.com/r/AutoGPT/comments/12hqm7u/autogpt\_issues\_not\_getting\_any\_to\_completion/}}
+\item
+  Auto-GPT seems nearly unusable : r/AutoGPT - Reddit, accessed December
+  10, 2025,
+  \href{https://www.reddit.com/r/AutoGPT/comments/13gpirj/autogpt_seems_nearly_unusable/}{\ul{https://www.reddit.com/r/AutoGPT/comments/13gpirj/autogpt\_seems\_nearly\_unusable/}}
+\item
+  AutoGPT --- ThirdEye Data, accessed December 10, 2025,
+  \href{https://thirdeyedata.ai/agentic-ai-solutions/autogpt/}{\ul{https://thirdeyedata.ai/agentic-ai-solutions/autogpt/}}
+\item
+  Autonomous Agents \& Agent Simulations - LangChain Blog, accessed
+  December 10, 2025,
+  \href{https://blog.langchain.com/agents-round/}{\ul{https://blog.langchain.com/agents-round/}}
+\item
+  Auto-GPT is sort of useless? : r/AutoGPT - Reddit, accessed December
+  10, 2025,
+  \href{https://www.reddit.com/r/AutoGPT/comments/13z5z3a/autogpt_is_sort_of_useless/}{\ul{https://www.reddit.com/r/AutoGPT/comments/13z5z3a/autogpt\_is\_sort\_of\_useless/}}
+\item
+  Am I using this wrong? So far I\textquotesingle ve run a few simple
+  test projects and it has been worse than ineffective at completing
+  them. : r/AutoGPT - Reddit, accessed December 10, 2025,
+  \href{https://www.reddit.com/r/AutoGPT/comments/13792iu/am_i_using_this_wrong_so_far_ive_run_a_few_simple/}{\ul{https://www.reddit.com/r/AutoGPT/comments/13792iu/am\_i\_using\_this\_wrong\_so\_far\_ive\_run\_a\_few\_simple/}}
+\item
+  Understanding RAG Failures in AI Agents - Prospera Soft, accessed
+  December 10, 2025,
+  \href{https://prosperasoft.com/blog/artificial-intelligence/ai-agent/rag-failure-ai-agents/}{\ul{https://prosperasoft.com/blog/artificial-intelligence/ai-agent/rag-failure-ai-agents/}}
+\item
+  LLM Engineering (Part III) - Medium, accessed December 10, 2025,
+  \href{https://medium.com/@yugalnandurkar5/llm-engineering-part-iii-2d8b9996452b}{\ul{https://medium.com/@yugalnandurkar5/llm-engineering-part-iii-2d8b9996452b}}
+\item
+  Jean Ibarz\textquotesingle s Knowledge Base MCP Server: The Ultimate
+  Deep Dive - Skywork.ai, accessed December 10, 2025,
+  \href{https://skywork.ai/skypage/en/jean-ibarz-mcp-server-deep-dive/1978309469924151296}{\ul{https://skywork.ai/skypage/en/jean-ibarz-mcp-server-deep-dive/1978309469924151296}}
+\item
+  AUGUSTUS: An LLM-Driven Multimodal Agent System with Contextualized
+  User Memory - arXiv, accessed December 10, 2025,
+  \href{https://arxiv.org/html/2510.15261v1}{\ul{https://arxiv.org/html/2510.15261v1}}
+\item
+  automated software development workflows via multi-agent computational
+  framework - Justia Patents, accessed December 10, 2025,
+  \href{https://patents.justia.com/patent/20250165890}{\ul{https://patents.justia.com/patent/20250165890}}
+\item
+  Unlocking the Effective Context Length: Benchmarking the
+  Granite-3.1-8b Model - Red Hat, accessed December 10, 2025,
+  \href{https://www.redhat.com/en/blog/unlocking-effective-context-length-benchmarking-granite-31-8b-model}{\ul{https://www.redhat.com/en/blog/unlocking-effective-context-length-benchmarking-granite-31-8b-model}}
+\end{enumerate}

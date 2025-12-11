@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corpus Forager | Megadoc Navigator</title>
+    <style>
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-card: #12121a;
+            --bg-hover: #1a1a28;
+            --text-primary: #e8e6e3;
+            --text-secondary: #8a8a9a;
+            --accent: #6366f1;
+            --accent-glow: rgba(99, 102, 241, 0.3);
+            --citation: #f59e0b;
+            --theme-context: #10b981;
+            --theme-negative: #ef4444;
+            --theme-lego: #3b82f6;
+            --theme-worlding: #8b5cf6;
+            --border: #2a2a3a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* Layout */
+        .container {
+            display: grid;
+            grid-template-columns: 200px 1fr 350px;
+            grid-template-rows: 60px 1fr;
+            height: 100vh;
+        }
+
+        /* Header */
+        header {
+            grid-column: 1 / -1;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            gap: 24px;
+        }
+
+        header h1 {
+            font-size: 18px;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--accent), #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .search-box {
+            flex: 1;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 16px 10px 40px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .search-box::before {
+            content: '🔍';
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .stat-item span {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Minimap */
+        .minimap {
+            background: var(--bg-card);
+            border-right: 1px solid var(--border);
+            padding: 16px;
+            overflow-y: auto;
+        }
+
+        .minimap h2 {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .minimap-section {
+            display: block;
+            padding: 6px 8px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 4px;
+            cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: all 0.2s;
+        }
+
+        .minimap-section:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .minimap-section.level-1 {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .minimap-section.level-2 {
+            padding-left: 16px;
+        }
+
+        .minimap-section.level-3 {
+            padding-left: 24px;
+            font-size: 10px;
+        }
+
+        .minimap-file {
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .minimap-file-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+
+        /* Main content */
+        .main-content {
+            padding: 32px 48px;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+
+        .document-block {
+            margin-bottom: 64px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .document-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .document-header h2 {
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .theme-tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .theme-tag {
+            padding: 3px 8px;
+            font-size: 10px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .theme-tag.context_engineering {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--theme-context);
+        }
+
+        .theme-tag.negative_space {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--theme-negative);
+        }
+
+        .theme-tag.lego_ecosystem {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--theme-lego);
+        }
+
+        .theme-tag.worlding {
+            background: rgba(139, 92, 246, 0.2);
+            color: var(--theme-worlding);
+        }
+
+        .theme-tag.infrastructure {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--citation);
+        }
+
+        .theme-tag.ai_agents {
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--accent);
+        }
+
+        .theme-tag.hci {
+            background: rgba(236, 72, 153, 0.2);
+            color: #ec4899;
+        }
+
+        .theme-tag.sintering {
+            background: rgba(168, 85, 247, 0.2);
+            color: #a855f7;
+        }
+
+        .document-content {
+            font-size: 15px;
+            max-width: 800px;
+        }
+
+        .document-content h1 {
+            font-size: 24px;
+            margin: 32px 0 16px;
+        }
+
+        .document-content h2 {
+            font-size: 20px;
+            margin: 28px 0 14px;
+            color: var(--accent);
+        }
+
+        .document-content h3 {
+            font-size: 17px;
+            margin: 24px 0 12px;
+        }
+
+        .document-content h4 {
+            font-size: 15px;
+            margin: 20px 0 10px;
+            color: var(--text-secondary);
+        }
+
+        .document-content p {
+            margin-bottom: 16px;
+        }
+
+        .document-content blockquote {
+            border-left: 3px solid var(--accent);
+            padding-left: 16px;
+            margin: 16px 0;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .document-content code {
+            background: var(--bg-hover);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+        }
+
+        .document-content pre {
+            background: var(--bg-hover);
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 16px 0;
+        }
+
+        .document-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 13px;
+        }
+
+        .document-content th,
+        .document-content td {
+            border: 1px solid var(--border);
+            padding: 10px 12px;
+            text-align: left;
+        }
+
+        .document-content th {
+            background: var(--bg-hover);
+        }
+
+        /* Citations */
+        .citation {
+            color: var(--citation);
+            cursor: pointer;
+            padding: 0 2px;
+            border-radius: 3px;
+            transition: all 0.2s;
+        }
+
+        .citation:hover {
+            background: rgba(245, 158, 11, 0.2);
+        }
+
+        .citation.selected {
+            background: rgba(245, 158, 11, 0.3);
+            box-shadow: 0 0 0 2px var(--citation);
+        }
+
+        /* Highlighted text */
+        ::selection {
+            background: var(--accent-glow);
+        }
+
+        .highlighted {
+            background: rgba(99, 102, 241, 0.3);
+            border-radius: 2px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--bg-card);
+            border-left: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-tab {
+            flex: 1;
+            padding: 14px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .sidebar-tab:hover {
+            background: var(--bg-hover);
+        }
+
+        .sidebar-tab.active {
+            color: var(--accent);
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+
+        .sidebar-panel {
+            display: none;
+        }
+
+        .sidebar-panel.active {
+            display: block;
+        }
+
+        /* Selection panel */
+        .selection-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        .selection-card {
+            background: var(--bg-dark);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .selection-text {
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 12px;
+            padding: 12px;
+            background: var(--bg-hover);
+            border-radius: 6px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .selection-meta {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .selection-meta strong {
+            color: var(--accent);
+        }
+
+        /* Citation panel */
+        .citation-card {
+            background: var(--bg-dark);
+            border-radius: 8px;
+            padding: 14px;
+            margin-bottom: 12px;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .citation-card:hover {
+            border-color: var(--citation);
+        }
+
+        .citation-key {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--citation);
+            margin-bottom: 8px;
+        }
+
+        .citation-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .citation-sources {
+            margin-top: 8px;
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+
+        /* Export panel */
+        .export-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--accent);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 12px;
+            transition: all 0.2s;
+        }
+
+        .export-btn:hover {
+            filter: brightness(1.1);
+        }
+
+        .export-preview {
+            background: var(--bg-dark);
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        /* Theme filter buttons */
+        .theme-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+
+        .theme-filter {
+            padding: 6px 12px;
+            font-size: 11px;
+            border: 1px solid var(--border);
+            background: var(--bg-dark);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-secondary);
+        }
+
+        .theme-filter:hover {
+            border-color: var(--accent);
+        }
+
+        .theme-filter.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: var(--text-secondary);
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>🔮 Corpus Forager</h1>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search across all documents...">
+            </div>
+            <div class="stats">
+                <div class="stat-item"><span id="fileCount">27</span> files</div>
+                <div class="stat-item"><span id="citationCount">1159</span> citations</div>
+                <div class="stat-item"><span id="sectionCount">930</span> sections</div>
+            </div>
+        </header>
+
+        <nav class="minimap" id="minimap">
+            <h2>📍 Navigation</h2>
+            <div id="minimapContent">
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    Loading...
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content" id="mainContent">
+            <div class="loading">
+                <div class="loading-spinner"></div>
+                Loading megadoc...
+            </div>
+        </main>
+
+        <aside class="sidebar">
+            <div class="sidebar-tabs">
+                <div class="sidebar-tab active" data-panel="selection">Selection</div>
+                <div class="sidebar-tab" data-panel="citations">Citations</div>
+                <div class="sidebar-tab" data-panel="export">Export</div>
+            </div>
+            <div class="sidebar-content">
+                <div class="sidebar-panel active" id="panel-selection">
+                    <div class="selection-empty">
+                        Select text in the document to see citation context and provenance
+                    </div>
+                </div>
+                <div class="sidebar-panel" id="panel-citations">
+                    <div class="theme-filters" id="themeFilters"></div>
+                    <div id="citationList"></div>
+                </div>
+                <div class="sidebar-panel" id="panel-export">
+                    <button class="export-btn" id="exportSelection">Export Selection + Citations</button>
+                    <button class="export-btn" id="exportBib" style="background: var(--citation)">Download
+                        Bibliography</button>
+                    <h4 style="margin: 16px 0 8px; font-size: 12px; color: var(--text-secondary);">Preview</h4>
+                    <div class="export-preview" id="exportPreview">
+                        Select text and citations to generate export...
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        // State
+        let corpusIndex = null;
+        let megadocContent = '';
+        let selectedCitations = new Set();
+        let selectedText = '';
+        let selectedProvenance = '';
+
+        // Load data
+        async function init() {
+            try {
+                // Load index
+                const indexRes = await fetch('corpus_index.json');
+                corpusIndex = await indexRes.json();
+
+                // Load megadoc
+                const docRes = await fetch('megadoc.md');
+                megadocContent = await docRes.text();
+
+                // Update stats
+                document.getElementById('fileCount').textContent = corpusIndex.stats.files;
+                document.getElementById('citationCount').textContent = corpusIndex.stats.unique_citations;
+                document.getElementById('sectionCount').textContent = corpusIndex.stats.total_sections;
+
+                // Render
+                renderMinimap();
+                renderMainContent();
+                renderCitations();
+                renderThemeFilters();
+
+            } catch (err) {
+                console.error('Failed to load corpus:', err);
+                document.getElementById('mainContent').innerHTML = `
+                    <div class="loading">
+                        <p>Failed to load corpus. Make sure you're running from a local server.</p>
+                        <p style="font-size: 12px; margin-top: 8px;">Run: python3 -m http.server 8000</p>
+                    </div>
+                `;
+            }
+        }
+
+        function renderMinimap() {
+            const content = document.getElementById('minimapContent');
+            let html = '';
+
+            // Group sections by file
+            let currentFile = '';
+            for (const section of corpusIndex.sections) {
+                if (section.file !== currentFile) {
+                    currentFile = section.file;
+                    html += `<div class="minimap-file">
+                        <div class="minimap-file-title">${section.file.replace('.md', '')}</div>
+                    </div>`;
+                }
+                html += `<a class="minimap-section level-${section.level}" 
+                           onclick="scrollToSection('${escapeHtml(section.title)}')"
+                           title="${escapeHtml(section.title)}">
+                    ${escapeHtml(section.title.substring(0, 30))}${section.title.length > 30 ? '...' : ''}
+                </a>`;
+            }
+
+            content.innerHTML = html;
+        }
+
+        function renderMainContent() {
+            const main = document.getElementById('mainContent');
+
+            // Split by document blocks
+            const blocks = megadocContent.split(/\n---\n/);
+            let html = '';
+
+            for (const block of blocks) {
+                // Extract provenance
+                const provenanceMatch = block.match(/<!-- PROVENANCE: (.+?) -->/);
+                const themesMatch = block.match(/<!-- THEMES: (.+?) -->/);
+                const filename = provenanceMatch ? provenanceMatch[1] : 'Unknown';
+                const themes = themesMatch ? themesMatch[1].split(', ') : [];
+
+                // Clean content
+                let content = block.replace(/<!-- .*? -->/g, '');
+
+                // Convert citations to clickable spans
+                content = content.replace(/\[([a-z0-9_]+)\]/g, (match, key) => {
+                    return `<span class="citation" data-key="${key}" onclick="selectCitation('${key}')">[${key}]</span>`;
+                });
+
+                // Parse markdown
+                const htmlContent = marked.parse(content);
+
+                html += `
+                <div class="document-block" data-file="${escapeHtml(filename)}" data-themes="${themes.join(',')}">
+                    <div class="document-header">
+                        <h2>${escapeHtml(filename.replace('.md', ''))}</h2>
+                        <div class="theme-tags">
+                            ${themes.map(t => `<span class="theme-tag ${t}">${t.replace('_', ' ')}</span>`).join('')}
+                        </div>
+                    </div>
+                    <div class="document-content">${htmlContent}</div>
+                </div>`;
+            }
+
+            main.innerHTML = html;
+
+            // Add selection listener
+            main.addEventListener('mouseup', handleTextSelection);
+        }
+
+        function renderCitations() {
+            const list = document.getElementById('citationList');
+            let html = '';
+
+            for (const [key, info] of Object.entries(corpusIndex.citations)) {
+                html += `
+                <div class="citation-card" data-key="${key}">
+                    <div class="citation-key">[${key}]</div>
+                    <div class="citation-text">${escapeHtml(info.text)}</div>
+                    <div class="citation-sources">Used in: ${info.sources.slice(0, 3).join(', ')}</div>
+                </div>`;
+            }
+
+            list.innerHTML = html;
+        }
+
+        function renderThemeFilters() {
+            const container = document.getElementById('themeFilters');
+            let html = '';
+
+            for (const theme of Object.keys(corpusIndex.themes)) {
+                const count = corpusIndex.themes[theme].length;
+                html += `<button class="theme-filter" data-theme="${theme}" onclick="filterByTheme('${theme}')">
+                    ${theme.replace('_', ' ')} (${count})
+                </button>`;
+            }
+
+            container.innerHTML = html;
+        }
+
+        function handleTextSelection() {
+            const selection = window.getSelection();
+            const text = selection.toString().trim();
+
+            if (text.length > 10) {
+                // Find containing document block
+                const range = selection.getRangeAt(0);
+                const block = range.commonAncestorContainer.closest?.('.document-block') ||
+                    range.commonAncestorContainer.parentElement?.closest('.document-block');
+
+                selectedText = text;
+                selectedProvenance = block ? block.dataset.file : 'Unknown';
+
+                // Find citations in selection
+                const citations = [];
+                const citationMatches = text.match(/\[[a-z0-9_]+\]/g);
+                if (citationMatches) {
+                    citationMatches.forEach(m => {
+                        const key = m.slice(1, -1);
+                        citations.push(key);
+                        selectedCitations.add(key);
+                    });
+                }
+
+                updateSelectionPanel(text, selectedProvenance, citations);
+                updateExportPreview();
+            }
+        }
+
+        function selectCitation(key) {
+            // Toggle selection
+            const el = document.querySelector(`.citation[data-key="${key}"]`);
+            if (selectedCitations.has(key)) {
+                selectedCitations.delete(key);
+                document.querySelectorAll(`.citation[data-key="${key}"]`).forEach(e => e.classList.remove('selected'));
+            } else {
+                selectedCitations.add(key);
+                document.querySelectorAll(`.citation[data-key="${key}"]`).forEach(e => e.classList.add('selected'));
+            }
+
+            updateExportPreview();
+        }
+
+        function updateSelectionPanel(text, provenance, citations) {
+            const panel = document.getElementById('panel-selection');
+            panel.innerHTML = `
+                <div class="selection-card">
+                    <div class="selection-text">"${escapeHtml(text.substring(0, 500))}${text.length > 500 ? '...' : ''}"</div>
+                    <div class="selection-meta">
+                        <strong>Source:</strong> ${escapeHtml(provenance)}<br>
+                        ${citations.length > 0 ? `<strong>Citations:</strong> ${citations.join(', ')}` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateExportPreview() {
+            const preview = document.getElementById('exportPreview');
+
+            let output = '';
+
+            if (selectedText) {
+                output += `--- SELECTED TEXT ---\n${selectedText}\n\nSource: ${selectedProvenance}\n\n`;
+            }
+
+            if (selectedCitations.size > 0) {
+                output += `--- CITATIONS (BibTeX) ---\n`;
+                for (const key of selectedCitations) {
+                    const info = corpusIndex.citations[key];
+                    if (info) {
+                        output += `@misc{${key},\n  title = {${info.text.substring(0, 80)}...}\n}\n\n`;
+                    }
+                }
+            }
+
+            preview.textContent = output || 'Select text and citations to generate export...';
+        }
+
+        function filterByTheme(theme) {
+            const btn = document.querySelector(`.theme-filter[data-theme="${theme}"]`);
+            btn.classList.toggle('active');
+
+            const activeThemes = [...document.querySelectorAll('.theme-filter.active')].map(b => b.dataset.theme);
+
+            document.querySelectorAll('.document-block').forEach(block => {
+                const blockThemes = block.dataset.themes.split(',');
+                if (activeThemes.length === 0 || activeThemes.some(t => blockThemes.includes(t))) {
+                    block.style.display = '';
+                } else {
+                    block.style.display = 'none';
+                }
+            });
+        }
+
+        function scrollToSection(title) {
+            const headers = document.querySelectorAll('.document-content h1, .document-content h2, .document-content h3');
+            for (const h of headers) {
+                if (h.textContent.includes(title.substring(0, 20))) {
+                    h.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    h.style.background = 'var(--accent-glow)';
+                    setTimeout(() => h.style.background = '', 2000);
+                    break;
+                }
+            }
+        }
+
+        // Sidebar tabs
+        document.querySelectorAll('.sidebar-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.sidebar-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.sidebar-panel').forEach(p => p.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById('panel-' + tab.dataset.panel).classList.add('active');
+            });
+        });
+
+        // Export handlers
+        document.getElementById('exportSelection').addEventListener('click', () => {
+            const preview = document.getElementById('exportPreview');
+            navigator.clipboard.writeText(preview.textContent);
+            alert('Copied to clipboard!');
+        });
+
+        document.getElementById('exportBib').addEventListener('click', () => {
+            const a = document.createElement('a');
+            a.href = 'clean_bibliography.bib';
+            a.download = 'corpus_bibliography.bib';
+            a.click();
+        });
+
+        // Search
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            if (query.length < 3) {
+                document.querySelectorAll('.document-block').forEach(b => b.style.display = '');
+                return;
+            }
+
+            document.querySelectorAll('.document-block').forEach(block => {
+                const text = block.textContent.toLowerCase();
+                block.style.display = text.includes(query) ? '' : 'none';
+            });
+        });
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        // Init
+        init();
+    </script>
+</body>
+
+</html>

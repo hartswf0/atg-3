@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Rocky Forager · Research Prospectus & Pattern Glossary</title>
+    <style>
+        :root {
+            --bg: #1a1b26;
+            --text-main: #a9b1d6;
+            --text-muted: #565f89;
+            --primary: #7aa2f7;
+            --secondary: #bb9af7;
+            --accent: #f7768e;
+            --border: #414868;
+            --font-main: "Inter", system-ui, sans-serif;
+            --font-mono: "JetBrains Mono", monospace;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 0.5em;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 20px;
+        }
+
+        h2 {
+            margin-top: 2.5em;
+            color: var(--secondary);
+            font-family: var(--font-mono);
+            font-size: 1.2em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(187, 154, 247, 0.2);
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: var(--primary);
+            margin-top: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h4 {
+            color: var(--text-muted);
+            font-weight: normal;
+            margin-top: 20px;
+            text-transform: uppercase;
+            font-size: 0.8em;
+            letter-spacing: 1px;
+        }
+
+        .intro {
+            font-size: 1.1em;
+            color: var(--text-main);
+            margin-bottom: 40px;
+            border-left: 4px solid var(--primary);
+            padding-left: 20px;
+        }
+
+        .meta {
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            font-size: 0.9em;
+            margin-bottom: 40px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 8px;
+            transition: border-color 0.2s;
+        }
+
+        .card:hover {
+            border-color: var(--primary);
+        }
+
+        .symbol {
+            font-family: var(--font-mono);
+            font-weight: bold;
+            color: var(--accent);
+            font-size: 1.2em;
+            background: rgba(247, 118, 142, 0.1);
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .morphism {
+            font-family: var(--font-mono);
+            background: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-left: 3px solid var(--secondary);
+            margin-bottom: 20px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .math {
+            color: var(--accent);
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .arrow {
+            color: var(--text-muted);
+            padding: 0 4px;
+        }
+
+        .pattern-def {
+            margin-top: 10px;
+            font-size: 0.95em;
+        }
+
+        .theory {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed var(--border);
+            font-size: 0.9em;
+            color: var(--text-muted);
+        }
+
+        .theory strong {
+            color: var(--text-main);
+        }
+    </style>
+</head>
+
+<body>
+
+    <a href="rocky-forager.html"
+        style="color:var(--text-muted);text-decoration:none;font-family:var(--font-mono);">&larr; Back to Forager</a>
+
+    <h1>Rocky Forager · Research Prospectus</h1>
+    <div class="meta">
+        Proposed implementation of the COURAGE research agenda.<br>
+        Status: Implementation Phase · December 2025
+    </div>
+
+    <div class="intro">
+        <p><strong>Rocky Forager</strong> is designed to operationalize the "messy middle" of the creative process.
+            While traditional tools enforce rigid schemas early in the workflow, Rocky Forager functions as a
+            "mnemotechnic" workspace that supports emergent structure.</p>
+        <p>This system bridges the gap between foraging (information collection) and synthesis (formal writing) by
+            treating text not as a stream of characters, but as manipulable "material" within a spatial environment.</p>
+    </div>
+
+    <h2>2. System Ontology (Objects)</h2>
+    <p>Defined by six atomic types, designed to separate the source of information from its manipulation.</p>
+
+    <div class="grid">
+        <div class="card">
+            <div class="symbol">F</div>
+            <h3>Fragment</h3>
+            <p>The atomic unit of thought. A single line or block of text extracted from a Source.</p>
+            <div class="theory"><strong>Context:</strong> "Separation of symbol and underlying content" (Spatial
+                Hypertext). Immutable content, mutable arrangement.</div>
+        </div>
+        <div class="card">
+            <div class="symbol">T</div>
+            <h3>Tray</h3>
+            <p>The volatile buffer where Fragments are held, reordered, and annotated.</p>
+            <div class="theory"><strong>Context:</strong> "Emergent structure" — a liminal space delaying formal
+                categorization.</div>
+        </div>
+        <div class="card">
+            <div class="symbol">S</div>
+            <h3>Source</h3>
+            <p>The ground truth document. A resource to be mined, remaining pristine and untouched.</p>
+        </div>
+        <div class="card">
+            <div class="symbol">N</div>
+            <h3>Note</h3>
+            <p>Marginalia attached to a Fragment. The "connective tissue" binding disjointed ideas.</p>
+        </div>
+        <div class="card">
+            <div class="symbol">P</div>
+            <h3>Provenance</h3>
+            <p>The indelible link back to the origin (Title, Line #).</p>
+            <div class="theory"><strong>Context:</strong> "Orthothetic instrument" (Stiegler). Preserves the exact trace
+                of the past.</div>
+        </div>
+        <div class="card">
+            <div class="symbol">K</div>
+            <h3>Frankenstein</h3>
+            <p>The final synthesis. A new document stitched together from Fragments, Notes, and Provenance.</p>
+        </div>
+    </div>
+
+    <h2>3. Morphisms (Mechanics)</h2>
+    <p>Structure-preserving maps between the ontology types.</p>
+
+    <div class="morphism">
+        <span class="math">Extracts : Creator &times; Source &rarr; Fragment</span>
+        <p>The act of selecting a line. The Creator mines the Source to generate a Fragment, explicitly preserving its
+            Content and Provenance.</p>
+    </div>
+
+    <div class="morphism">
+        <span class="math">Accumulates : Tray &rarr; {Fragment}</span>
+        <p>The Tray accumulates Fragments into a sequence. It acts as a localized "Ring Memory" for ideas, holding them
+            in a "ready-to-hand" state.</p>
+    </div>
+
+    <div class="morphism">
+        <span class="math">Annotates : Creator &times; Fragment &rarr; Note</span>
+        <p>The Creator attaches new meaning to a Fragment. This transforms it from raw "data" to interpreted "insight."
+        </p>
+    </div>
+
+    <div class="morphism">
+        <span class="math">Synthesizes : Tray &rarr; Frankenstein</span>
+        <p>The Tray's state is serialized and exported as a new Document, freezing the spatial arrangement into a new
+            linear Artifact.</p>
+    </div>
+
+    <h2>4. Pattern Glossary</h2>
+
+    <div class="card" style="margin-top:20px; border-color:var(--accent);">
+        <h3>Anti-Tool</h3>
+        <p>The interface minimizes administrative overhead. Clicking a line <i>is</i> the action. No wizards or modes.
+        </p>
+        <div class="theory">
+            <strong>Theoretical Connection:</strong> Heidegger’s <em>Zuhandenheit</em> (Readiness-to-Hand). The tool
+            should withdraw from attention, becoming an extension of the hand, only becoming "visible" (Present-at-Hand)
+            when it breaks down.
+        </div>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+        <h3>Material-Text</h3>
+        <p>Treating text not as a stream of characters, but as manipulable "bricks" that can be grasped, moved, and
+            stacked.</p>
+        <div class="theory">
+            <strong>Theoretical Connection:</strong> <em>Reification</em> (Beaudouin-Lafon). Concepts are turned into
+            objects, allowing "Instrumental Interaction" where users manipulate the object directly rather than issuing
+            commands.
+        </div>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+        <h3>Lazy-Synthesis</h3>
+        <p>Separating the "Foraging" phase (collection) from the "Synthesizing" phase (writing).</p>
+        <div class="theory">
+            <strong>Theoretical Connection:</strong> <em>Emergent Structure</em> (Shipman & Marshall). Users resist
+            formalizing relationships early. Systems must allow structure to remain implicit until the user is ready to
+            "reify" it.
+        </div>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+        <h3>Deep-Provenance</h3>
+        <p>Automated tracking of origin for every piece of data. Exports automatically cite their source.</p>
+        <div class="theory">
+            <strong>Theoretical Connection:</strong> <em>Tertiary Retention</em> (Stiegler). Externalizing memory to
+            record context of acquisition, fighting "proletarization" (loss of knowledge).
+        </div>
+    </div>
+
+</body>
+
+</html>

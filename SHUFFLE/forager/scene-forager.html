@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#000000">
+    <title>CORPUS FORAGER // 27 Documents</title>
+    <style>
+        /* =================================================
+           DESIGN SYSTEM - Forager Theme
+           ================================================= */
+        :root {
+            --bg: #000000;
+            --surface: #09090b;
+            --panel: #111111;
+            --border: #333333;
+            --text-main: #ffffff;
+            --text-dim: #888888;
+            --text-muted: #52525b;
+
+            /* Semantic Colors */
+            --context: #10b981;
+            --negative: #ef4444;
+            --lego: #3b82f6;
+            --worlding: #8b5cf6;
+            --infra: #f59e0b;
+            --hci: #ec4899;
+            --agent: #6366f1;
+            --sinter: #a855f7;
+
+            --citation: #fcd34d;
+            --hot: #ffffff;
+            --selected: #00ffaa;
+            --tray: #ff6b6b;
+
+            --font: 'JetBrains Mono', 'Menlo', monospace;
+            --radius: 4px;
+            --shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            height: 100dvh;
+            background: var(--bg);
+            color: var(--text-main);
+            font-family: var(--font);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* =================================================
+           HEADER
+           ================================================= */
+        header {
+            flex: 0 0 56px;
+            background: #050505;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            gap: 15px;
+            font-size: 11px;
+            z-index: 200;
+        }
+
+        .brand {
+            font-weight: 900;
+            letter-spacing: 0.1em;
+            color: var(--text-dim);
+        }
+
+        .brand span {
+            color: var(--context);
+        }
+
+        .header-left,
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-indicators {
+            display: flex;
+            gap: 8px;
+            font-size: 9px;
+            color: var(--text-muted);
+        }
+
+        .status-indicators span {
+            padding: 2px 6px;
+            border: 1px solid var(--border);
+            border-radius: 2px;
+        }
+
+        .status-indicators .active {
+            color: var(--selected);
+            border-color: var(--selected);
+        }
+
+        button.btn {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 6px 12px;
+            border-radius: var(--radius);
+            font-family: var(--font);
+            font-size: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        button.btn:hover {
+            border-color: var(--hot);
+            color: var(--hot);
+            transform: scale(1.05);
+        }
+
+        button.btn:active {
+            transform: scale(0.95);
+        }
+
+        button.btn.primary {
+            border-color: var(--selected);
+            color: var(--selected);
+        }
+
+        /* =================================================
+           HUD - Context Bar
+           ================================================= */
+        .hud {
+            flex: 0 0 54px;
+            background: #080808;
+            border-bottom: 1px solid var(--border);
+            display: grid;
+            grid-template-columns: 200px 1fr 120px;
+            gap: 20px;
+            padding: 0 20px;
+            align-items: center;
+            z-index: 190;
+        }
+
+        .hud-group {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .hud-label {
+            font-size: 9px;
+            color: var(--text-muted);
+            font-weight: bold;
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
+        }
+
+        #hud-focus {
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--hot);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .theme-chips {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .theme-chip {
+            font-size: 9px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .theme-chip:hover {
+            transform: translateY(-1px);
+        }
+
+        .theme-chip.active {
+            background: var(--agent);
+            border-color: var(--agent);
+        }
+
+        .theme-chip[data-theme="context_engineering"] {
+            border-color: var(--context);
+            color: var(--context);
+        }
+
+        .theme-chip[data-theme="negative_space"] {
+            border-color: var(--negative);
+            color: var(--negative);
+        }
+
+        .theme-chip[data-theme="lego_ecosystem"] {
+            border-color: var(--lego);
+            color: var(--lego);
+        }
+
+        .theme-chip[data-theme="worlding"] {
+            border-color: var(--worlding);
+            color: var(--worlding);
+        }
+
+        .tray-controls {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        #tray-count {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--tray);
+            min-width: 30px;
+            text-align: center;
+        }
+
+        /* =================================================
+           MAIN LAYOUT - Grid + Document View
+           ================================================= */
+        .main-container {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 280px 1fr 300px;
+            overflow: hidden;
+        }
+
+        /* =================================================
+           DOCUMENT GRID - 27 Documents
+           ================================================= */
+        .doc-grid-panel {
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            padding: 16px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .doc-grid-header {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .doc-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .doc-card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-height: 80px;
+        }
+
+        .doc-card:hover {
+            transform: scale(1.05) translateZ(5px);
+            border-color: var(--hot);
+            box-shadow: var(--shadow);
+        }
+
+        .doc-card.active {
+            background: var(--selected);
+            color: var(--bg);
+            border-color: var(--selected);
+            box-shadow: 0 0 20px rgba(0, 255, 170, 0.3);
+        }
+
+        .doc-card-title {
+            font-size: 9px;
+            font-weight: 600;
+            line-height: 1.3;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .doc-card-meta {
+            font-size: 8px;
+            color: var(--text-muted);
+            margin-top: auto;
+        }
+
+        .doc-card.active .doc-card-meta {
+            color: var(--bg);
+            opacity: 0.7;
+        }
+
+        .doc-card-themes {
+            display: flex;
+            gap: 2px;
+            flex-wrap: wrap;
+        }
+
+        .doc-mini-tag {
+            width: 8px;
+            height: 8px;
+            border-radius: 2px;
+        }
+
+        /* =================================================
+           SCENE GRAPH - Document Structure
+           ================================================= */
+        .scene-graph-panel {
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .scene-header {
+            padding: 12px 20px;
+            background: #050505;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .scene-title {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .scene-breadcrumbs {
+            display: flex;
+            gap: 6px;
+            font-size: 9px;
+        }
+
+        .scene-crumb {
+            padding: 3px 8px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .scene-crumb:hover {
+            border-color: var(--selected);
+        }
+
+        .scene-crumb.active {
+            border-color: var(--selected);
+            color: var(--selected);
+        }
+
+        .scene-content {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Section Tree */
+        .section-tree {
+            width: 200px;
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            padding: 12px;
+            background: #060606;
+        }
+
+        .tree-node {
+            padding: 6px 8px;
+            font-size: 10px;
+            cursor: pointer;
+            border-radius: 3px;
+            margin-bottom: 2px;
+            transition: all 0.15s;
+            border-left: 2px solid transparent;
+        }
+
+        .tree-node:hover {
+            background: var(--panel);
+        }
+
+        .tree-node.active {
+            background: rgba(0, 255, 170, 0.1);
+            border-left-color: var(--selected);
+            color: var(--selected);
+        }
+
+        .tree-node.level-1 {
+            font-weight: 700;
+        }
+
+        .tree-node.level-2 {
+            padding-left: 16px;
+        }
+
+        .tree-node.level-3 {
+            padding-left: 24px;
+            font-size: 9px;
+            color: var(--text-dim);
+        }
+
+        /* Line Content */
+        .line-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            scroll-behavior: smooth;
+        }
+
+        .content-line {
+            display: flex;
+            font-size: 12px;
+            line-height: 1.8;
+            padding: 4px 10px;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            transition: all 0.15s;
+            margin-bottom: 2px;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .content-line:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .content-line.selected {
+            background: rgba(0, 255, 170, 0.1);
+            border-left-color: var(--selected);
+        }
+
+        .content-line.in-tray {
+            background: rgba(255, 107, 107, 0.15);
+            border-left-color: var(--tray);
+        }
+
+        .content-line.heading-1 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-top: 24px;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+
+        .content-line.heading-2 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-top: 20px;
+            margin-bottom: 6px;
+            color: var(--agent);
+        }
+
+        .content-line.heading-3 {
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 16px;
+            color: var(--text-dim);
+        }
+
+        .line-number {
+            width: 35px;
+            text-align: right;
+            margin-right: 12px;
+            font-size: 10px;
+            color: var(--text-muted);
+            opacity: 0.4;
+            user-select: none;
+        }
+
+        .line-text {
+            flex: 1;
+        }
+
+        .line-citation {
+            color: var(--citation);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .line-citation:hover {
+            text-decoration: underline;
+        }
+
+        /* =================================================
+           TRAY - Collected Lines
+           ================================================= */
+        .tray-panel {
+            background: var(--surface);
+            border-left: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .tray-header {
+            padding: 12px 16px;
+            background: #050505;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tray-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--tray);
+        }
+
+        .tray-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+        }
+
+        .tray-item {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 10px;
+            margin-bottom: 8px;
+            cursor: grab;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .tray-item:hover {
+            border-color: var(--tray);
+        }
+
+        .tray-item.dragging {
+            opacity: 0.5;
+            transform: scale(0.98);
+        }
+
+        .tray-item-text {
+            font-size: 11px;
+            line-height: 1.5;
+            margin-bottom: 6px;
+            max-height: 60px;
+            overflow: hidden;
+        }
+
+        .tray-item-meta {
+            font-size: 9px;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .tray-item-remove {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--negative);
+            color: white;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .tray-item:hover .tray-item-remove {
+            opacity: 1;
+        }
+
+        .tray-actions {
+            padding: 12px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .tray-action-btn {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            background: var(--panel);
+            color: var(--text-main);
+            font-family: var(--font);
+            font-size: 10px;
+            text-transform: uppercase;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: var(--radius);
+            transition: all 0.2s;
+        }
+
+        .tray-action-btn:hover {
+            border-color: var(--selected);
+            color: var(--selected);
+        }
+
+        .tray-action-btn.primary {
+            background: var(--tray);
+            border-color: var(--tray);
+            color: white;
+        }
+
+        .tray-action-btn.primary:hover {
+            filter: brightness(1.2);
+        }
+
+        /* =================================================
+           ANIMATIONS
+           ================================================= */
+        @keyframes flyToTray {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.2) translateX(50px);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: scale(0.5) translateX(200px);
+                opacity: 0;
+            }
+        }
+
+        .fly-to-tray {
+            animation: flyToTray 0.4s ease-out forwards;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(0, 255, 170, 0.7);
+            }
+
+            100% {
+                box-shadow: 0 0 0 15px rgba(0, 255, 170, 0);
+            }
+        }
+
+        .pulse {
+            animation: pulse 0.5s ease-out;
+        }
+
+        @keyframes trayPop {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .tray-item.new {
+            animation: trayPop 0.3s ease-out;
+        }
+
+        /* =================================================
+           EXPORT MODAL
+           ================================================= */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(8px);
+            z-index: 500;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal {
+            width: min(800px, 95vw);
+            max-height: 80vh;
+            background: #070707;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .modal-head {
+            padding: 12px 16px;
+            background: #0c0c0c;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-head b {
+            color: var(--selected);
+            font-size: 11px;
+            letter-spacing: 0.1em;
+        }
+
+        .modal-body {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+        }
+
+        .export-preview {
+            background: var(--panel);
+            padding: 16px;
+            border-radius: var(--radius);
+            font-size: 11px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: var(--font);
+        }
+
+        .modal-actions {
+            padding: 12px 16px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="header-left">
+            <div class="brand">CORPUS FORAGER <span>//</span> <span id="doc-count">27</span> DOCS</div>
+            <div class="status-indicators">
+                <span id="status-sonify" class="active">🔊 AUDIO</span>
+                <span id="status-tray">TRAY: <span id="tray-badge">0</span></span>
+            </div>
+        </div>
+        <div class="header-right">
+            <button class="btn" onclick="exportTray()">EXPORT</button>
+            <button class="btn" onclick="clearTray()">CLEAR TRAY</button>
+            <button class="btn primary" onclick="downloadBib()">📚 BIB</button>
+        </div>
+    </header>
+
+    <div class="hud">
+        <div class="hud-group">
+            <span class="hud-label">FOCUS</span>
+            <span id="hud-focus">Select a document</span>
+        </div>
+        <div class="hud-group">
+            <span class="hud-label">THEMES</span>
+            <div class="theme-chips" id="theme-chips"></div>
+        </div>
+        <div class="tray-controls">
+            <span id="tray-count">0</span>
+            <span style="font-size: 9px; color: var(--text-muted);">items in tray</span>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <!-- Document Grid -->
+        <div class="doc-grid-panel">
+            <div class="doc-grid-header">📁 Documents (27)</div>
+            <div class="doc-grid" id="doc-grid"></div>
+        </div>
+
+        <!-- Scene Graph -->
+        <div class="scene-graph-panel">
+            <div class="scene-header">
+                <div class="scene-title" id="scene-title">Select a document</div>
+                <div class="scene-breadcrumbs" id="breadcrumbs"></div>
+            </div>
+            <div class="scene-content">
+                <div class="section-tree" id="section-tree">
+                    <div style="color: var(--text-muted); font-size: 10px; padding: 20px;">
+                        Click a document to view its structure
+                    </div>
+                </div>
+                <div class="line-content" id="line-content">
+                    <div style="color: var(--text-muted); font-size: 12px; padding: 40px; text-align: center;">
+                        <div style="font-size: 40px; margin-bottom: 16px;">📄</div>
+                        Select a document from the grid to begin foraging
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tray -->
+        <div class="tray-panel">
+            <div class="tray-header">
+                <div class="tray-title">🗃️ Collected Lines</div>
+            </div>
+            <div class="tray-list" id="tray-list">
+                <div style="color: var(--text-muted); font-size: 10px; padding: 20px; text-align: center;">
+                    Click lines to add them to your tray for export
+                </div>
+            </div>
+            <div class="tray-actions">
+                <button class="tray-action-btn" onclick="copyTrayToClipboard()">📋 Copy to Clipboard</button>
+                <button class="tray-action-btn" onclick="exportTray()">📄 Export Markdown</button>
+                <button class="tray-action-btn primary" onclick="exportWithBib()">📚 Export + Bibliography</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Modal -->
+    <div class="modal-overlay" id="exportModal">
+        <div class="modal">
+            <div class="modal-head">
+                <b>EXPORT PREVIEW</b>
+                <button class="btn" onclick="closeExportModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="export-preview" id="export-preview"></div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn" onclick="closeExportModal()">Close</button>
+                <button class="btn primary" onclick="downloadExport()">Download</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =================================================
+        // STATE
+        // =================================================
+        const state = {
+            documents: [],
+            index: null,
+            currentDoc: null,
+            currentContent: '',
+            sections: [],
+            tray: [],
+            sonify: true
+        };
+
+        // Audio context for satisfying sounds
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type, duration = 0.1) {
+            if (!state.sonify || !audioCtx) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                const freqs = {
+                    select: 800,
+                    add: 1200,
+                    remove: 400,
+                    hover: 300,
+                    export: 600,
+                    success: 1000
+                };
+
+                osc.frequency.value = freqs[type] || 500;
+                osc.type = 'sine';
+                gain.gain.value = 0.15;
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) { }
+        }
+
+        // =================================================
+        // INITIALIZATION
+        // =================================================
+        async function init() {
+            try {
+                // Load corpus index
+                const indexRes = await fetch('corpus_index.json');
+                state.index = await indexRes.json();
+
+                // Build document list from index
+                state.documents = Object.entries(state.index.files).map(([name, info]) => ({
+                    name: name,
+                    title: name.replace('.md', ''),
+                    themes: info.themes || [],
+                    sections: info.sections || 0,
+                    citations: info.citations || 0
+                }));
+
+                document.getElementById('doc-count').textContent = state.documents.length;
+
+                renderDocumentGrid();
+                renderThemeChips();
+
+            } catch (err) {
+                console.error('Failed to load corpus:', err);
+                document.getElementById('doc-grid').innerHTML = `
+                    <div style="grid-column: 1/-1; color: var(--negative); font-size: 11px; padding: 20px;">
+                        Failed to load corpus. Run from /SHUFFLE/forager/ directory.
+                    </div>
+                `;
+            }
+        }
+
+        // =================================================
+        // RENDER FUNCTIONS
+        // =================================================
+        function renderDocumentGrid() {
+            const grid = document.getElementById('doc-grid');
+            grid.innerHTML = '';
+
+            state.documents.forEach((doc, idx) => {
+                const card = document.createElement('div');
+                card.className = 'doc-card';
+                card.dataset.index = idx;
+
+                // Theme color dots
+                const themeDots = doc.themes.slice(0, 4).map(t => {
+                    const colors = {
+                        context_engineering: 'var(--context)',
+                        negative_space: 'var(--negative)',
+                        lego_ecosystem: 'var(--lego)',
+                        worlding: 'var(--worlding)',
+                        infrastructure: 'var(--infra)',
+                        hci: 'var(--hci)',
+                        ai_agents: 'var(--agent)',
+                        sintering: 'var(--sinter)'
+                    };
+                    return `<div class="doc-mini-tag" style="background: ${colors[t] || 'var(--text-muted)'}"></div>`;
+                }).join('');
+
+                card.innerHTML = `
+                    <div class="doc-card-title">${escapeHtml(doc.title)}</div>
+                    <div class="doc-card-themes">${themeDots}</div>
+                    <div class="doc-card-meta">${doc.sections} sections · ${doc.citations} cites</div>
+                `;
+
+                card.onclick = () => {
+                    playSound('select');
+                    selectDocument(idx);
+                };
+
+                card.onmouseenter = () => playSound('hover', 0.03);
+
+                grid.appendChild(card);
+            });
+        }
+
+        function renderThemeChips() {
+            const container = document.getElementById('theme-chips');
+            const themes = state.index?.themes || {};
+
+            container.innerHTML = Object.entries(themes)
+                .sort((a, b) => b[1].length - a[1].length)
+                .slice(0, 8)
+                .map(([theme, files]) => `
+                    <div class="theme-chip" data-theme="${theme}" onclick="filterByTheme('${theme}')">
+                        ${theme.replace('_', ' ')} (${files.length})
+                    </div>
+                `).join('');
+        }
+
+        async function selectDocument(idx) {
+            const doc = state.documents[idx];
+            if (!doc) return;
+
+            // Update UI
+            document.querySelectorAll('.doc-card').forEach(c => c.classList.remove('active'));
+            document.querySelector(`.doc-card[data-index="${idx}"]`)?.classList.add('active');
+
+            state.currentDoc = doc;
+            document.getElementById('hud-focus').textContent = doc.title;
+            document.getElementById('scene-title').textContent = doc.title;
+
+            // Load document content
+            try {
+                const res = await fetch(`../markdown/${doc.name}`);
+                state.currentContent = await res.text();
+
+                parseSections();
+                renderSectionTree();
+                renderLineContent();
+
+            } catch (err) {
+                console.error('Failed to load document:', err);
+            }
+        }
+
+        function parseSections() {
+            state.sections = [];
+            const lines = state.currentContent.split('\n');
+
+            lines.forEach((line, idx) => {
+                const match = line.match(/^(#{1,4})\s+(.+)/);
+                if (match) {
+                    state.sections.push({
+                        level: match[1].length,
+                        title: match[2],
+                        lineIndex: idx
+                    });
+                }
+            });
+        }
+
+        function renderSectionTree() {
+            const tree = document.getElementById('section-tree');
+
+            tree.innerHTML = state.sections.map((sec, idx) => `
+                <div class="tree-node level-${sec.level}" 
+                     data-line="${sec.lineIndex}"
+                     onclick="scrollToSection(${sec.lineIndex})">
+                    ${escapeHtml(sec.title.substring(0, 40))}${sec.title.length > 40 ? '...' : ''}
+                </div>
+            `).join('');
+        }
+
+        function renderLineContent() {
+            const content = document.getElementById('line-content');
+            const lines = state.currentContent.split('\n');
+
+            content.innerHTML = lines.map((line, idx) => {
+                let classes = 'content-line';
+
+                // Detect headings
+                if (line.startsWith('# ')) classes += ' heading-1';
+                else if (line.startsWith('## ')) classes += ' heading-2';
+                else if (line.startsWith('### ')) classes += ' heading-3';
+
+                // Check if in tray
+                const inTray = state.tray.some(item =>
+                    item.doc === state.currentDoc?.name && item.lineIndex === idx
+                );
+                if (inTray) classes += ' in-tray';
+
+                // Highlight citations
+                let text = escapeHtml(line);
+                text = text.replace(/\[([a-z0-9_]+)\]/g, '<span class="line-citation">[$1]</span>');
+
+                return `
+                    <div class="${classes}" data-line="${idx}" onclick="toggleLineInTray(${idx}, event)">
+                        <div class="line-number">${idx + 1}</div>
+                        <div class="line-text">${text}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function scrollToSection(lineIndex) {
+            const line = document.querySelector(`.content-line[data-line="${lineIndex}"]`);
+            if (line) {
+                line.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                line.classList.add('pulse');
+                setTimeout(() => line.classList.remove('pulse'), 500);
+            }
+
+            // Update tree active state
+            document.querySelectorAll('.tree-node').forEach(n => n.classList.remove('active'));
+            document.querySelector(`.tree-node[data-line="${lineIndex}"]`)?.classList.add('active');
+
+            playSound('select', 0.08);
+        }
+
+        // =================================================
+        // TRAY FUNCTIONALITY
+        // =================================================
+        function toggleLineInTray(lineIndex, event) {
+            if (!state.currentDoc) return;
+
+            const lines = state.currentContent.split('\n');
+            const lineText = lines[lineIndex];
+
+            // Check if already in tray
+            const existingIdx = state.tray.findIndex(item =>
+                item.doc === state.currentDoc.name && item.lineIndex === lineIndex
+            );
+
+            if (existingIdx >= 0) {
+                // Remove from tray
+                state.tray.splice(existingIdx, 1);
+                playSound('remove');
+            } else {
+                // Add to tray with animation
+                const lineEl = event.target.closest('.content-line');
+                lineEl.classList.add('fly-to-tray');
+
+                setTimeout(() => {
+                    lineEl.classList.remove('fly-to-tray');
+
+                    state.tray.push({
+                        doc: state.currentDoc.name,
+                        docTitle: state.currentDoc.title,
+                        lineIndex: lineIndex,
+                        text: lineText,
+                        citations: extractCitations(lineText)
+                    });
+
+                    renderTray();
+                    updateTrayCount();
+                    renderLineContent(); // Refresh to show in-tray state
+                    playSound('add');
+                }, 300);
+
+                return;
+            }
+
+            renderTray();
+            updateTrayCount();
+            renderLineContent();
+        }
+
+        function extractCitations(text) {
+            const matches = text.match(/\[([a-z0-9_]+)\]/g) || [];
+            return matches.map(m => m.slice(1, -1));
+        }
+
+        function renderTray() {
+            const list = document.getElementById('tray-list');
+
+            if (state.tray.length === 0) {
+                list.innerHTML = `
+                    <div style="color: var(--text-muted); font-size: 10px; padding: 20px; text-align: center;">
+                        Click lines to add them to your tray for export
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = state.tray.map((item, idx) => `
+                <div class="tray-item new" data-index="${idx}" draggable="true">
+                    <div class="tray-item-remove" onclick="removeFromTray(${idx})">×</div>
+                    <div class="tray-item-text">${escapeHtml(item.text.substring(0, 150))}${item.text.length > 150 ? '...' : ''}</div>
+                    <div class="tray-item-meta">
+                        <span>${item.docTitle}</span>
+                        <span>L${item.lineIndex + 1}</span>
+                    </div>
+                </div>
+            `).join('');
+
+            // Remove 'new' class after animation
+            setTimeout(() => {
+                document.querySelectorAll('.tray-item.new').forEach(el => el.classList.remove('new'));
+            }, 300);
+        }
+
+        function removeFromTray(idx) {
+            state.tray.splice(idx, 1);
+            playSound('remove');
+            renderTray();
+            updateTrayCount();
+            renderLineContent();
+        }
+
+        function updateTrayCount() {
+            document.getElementById('tray-count').textContent = state.tray.length;
+            document.getElementById('tray-badge').textContent = state.tray.length;
+        }
+
+        function clearTray() {
+            state.tray = [];
+            playSound('remove');
+            renderTray();
+            updateTrayCount();
+            renderLineContent();
+        }
+
+        // =================================================
+        // EXPORT FUNCTIONALITY
+        // =================================================
+        function copyTrayToClipboard() {
+            const text = state.tray.map(item => item.text).join('\n\n');
+            navigator.clipboard.writeText(text);
+            playSound('success');
+            alert('Copied to clipboard!');
+        }
+
+        function exportTray() {
+            let output = `# Corpus Forager Export\n`;
+            output += `Generated: ${new Date().toISOString()}\n`;
+            output += `Items: ${state.tray.length}\n\n---\n\n`;
+
+            // Group by document
+            const byDoc = {};
+            state.tray.forEach(item => {
+                if (!byDoc[item.docTitle]) byDoc[item.docTitle] = [];
+                byDoc[item.docTitle].push(item);
+            });
+
+            for (const [docTitle, items] of Object.entries(byDoc)) {
+                output += `## From: ${docTitle}\n\n`;
+                items.forEach(item => {
+                    output += `> ${item.text}\n`;
+                    output += `> — Line ${item.lineIndex + 1}\n\n`;
+                });
+            }
+
+            document.getElementById('export-preview').textContent = output;
+            document.getElementById('exportModal').classList.add('open');
+            playSound('export');
+        }
+
+        function exportWithBib() {
+            let output = `# Corpus Forager Export\n`;
+            output += `Generated: ${new Date().toISOString()}\n`;
+            output += `Items: ${state.tray.length}\n\n---\n\n`;
+
+            // Collect all citations
+            const allCitations = new Set();
+
+            // Group by document
+            const byDoc = {};
+            state.tray.forEach(item => {
+                if (!byDoc[item.docTitle]) byDoc[item.docTitle] = [];
+                byDoc[item.docTitle].push(item);
+                item.citations.forEach(c => allCitations.add(c));
+            });
+
+            for (const [docTitle, items] of Object.entries(byDoc)) {
+                output += `## From: ${docTitle}\n\n`;
+                items.forEach(item => {
+                    output += `> ${item.text}\n`;
+                    output += `> — Line ${item.lineIndex + 1}\n\n`;
+                });
+            }
+
+            // Add bibliography
+            if (allCitations.size > 0) {
+                output += `---\n\n## Bibliography\n\n`;
+                allCitations.forEach(key => {
+                    const cite = state.index?.citations?.[key];
+                    if (cite) {
+                        output += `**[${key}]** ${cite.text.substring(0, 200)}...\n\n`;
+                    } else {
+                        output += `**[${key}]** (citation not found)\n\n`;
+                    }
+                });
+            }
+
+            document.getElementById('export-preview').textContent = output;
+            document.getElementById('exportModal').classList.add('open');
+            playSound('export');
+        }
+
+        function closeExportModal() {
+            document.getElementById('exportModal').classList.remove('open');
+        }
+
+        function downloadExport() {
+            const content = document.getElementById('export-preview').textContent;
+            const blob = new Blob([content], { type: 'text/markdown' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `corpus-export-${Date.now()}.md`;
+            a.click();
+            URL.revokeObjectURL(url);
+            playSound('success');
+            closeExportModal();
+        }
+
+        async function downloadBib() {
+            try {
+                const a = document.createElement('a');
+                a.href = 'clean_bibliography.bib';
+                a.download = 'corpus_bibliography.bib';
+                a.click();
+                playSound('success');
+            } catch (err) {
+                alert('Could not download bibliography');
+            }
+        }
+
+        // =================================================
+        // THEME FILTERING
+        // =================================================
+        function filterByTheme(theme) {
+            const chip = document.querySelector(`.theme-chip[data-theme="${theme}"]`);
+            const isActive = chip.classList.toggle('active');
+
+            const activeThemes = [...document.querySelectorAll('.theme-chip.active')].map(c => c.dataset.theme);
+
+            document.querySelectorAll('.doc-card').forEach((card, idx) => {
+                const doc = state.documents[idx];
+                if (activeThemes.length === 0 || activeThemes.some(t => doc.themes.includes(t))) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            playSound('select', 0.05);
+        }
+
+        // =================================================
+        // UTILITIES
+        // =================================================
+        function escapeHtml(str) {
+            return str.replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        // Toggle audio
+        document.getElementById('status-sonify').onclick = function () {
+            state.sonify = !state.sonify;
+            this.classList.toggle('active', state.sonify);
+        };
+
+        // Initialize
+        init();
+    </script>
+</body>
+
+</html>
