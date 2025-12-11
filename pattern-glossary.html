@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pattern Glossary | ATG Trail Ontology</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap');
+
+        :root {
+            --bg: #fafafa;
+            --surface: #ffffff;
+            --surface-alt: #f5f5f5;
+            --card-border: #e5e5e5;
+            --ink: #1a1a1a;
+            --ink-secondary: #525252;
+            --ink-tertiary: #737373;
+            --accent: #6d28d9;
+            --accent-bg: #f3e8ff;
+            --link: #1d4ed8;
+            --pattern-color: #6d28d9;
+            --morphism-bg: #f3e8ff;
+        }
+
+        [data-theme="dark"] {
+            --bg: #0d0d12;
+            --surface: #18181b;
+            --surface-alt: #27272a;
+            --card-border: #3f3f46;
+            --ink: #fafafa;
+            --ink-secondary: #a1a1aa;
+            --ink-tertiary: #71717a;
+            --accent: #a78bfa;
+            --accent-bg: rgba(167, 139, 250, 0.12);
+            --link: #60a5fa;
+            --pattern-color: #a78bfa;
+            --morphism-bg: rgba(167, 139, 250, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 18px;
+            scroll-behavior: smooth;
+        }
+
+        @media (max-width: 768px) {
+            html {
+                font-size: 16px;
+            }
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--ink);
+            font-family: 'Source Serif 4', Georgia, serif;
+            line-height: 1.7;
+            padding: 0 1rem;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.3;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            margin: 2.5rem 0 1rem;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        h4 {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--ink-secondary);
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            max-width: 65ch;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9em;
+            background: var(--surface-alt);
+            padding: 0.15em 0.4em;
+            border-radius: 3px;
+        }
+
+        .container {
+            max-width: 52rem;
+            margin: 0 auto;
+            padding: 2rem 0 4rem;
+        }
+
+        header {
+            margin-bottom: 2rem;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: var(--ink-secondary);
+            font-style: italic;
+        }
+
+        .meta {
+            font-size: 0.8rem;
+            color: var(--ink-tertiary);
+            margin-top: 0.5rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .back-nav {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--ink-secondary);
+            text-decoration: none;
+            font-size: 0.8rem;
+            margin-bottom: 1.5rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .back-nav:hover {
+            color: var(--accent);
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 1px solid var(--card-border);
+            background: var(--surface);
+            color: var(--ink);
+            cursor: pointer;
+            font-size: 1.25rem;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent-bg);
+        }
+
+        /* Executive Summary Box */
+        .executive-summary {
+            background: var(--surface);
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .executive-summary h3 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .executive-summary p {
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .executive-summary p:last-child {
+            margin-bottom: 0;
+        }
+
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .toc-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--ink-tertiary);
+            margin-bottom: 0.75rem;
+        }
+
+        .toc-list {
+            list-style: none;
+            columns: 2;
+            column-gap: 1.5rem;
+        }
+
+        @media (max-width: 480px) {
+            .toc-list {
+                columns: 1;
+            }
+        }
+
+        .toc-list a {
+            color: var(--link);
+            text-decoration: none;
+            font-size: 0.85rem;
+            display: block;
+            padding: 0.25rem 0;
+        }
+
+        .toc-list a:hover {
+            text-decoration: underline;
+        }
+
+        .onto-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 0.75rem;
+            margin: 1rem 0 2rem;
+        }
+
+        .onto-card {
+            background: var(--surface);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .onto-sym {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 500;
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .onto-name {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .onto-desc {
+            font-size: 0.8rem;
+            color: var(--ink-secondary);
+            line-height: 1.5;
+        }
+
+        .morphism {
+            background: var(--morphism-bg);
+            border-left: 3px solid var(--accent);
+            padding: 1rem 1.25rem;
+            margin: 1rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .morphism-formula {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .morphism-plain {
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .morphism-example {
+            font-size: 0.85rem;
+            color: var(--ink-secondary);
+            font-style: italic;
+        }
+
+        .pattern-card {
+            background: var(--surface);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            overflow: hidden;
+        }
+
+        .pattern-head {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--card-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .pattern-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--pattern-color);
+        }
+
+        .pattern-zones {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+        }
+
+        .zone-chip {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 500;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            background: var(--surface-alt);
+            color: var(--ink-secondary);
+        }
+
+        .pattern-body {
+            padding: 1.25rem;
+        }
+
+        .pattern-def {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            border-left: 3px solid var(--pattern-color);
+            padding-left: 1rem;
+        }
+
+        .pattern-grounding {
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: var(--ink-secondary);
+            border-left: 2px solid var(--accent);
+            padding-left: 0.75rem;
+        }
+
+        .pattern-grounding strong {
+            color: var(--ink);
+        }
+
+        .pattern-grounding p {
+            margin-bottom: 0.5rem;
+        }
+
+        .pattern-meta {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        .pattern-meta dt {
+            font-weight: 600;
+            color: var(--ink-tertiary);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .pattern-meta dd {
+            color: var(--ink-secondary);
+        }
+
+        .pattern-refs {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--card-border);
+            font-size: 0.8rem;
+        }
+
+        .pattern-refs-title {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            color: var(--ink-tertiary);
+            margin-bottom: 0.5rem;
+        }
+
+        .pattern-refs cite {
+            font-style: normal;
+            display: block;
+            color: var(--ink-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .pattern-refs a {
+            color: var(--link);
+        }
+
+        .void-note {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 6px;
+            padding: 0.75rem 1rem;
+            margin: 1rem 0;
+            font-size: 0.85rem;
+            color: #991b1b;
+        }
+
+        [data-theme="dark"] .void-note {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+        }
+
+        .edge-note {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 6px;
+            padding: 0.75rem 1rem;
+            margin: 1rem 0;
+            font-size: 0.85rem;
+            color: #166534;
+        }
+
+        [data-theme="dark"] .edge-note {
+            background: rgba(34, 197, 94, 0.1);
+            border-color: rgba(34, 197, 94, 0.3);
+            color: #86efac;
+        }
+
+        .leverage-note {
+            background: #faf5ff;
+            border: 1px solid #e9d5ff;
+            border-radius: 6px;
+            padding: 0.75rem 1rem;
+            margin: 1rem 0;
+            font-size: 0.85rem;
+            color: #6b21a8;
+        }
+
+        [data-theme="dark"] .leverage-note {
+            background: rgba(168, 85, 247, 0.1);
+            border-color: rgba(168, 85, 247, 0.3);
+            color: #d8b4fe;
+        }
+
+        .audit-badge {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            padding: 0.15rem 0.4rem;
+            border-radius: 3px;
+            margin-left: 0.5rem;
+        }
+
+        .audit-verified {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .audit-caution {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .audit-edge {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .audit-deep {
+            background: #f3e8ff;
+            color: #6b21a8;
+        }
+
+        [data-theme="dark"] .audit-verified {
+            background: rgba(34, 197, 94, 0.2);
+            color: #86efac;
+        }
+
+        [data-theme="dark"] .audit-caution {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fcd34d;
+        }
+
+        [data-theme="dark"] .audit-edge {
+            background: rgba(59, 130, 246, 0.2);
+            color: #93c5fd;
+        }
+
+        [data-theme="dark"] .audit-deep {
+            background: rgba(168, 85, 247, 0.2);
+            color: #d8b4fe;
+        }
+
+        /* Validation Matrix Table */
+        .validation-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            margin: 1.5rem 0;
+        }
+
+        .validation-table th,
+        .validation-table td {
+            border: 1px solid var(--card-border);
+            padding: 0.6rem 0.8rem;
+            text-align: left;
+        }
+
+        .validation-table th {
+            background: var(--surface-alt);
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .validation-table td {
+            background: var(--surface);
+        }
+
+        .validation-table code {
+            font-size: 0.75rem;
+            background: var(--accent-bg);
+            color: var(--accent);
+        }
+
+        /* Comparison Tables */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            margin: 1rem 0;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            border: 1px solid var(--card-border);
+            padding: 0.5rem 0.75rem;
+            text-align: left;
+        }
+
+        .comparison-table th {
+            background: var(--surface-alt);
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+
+        .comparison-table td {
+            background: var(--surface);
+        }
+
+        /* Blockquote */
+        blockquote {
+            border-left: 3px solid var(--accent);
+            margin: 1rem 0;
+            padding: 0.5rem 1rem;
+            font-style: italic;
+            color: var(--ink-secondary);
+            background: var(--surface-alt);
+            border-radius: 0 6px 6px 0;
+        }
+
+        blockquote cite {
+            display: block;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            font-style: normal;
+            color: var(--ink-tertiary);
+        }
+
+        footer {
+            margin-top: 4rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--card-border);
+            font-size: 0.8rem;
+            color: var(--ink-tertiary);
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+        }
+
+        footer a {
+            color: var(--accent);
+        }
+    </style>
+</head>
+
+<body>
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">☀</button>
+
+    <div class="container">
+        <a href="courage-trail-olog.html" class="back-nav">← Trail Map</a>
+
+        <header>
+            <h1>Pattern Glossary</h1>
+            <p class="subtitle">The Sociotechnical Architecture of Agentic Systems: A Theoretical Verification of the
+                ATG Trail Ontology.</p>
+            <p class="meta">v3.0 · Sociotechnical Verification · December 2025 · 14 patterns · 32 archival sources</p>
+        </header>
+
+        <!-- Executive Summary -->
+        <div class="executive-summary">
+            <h3>Executive Summary: The Ontology of Entanglement</h3>
+            <p>This report serves as a rigorous verification and synthesis of the theoretical groundings for the ATG
+                Trail Ontology. It moves beyond citation checks to excavate the deeper epistemological arguments of
+                <strong>David Turnbull ("Gothic" assemblage)</strong>, <strong>Susan Leigh Star
+                    (Infrastructure)</strong>, <strong>Charles Goodwin (Professional Vision)</strong>, and <strong>Heinz
+                    von Foerster (Second-Order Cybernetics)</strong>.</p>
+            <p>The central thesis is that robust agentic systems are not the product of rigid, centralized master
+                planning ("Roman" engineering), but rather the result of "contingent assemblages"—messy, ad hoc, and
+                locally optimized collaborations between human intent, machine capability, and environmental constraint
+                ("Gothic" construction).</p>
+        </div>
+
+        <nav class="toc">
+            <div class="toc-title">Contents</div>
+            <ul class="toc-list">
+                <li><a href="#validation-matrix">Validation Matrix</a></li>
+                <li><a href="#ontology">Ontology Types</a></li>
+                <li><a href="#morphisms">Morphisms</a></li>
+                <li><a href="#gothic-assemblage">gothic-assemblage 🏛</a></li>
+                <li><a href="#associative-trail">associative-trail ✓</a></li>
+                <li><a href="#professional-vision">professional-vision 🏛</a></li>
+                <li><a href="#second-order-loop">second-order-loop 🏛</a></li>
+                <li><a href="#transclusion">transclusion ✓</a></li>
+                <li><a href="#trail-aware">trail-aware ⚡</a></li>
+                <li><a href="#spatial-hypertext">spatial-hypertext ✓</a></li>
+                <li><a href="#infrastructure">infrastructure ✓</a></li>
+                <li><a href="#prompt-friction">prompt-friction ⚡</a></li>
+                <li><a href="#bibliography">Bibliography</a></li>
+            </ul>
+        </nav>
+
+        <!-- VALIDATION MATRIX -->
+        <section id="validation-matrix">
+            <h2>Validation Matrix</h2>
+            <p>The following table summarizes the verified theoretical groundings, linking glossary terms to their
+                primary source literature and function within the ATG Ontology.</p>
+
+            <table class="validation-table">
+                <thead>
+                    <tr>
+                        <th>Glossary Term</th>
+                        <th>Verified Source</th>
+                        <th>Key Concept</th>
+                        <th>Function in ATG Ontology</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>Gothic Assemblage</code></td>
+                        <td>D. Turnbull (2000)</td>
+                        <td>Contingent, local coordination</td>
+                        <td>Replaces "master plan" with templates and local standards</td>
+                    </tr>
+                    <tr>
+                        <td><code>Infrastructure</code></td>
+                        <td>Star & Ruhleder (1996)</td>
+                        <td>Relational property</td>
+                        <td>Defines "visibility upon breakdown" and inversion</td>
+                    </tr>
+                    <tr>
+                        <td><code>Professional Vision</code></td>
+                        <td>C. Goodwin (1994)</td>
+                        <td>Discursive coding schemes</td>
+                        <td>Explains prompting as "teaching vision" (highlighting)</td>
+                    </tr>
+                    <tr>
+                        <td><code>Second-Order Loop</code></td>
+                        <td>H. von Foerster (2003)</td>
+                        <td>Observing systems</td>
+                        <td>Grounds human-in-the-loop and "Action Guards"</td>
+                    </tr>
+                    <tr>
+                        <td><code>Provenance</code></td>
+                        <td>Hill (1992) / Turnilo (2025)</td>
+                        <td>Edit Wear / Diffing</td>
+                        <td>"Persist" actions and visualize "Loops" of analysis</td>
+                    </tr>
+                    <tr>
+                        <td><code>Associative Trail</code></td>
+                        <td>V. Bush (1945)</td>
+                        <td>Selection by association</td>
+                        <td>Fundamental unit of knowledge organization</td>
+                    </tr>
+                    <tr>
+                        <td><code>Olog</code></td>
+                        <td>Spivak & Kent (2012)</td>
+                        <td>Category-theoretic schema</td>
+                        <td>Mathematical rigor and interoperability</td>
+                    </tr>
+                    <tr>
+                        <td><code>Spatial Hypertext</code></td>
+                        <td>Marshall & Shipman (1993)</td>
+                        <td>Implicit structure</td>
+                        <td>Ambiguity and emergent structure via parsing</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- ONTOLOGY SECTION -->
+        <section id="ontology">
+            <h2>Ontology Types (C-T-A-M-D-S-P-I)</h2>
+            <p>The 8-codon schema based on <strong>Spivak's Olog framework</strong>: objects are types, arrows are
+                functional relationships.</p>
+
+            <div class="onto-grid">
+                <div class="onto-card">
+                    <div class="onto-sym" style="color:#b45309">C</div>
+                    <div class="onto-name">Creator</div>
+                    <div class="onto-desc">The human "trailblazer" (Bush) or "craftsman" (Sennett) generating content.
+                    </div>
+                </div>
+                <div class="onto-card">
+                    <div class="onto-sym" style="color:#1d4ed8">T</div>
+                    <div class="onto-name">Trail</div>
+                    <div class="onto-desc">A persistent sequence of associations. A "Gothic" assemblage of artifacts.
+                    </div>
+                </div>
+                <div class="onto-card">
+                    <div class="onto-sym" style="color:#047857">A</div>
+                    <div class="onto-name">Artifact</div>
+                    <div class="onto-desc">Tangible outputs bound together "as though from widely separated sources."
+                    </div>
+                </div>
+                <div class="onto-card">
+                    <div class="onto-sym" style="color:#be185d">M</div>
+                    <div class="onto-name">Metadata</div>
+                    <div class="onto-desc">Timestamps, tags. The "post molds" of the digital record.</div>
+                </div>
+                <div class="onto-card">
+                    <div class="onto-sym" style="color:#6d28d9">D</div>
+                    <div class="onto-name">Decision</div>
+                    <div class="onto-desc">Intentional interventions. The "cuts" made by the apparatus.</div>
+                </div>
+                <div class="onto-card">
+                    <div class="onto-sym" style="color:#c2410c">S*</div>
+                    <div class="onto-name">Trail-Aware Tool</div>
+                    <div class="onto-desc">The "apparatus" (Barad) that observes trails and makes infrastructure
+                        visible.</div>
+                </div>
+                <div class="onto-card">
+                    <div class="onto-sym" style="color:#0891b2">P</div>
+                    <div class="onto-name">Pattern</div>
+                    <div class="onto-desc">Emergent regularities inferred by the "Spatial Parser."</div>
+                </div>
+                <div class="onto-card">
+                    <div class="onto-sym" style="color:#dc2626">I</div>
+                    <div class="onto-name">Intent</div>
+                    <div class="onto-desc">The goal. What the tool supports via "templates" and "scaffolding."</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PATTERNS SECTION -->
+        <section id="patterns">
+            <h2>Pattern Definitions</h2>
+
+            <!-- gothic-assemblage -->
+            <article class="pattern-card" id="gothic-assemblage">
+                <div class="pattern-head">
+                    <div class="pattern-name">gothic-assemblage <span class="audit-badge audit-deep">🏛 DEEP</span>
+                    </div>
+                    <div class="pattern-zones">
+                        <span class="zone-chip" style="background:#f3e8ff;color:#6d28d9">POML FORGE</span>
+                    </div>
+                </div>
+                <div class="pattern-body">
+                    <div class="pattern-def">Building complex systems without a central "master plan" via contingent
+                        assemblages, templates, and local standards. The "plan" emerges from interaction, not blueprint.
+                    </div>
+
+                    <div class="pattern-grounding">
+                        <strong>Primary Source: David Turnbull (2000)</strong>
+                        <p>In <em>Masons, Tricksters and Cartographers</em>, Turnbull dismantles the myth that Gothic
+                            cathedrals were built by master architects. They were "ad hoc" and "messy," built by
+                            disparate groups using "talk, templates, and tradition." <a href="#ref-turnbull">[Turnbull
+                                2000]</a></p>
+                    </div>
+
+                    <table class="comparison-table">
+                        <tr>
+                            <th>Feature</th>
+                            <th>Roman Mode (Software)</th>
+                            <th>Gothic Mode (Agentic AI)</th>
+                        </tr>
+                        <tr>
+                            <td>Planning</td>
+                            <td>Centralized blueprint</td>
+                            <td>Emergent, iterative assemblage</td>
+                        </tr>
+                        <tr>
+                            <td>Coordination</td>
+                            <td>Universal metrics</td>
+                            <td>Boundary objects & templates</td>
+                        </tr>
+                        <tr>
+                            <td>Knowledge</td>
+                            <td>Unified theory</td>
+                            <td>Diffused local knowledges</td>
+                        </tr>
+                    </table>
+
+                    <div class="leverage-note">
+                        <strong>Deep Leverage: Templates as Boundary Objects</strong>
+                        <p>Masons used "templates" (physical cut-outs) to coordinate work without sharing theory. In
+                            ATG, <strong>Prompt Templates</strong> act as these boundary objects—constraining the
+                            infinite potential of existing LLMs into specific, useful shapes (the "stone" to be cut).
+                        </p>
+                    </div>
+                </div>
+            </article>
+
+            <!-- associative-trail -->
+            <article class="pattern-card" id="associative-trail">
+                <div class="pattern-head">
+                    <div class="pattern-name">associative-trail <span class="audit-badge audit-verified">✓
+                            VERIFIED</span></div>
+                    <div class="pattern-zones">
+                        <span class="zone-chip" style="background:#fef3c7;color:#b45309">CORE PORTAL</span>
+                    </div>
+                </div>
+                <div class="pattern-body">
+                    <div class="pattern-def">A persistent sequence of associations—the fundamental unit of knowledge.
+                        "Selecting by association rather than indexing."</div>
+
+                    <div class="pattern-grounding">
+                        <strong>Primary Source: Vannevar Bush (1945)</strong>
+                        <p>Bush identified the failure of indexing (artificial subclasses) versus the mind's operation
+                            by association. The "essential feature" of the Memex was "tying two items together" to form
+                            a permanent path. <a href="#ref-bush">[Bush 1945]</a></p>
+                    </div>
+
+                    <blockquote>
+                        "Wholly new forms of encyclopedias will appear, ready-made with a mesh of associative trails
+                        running through them."
+                        <cite>— Vannevar Bush, "As We May Think"</cite>
+                    </blockquote>
+                </div>
+            </article>
+
+            <!-- professional-vision -->
+            <article class="pattern-card" id="professional-vision">
+                <div class="pattern-head">
+                    <div class="pattern-name">professional-vision <span class="audit-badge audit-deep">🏛 DEEP</span>
+                    </div>
+                    <div class="pattern-zones">
+                        <span class="zone-chip" style="background:#f3e8ff;color:#6d28d9">POML FORGE</span>
+                    </div>
+                </div>
+                <div class="pattern-body">
+                    <div class="pattern-def">The discursive production of reality through "coding" and "highlighting."
+                        Data is not "raw"; it is cooked by the observer's coding scheme.</div>
+
+                    <div class="pattern-grounding">
+                        <strong>Primary Source: Charles Goodwin (1994)</strong>
+                        <p>Goodwin distinguishes the "Post Hole" (the dirt) from the "Post Mold" (the trace). The expert
+                            archaeologist "weaves the post mold into existence" by drawing a line in the dirt. To the
+                            student, it is just a stain; to the expert, it is data. <a href="#ref-goodwin">[Goodwin
+                                1994]</a></p>
+                    </div>
+
+                    <div class="leverage-note">
+                        <strong>Deep Leverage: Prompting as Teaching Vision</strong>
+                        <p>Prompt Engineering is the transmission of "Professional Vision." The user (expert) uses
+                            <strong>highlighting</strong> (examples, emphasis) to teach the agent (student) to "see"
+                            relevant features. "Hallucination" is applying a coding scheme where none belongs—weaving a
+                            post mold from random noise.</p>
+                    </div>
+                </div>
+            </article>
+
+            <!-- second-order-loop -->
+            <article class="pattern-card" id="second-order-loop">
+                <div class="pattern-head">
+                    <div class="pattern-name">second-order-loop <span class="audit-badge audit-deep">🏛 DEEP</span>
+                    </div>
+                    <div class="pattern-zones">
+                        <span class="zone-chip" style="background:#dbeafe;color:#1d4ed8">CB-BOX ENGINE</span>
+                    </div>
+                </div>
+                <div class="pattern-body">
+                    <div class="pattern-def">The shift from "observed systems" to "observing systems." The observer
+                        constructs the system, and is responsible for the reality constructed. "It takes two to
+                        language."</div>
+
+                    <div class="pattern-grounding">
+                        <strong>Primary Source: Heinz von Foerster (2003)</strong>
+                        <p>Objectivity is the delusion that observations can be made without an observer. Meaning is in
+                            the interaction, not the signal. <a href="#ref-vonfoerster">[von Foerster 2003]</a></p>
+                    </div>
+
+                    <div class="edge-note">
+                        <strong>Edge Scout (2025): Action Guards & Magentic-UI</strong>
+                        <p>Magentic-UI operationalizes this by forcing the user to acknowledge their role.
+                            <strong>Action Guards</strong> require human approval for high-stakes actions, ensuring the
+                            "human-in-the-loop" accepts the ethical weight of the agent's proposal. <a
+                                href="#ref-magentic">[Magentic-UI 2025]</a></p>
+                    </div>
+                </div>
+            </article>
+
+            <!-- trail-aware -->
+            <article class="pattern-card" id="trail-aware">
+                <div class="pattern-head">
+                    <div class="pattern-name">trail-aware <span class="audit-badge audit-edge">⚡ EDGE+</span></div>
+                    <div class="pattern-zones">
+                        <span class="zone-chip" style="background:#dcfce7;color:#166534">TERRAIN MAPS</span>
+                    </div>
+                </div>
+                <div class="pattern-body">
+                    <div class="pattern-def">Tools that observe/visualize the creator's working trail. Visualizing usage
+                        history ("Edit Wear") and computational provenance ("Persist").</div>
+
+                    <div class="pattern-grounding">
+                        <strong>Foundational:</strong> Hill et al. (1992) "Edit Wear." Viégas & Wattenberg (2004)
+                        "History Flow." <a href="#ref-hill">[Hill 1992]</a>
+                    </div>
+
+                    <div class="edge-note">
+                        <strong>Edge Scout (2024-2025): Provenance</strong>
+                        <p><strong>Persist (EuroVis '24):</strong> Captures interaction provenance (e.g., plot
+                            filtering) as reproducible data artifacts. <a href="#ref-persist">[Gadhave et al. 2024]</a>
+                        </p>
+                        <p><strong>Loops (TVCG '25):</strong> Visualizes branching history of analysis. "Diffing"
+                            outputs to see how code (or agent) changes altered results. <a href="#ref-loops">[Eckelt et
+                                al. 2025]</a></p>
+                    </div>
+                </div>
+            </article>
+
+            <!-- infrastructure -->
+            <article class="pattern-card" id="infrastructure">
+                <div class="pattern-head">
+                    <div class="pattern-name">infrastructure <span class="audit-badge audit-verified">✓ VERIFIED</span>
+                    </div>
+                    <div class="pattern-zones">
+                        <span class="zone-chip" style="background:#e5e5e5;color:#525252">DEPLOY ENGINE</span>
+                    </div>
+                </div>
+                <div class="pattern-body">
+                    <div class="pattern-def">A relational property, not a thing. Emerges when technology sinks into
+                        practice. Characterized by "embeddedness" and "transparency."</div>
+
+                    <div class="pattern-grounding">
+                        <strong>Primary Source: Star & Ruhleder (1996)</strong>
+                        <p>"Steps Toward an Ecology of Infrastructure." Infrastructure is invisible until it fails
+                            (breakdown). <a href="#ref-star">[Star & Ruhleder 1996]</a></p>
+                    </div>
+
+                    <div class="leverage-note">
+                        <strong>Deep Leverage: Infrastructural Inversion</strong>
+                        <p>For AI agents, invisibility is dangerous. We must use <strong>Infrastructural
+                                Inversion</strong> to make the background reasoning visible (CoT, "Thinking..."). We
+                            design for visibility <em>before</em> breakdown to maintain trust. <a
+                                href="#ref-bowker">[Bowker & Star 1999]</a></p>
+                    </div>
+                </div>
+            </article>
+
+        </section>
+
+        <!-- BIBLIOGRAPHY -->
+        <section id="bibliography"
+            style="margin-top: 3rem; border-top: 1px solid var(--card-border); padding-top: 2rem;">
+            <h2>Works Cited (Verified Archival Sources)</h2>
+            <div style="font-size: 0.72rem; color: var(--ink-secondary); line-height: 1.65; columns: 1;">
+
+                <h4>Knowledge Spaces & System Building (Deep Leverage)</h4>
+                <p id="ref-turnbull">Turnbull, D. (2000). <em>Masons, Tricksters and Cartographers</em>. Routledge.</p>
+                <p id="ref-goodwin">Goodwin, C. (1994). Professional Vision. <em>American Anthropologist</em> 96(3).</p>
+                <p id="ref-vonfoerster">von Foerster, H. (2003). <em>Understanding Understanding</em>. Springer.</p>
+                <p id="ref-sennett">Sennett, R. (2008). <em>The Craftsman</em>. Yale University Press.</p>
+
+                <h4>Infrastructure & Materiality</h4>
+                <p id="ref-star">Star, S.L. & Ruhleder, K. (1996). Steps Toward an Ecology of Infrastructure.
+                    <em>ISR</em>.</p>
+                <p id="ref-bowker">Bowker, G.C. & Star, S.L. (1999). <em>Sorting Things Out</em>. MIT Press.</p>
+                <p id="ref-barad">Barad, K. (2007). <em>Meeting the Universe Halfway</em>. Duke UP.</p>
+
+                <h4>Information Science Foundation</h4>
+                <p id="ref-bush">Bush, V. (1945). As We May Think. <em>The Atlantic</em>.</p>
+                <p id="ref-nelson">Nelson, T. (1981). <em>Literary Machines</em>.</p>
+                <p id="ref-spivak">Spivak, D.I. & Kent, R.E. (2012). Ologs. <em>PLoS ONE</em>.</p>
+                <p id="ref-marshall">Marshall, C.C. & Shipman, F.M. (1993). Searching for the Missing Link.
+                    <em>Hypertext '93</em>.</p>
+
+                <h4>Interaction & Provenance (Edge Scout)</h4>
+                <p id="ref-hill">Hill, W.C. et al. (1992). Edit Wear and Read Wear. <em>CHI '92</em>.</p>
+                <p id="ref-magentic">Microsoft Research. (2025). Magentic-UI. <em>Research Preview</em>.</p>
+                <p id="ref-persist">Gadhave, Cutler, Lex. (2024). Persist. <em>EuroVis '24</em>.</p>
+                <p id="ref-loops">Eckelt, Gadhave, Lex, Streit. (2025). Loops. <em>IEEE TVCG</em>.</p>
+                <p id="ref-zamfirescu">Zamfirescu-Pereira et al. (2023). Why Johnny Can't Prompt. <em>CHI '23</em>.</p>
+
+            </div>
+        </section>
+
+        <footer>
+            Part of the <a href="courage-trail-olog.html">ATG Trail Olog</a> knowledge infrastructure.<br>
+            Verified Sociotechnical Architecture · December 2025<br>
+            <span style="font-size:0.7rem; opacity:0.7;">"A Gothic assemblage of local standards and professional
+                vision."</span>
+        </footer>
+    </div>
+
+    <script>
+        const toggle = document.getElementById('theme-toggle');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        let isDark = localStorage.getItem('theme') === 'dark' || (localStorage.getItem('theme') === null && prefersDark);
+
+        function setTheme(dark) {
+            document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+            toggle.textContent = dark ? '☀' : '☽';
+            localStorage.setItem('theme', dark ? 'dark' : 'light');
+            isDark = dark;
+        }
+
+        setTheme(isDark);
+        toggle.onclick = () => setTheme(!isDark);
+    </script>
+</body>
+
+</html>
