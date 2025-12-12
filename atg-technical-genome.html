@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATG Architecture: The Technical Genome | ATG 3.0</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap');
+
+        :root {
+            --bg: #0d0d12;
+            --surface: #18181b;
+            --surface-alt: #27272a;
+            --card-border: #3f3f46;
+            --ink: #fafafa;
+            --ink-secondary: #a1a1aa;
+            --ink-tertiary: #71717a;
+            --accent: #a78bfa;
+            --link: #60a5fa;
+            --code-bg: #27272a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--ink);
+            font-family: 'Source Serif 4', Georgia, serif;
+            line-height: 1.7;
+            padding: 0 1rem;
+            max-width: 60rem;
+            margin: 0 auto;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.3;
+            color: var(--ink);
+        }
+
+        h1 {
+            margin: 2rem 0 1rem;
+            font-size: 2.2rem;
+        }
+
+        h2 {
+            margin: 2.5rem 0 1rem;
+            font-size: 1.5rem;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 0.5rem;
+            color: var(--accent);
+        }
+
+        h3 {
+            margin: 1.5rem 0 0.5rem;
+            font-size: 1.1rem;
+            color: var(--ink);
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--ink-secondary);
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9em;
+            background: var(--code-bg);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            color: var(--accent);
+        }
+
+        pre {
+            background: var(--code-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--card-border);
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: var(--ink-secondary);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--ink-tertiary);
+            margin-bottom: 3rem;
+            font-style: italic;
+        }
+
+        .diagram {
+            border: 1px solid var(--card-border);
+            padding: 1.5rem;
+            border-radius: 8px;
+            background: var(--surface);
+            margin: 1.5rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            line-height: 1.4;
+            color: var(--ink-secondary);
+            overflow-x: auto;
+        }
+
+        .step-list {
+            list-style: none;
+            counter-reset: steps;
+        }
+
+        .step-list li {
+            position: relative;
+            padding-left: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .step-list li::before {
+            counter-increment: steps;
+            content: counter(steps);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 1.8rem;
+            height: 1.8rem;
+            background: var(--surface-alt);
+            border: 1px solid var(--card-border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .feature-card {
+            background: var(--surface);
+            border: 1px solid var(--card-border);
+            padding: 1.25rem;
+            border-radius: 8px;
+        }
+
+        .feature-title {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        a {
+            color: var(--link);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--card-border);
+            text-align: center;
+            color: var(--ink-tertiary);
+            font-size: 0.9rem;
+            margin-bottom: 4rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>ATG Architecture: The Technical Genome</h1>
+        <p class="subtitle">A definitive guide to the "Gothic Assemblage" constructing the Trail Olog, Pattern Glossary,
+            and Document Genome.</p>
+    </header>
+
+    <div class="executive-summary">
+        <p>The ATG system is not a static website but a <strong>living knowledge graph</strong>. Unlike traditional CMS
+            architectures that rely on databases, ATG uses a "Gothic" assemblage of JSON schemas, POML strategies, and
+            HTML5 visualization engines. This document details exactly how the three core systems—Transformation (Olog),
+            Reflection (Glossary), and Definition (Genome)—are technically constructed and interwoven.</p>
+    </div>
+
+    <!-- SECTION 1: TRAIL OLOG -->
+    <section>
+        <h2>1. The Trail Olog Map (`courage-trail-olog.html`)</h2>
+        <p>The Trail Olog is a <strong>topological terrain map</strong> that visualizes the project's evolution. It does
+            not use external mapping libraries; it is a custom-built SVG engine that renders a "10x8 grid topology"
+            based on JSON data.</p>
+
+        <div class="diagram">
+            DATA SOURCE: courage-trail-data.json
+            │
+            ▼
+            LOADER (JS): loadTrailData()
+            │ • Fetches JSON
+            │ • Fallback: embedded data (if CORS fails)
+            │ • Parsed into TRAIL_DATA global object
+            ▼
+            RENDER ENGINE: draw() (HTML5 Canvas + SVG Overlay)
+            │
+            ├── DRAW ZONES (The "Islands")
+            │ • Iterate TRAIL_DATA.zones
+            │ • Map grid (col,row) → Pixel (x,y)
+            │ • Draw SVG shapes based on type (mountain, forge, river)
+            │ • Color code by Trail Level (0-3)
+            │
+            ├── DRAW CONNECTIONS (The "Trails")
+            │ • Iterate TRAIL_DATA.connections
+            │ • Draw Bézier curves between Zone centers
+            │ • Animate "Pilgrims" (white dots) following curves
+            │
+            └── DRAW TIMELINE
+            • Render bottom scrubber
+            • Filter Zones by active date range
+        </div>
+
+        <h3>Technical Core: The 10x8 Grid Topology</h3>
+        <p>The map abandons "pixel-perfect" design for a <strong>semantic grid</strong>. Every zone is defined by a
+            `(col, row)` coordinate in a virtual 10x8 grid. This ensures that the layout is responsive and topologically
+            consistent regardless of screen size. The `getPoint(col, row)` function translates these abstract
+            coordinates into actual canvas pixels.</p>
+
+        <h3>The "Pilgrim" Animation System</h3>
+        <p>The moving dots ("Pilgrims") are not GIFs. They are <strong>procedural classes</strong> (`Pilgrim`) spawned
+            by the `spawnPilgrims()` function. They:</p>
+        <ul style="margin-left: 2rem; color: var(--ink-secondary); margin-bottom: 1.5rem;">
+            <li>Select a random connection from `TRAIL_DATA.connections`.</li>
+            <li>Traverse the Bézier curve using a progress variable `t` (0 to 1).</li>
+            <li>Upon reaching `t=1`, they die and respawn, simulating continuous data flow ("Data Exhaust").</li>
+        </ul>
+    </section>
+
+    <!-- SECTION 2: PATTERN GLOSSARY -->
+    <section>
+        <h2>2. The Pattern Glossary (`pattern-glossary.html`)</h2>
+        <p>The Pattern Glossary acts as the <strong>self-reflective engine</strong> of the system. It validates the
+            "implicit theory" behind the explicit code.</p>
+
+        <div class="grid-2">
+            <div class="feature-card">
+                <div class="feature-title">Audit Protocol (CSS Classes)</div>
+                <p>Academic rigor is enforced via CSS classes that visually distinguish claim strength:</p>
+                <code>.audit-verified</code> (Green): Proven archival source.<br>
+                <code>.audit-deep</code> (Purple): Philosophical/theoretical grounding.<br>
+                <code>.audit-edge</code> (Blue/Green): Bleeding-edge (2024+) research.<br>
+                <code>.void-note</code> (Red): Warnings/Absence of citations.
+            </div>
+            <div class="feature-card">
+                <div class="feature-title">The "Pattern Card" Component</div>
+                <p>Each pattern is an <code>&lt;article&gt;</code> element containing:</p>
+                <ul>
+                    <li><strong>Badge:</strong> Visual proof of audit status.</li>
+                    <li><strong>Zone Chips:</strong> Where it lives in the Olog map.</li>
+                    <li><strong>Definition:</strong> 1-2 sentence condensed theory.</li>
+                    <li><strong>Grounding:</strong> Direct link to primary source.</li>
+                </ul>
+            </div>
+        </div>
+
+        <h3>The "Sociotechnical" Verification</h3>
+        <p>The glossary is not just a list of terms; it is a <strong>verified graph</strong>. It links design patterns
+            (like "Context Engineering") to their academic ancestors ("Gothic Assemblage" by Turnbull). This is
+            hard-coded in the HTML structure, creating a "frozen" snapshot of theoretical validity.</p>
+    </section>
+
+    <!-- SECTION 3: DOCUMENT GENOME -->
+    <section>
+        <h2>3. The Document Genome (`project-genome.html` & `genome.poml`)</h2>
+        <p>The Genome is the <strong>schema definition layer</strong>. It uses "Ologs" (Ontology Logs) to enforce
+            mathematical rigor on the project's structure.</p>
+
+        <div class="diagram">
+            SCHEMA SOURCE: genome.poml
+            │
+            ▼
+            DEFINES: The 8 Codons (C-T-A-M-D-S-P-I)
+            │ • C: Creator • D: Decision
+            │ • T: Trail • S: Trail-Aware Tool
+            │ • A: Artifact • P: Pattern
+            │ • M: Metadata • I: Intent
+            │
+            ▼
+            ENFORCES: The Morphisms (Arrows)
+            • "generates" (Creator → Trail)
+            • "observes" (Tool → Trail)
+            • "anneals" (Pattern → Structure)
+            │
+            ▼
+            VISUALIZES: project-genome.html
+            • Renders the Olog Types as cards
+            • Maps the Morphisms as logical flows
+        </div>
+
+        <h3>POML: The Prompt Object Markup Language</h3>
+        <p>The Genome is written in <strong>POML</strong> (`genome.poml`). This is a specialized pseudo-code format
+            designed for LLMs. It defines:</p>
+        <ul class="step-list">
+            <li><strong>Roles:</strong> Who the agent is (e.g., "Void Guardian").</li>
+            <li><strong>Protocols:</strong> Step-by-step algorithms for tasks (e.g., "Citation Triage").</li>
+            <li><strong>Axioms:</strong> Unbreakable rules (e.g., "If you can't cite it, you can't claim it").</li>
+        </ul>
+        <p>The `project-genome.html` page effectively "compiles" this POML logic into a human-readable visual guide.</p>
+    </section>
+
+    <!-- SECTION 4: SYNTHESIS -->
+    <section>
+        <h2>4. Synthesis: How They Connect</h2>
+        <p>These three systems form a closed loop of "Associative Infrastructuring":</p>
+
+        <div class="feature-card" style="background: var(--surface-alt);">
+            <p><strong>1. DEFINE (Genome):</strong> <code>genome.poml</code> defines the <em>rules</em> of the universe
+                (Creator, Trail, Artifact).</p>
+            <p><strong>2. BUILD (Data):</strong> <code>courage-trail-data.json</code> instantiates those rules into
+                specific <em>zones</em> and <em>connections</em>.</p>
+            <p><strong>3. MAP (Olog):</strong> <code>courage-trail-olog.html</code> reads the data and renders the
+                spatial <em>reality</em>.</p>
+            <p><strong>4. REFLECT (Glossary):</strong> <code>pattern-glossary.html</code> observes the reality and
+                validates the <em>theory</em> behind it.</p>
+        </div>
+
+        <p style="margin-top: 2rem;">This architecture moves beyond "software engineering" into <strong>"Ontological
+                Engineering."</strong> We are not just building tools; we are building a verifiable, self-documenting
+            knowledge system that knows <em>why</em> it exists.</p>
+    </section>
+
+    <footer>
+        ATG 3.0 Technical Documentation · Generated December 2025
+    </footer>
+
+</body>
+
+</html>
